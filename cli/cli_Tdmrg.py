@@ -4,19 +4,11 @@
 import argparse
 import sys
 import os
-from pyfhmdot.dynamical import dynamical_dmps
 
 from pyfhmdot.general import (
-    create_maximal_entangled_state,
     load_model_bdmrg_simulation,
-    load_model_info_model_name,
     load_model_info_size,
-)
-from pyfhmdot.utils.iotools import (
-    add_single_mp,
-    check_filename_and_extension_h5,
-    check_filename_and_extension_to_create_h5,
-    create_h5,
+    load_mps,
 )
 
 if __name__ == "__main__":
@@ -45,5 +37,10 @@ if __name__ == "__main__":
 
     size = load_model_info_size(arguments.gates)
     bdmrg_simulation_parameters = load_model_bdmrg_simulation(arguments.gates)
+
+    dmps = load_mps(arguments.dmps, size, folder="QMP")
+    ggate = []
+    for st in range(4):
+        ggate.append(load_mps(arguments.gates, size - 1, folder=f"TEMP_GATE_{st:02g}"))
 
     # dynamical_dmps(dmps,ggate,bdmrg_simulation_parameters)

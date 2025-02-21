@@ -6,7 +6,12 @@ import sys
 
 from pyfhmdot.models.pymodels import hamiltonian_obc, suzu_trotter_obc_exp
 from pyfhmdot.models.pyoperators import single_operator
-from pyfhmdot.utils.iotools import add_dictionary, load_dictionary
+from pyfhmdot.utils.iotools import (
+    add_dictionary,
+    load_dictionary,
+    add_single_mp,
+    load_single_mp,
+)
 
 
 def translate_qn_name(model_name):
@@ -102,6 +107,11 @@ def add_model_bdmrg_simulation(filepath, parameters):
     add_dictionary(filepath, parameters, folder="INFO_SIM_BETA_DMRG")
 
 
+def add_mps(filepath, mps, *, folder):
+    for i, mp in enumerate(mps):
+        add_single_mp(filepath, mp, i, folder=folder)
+
+
 # def get_details_zdmrg():
 #     return
 #
@@ -128,15 +138,30 @@ def load_model_info_model_name(filepath):
 
 
 def load_model_parameters(filepath):
-    return load_dictionary(filepath, "INFO_PARAMETERS")
+    d = {}
+    load_dictionary(filepath, d, folder="INFO_PARAMETERS")
+    return d
 
 
 def load_model_tdmrg_simulation(filepath):
-    return load_dictionary(filepath, "INFO_SIM_TIME_DMRG")
+    d = {}
+    load_dictionary(filepath, d, folder="INFO_SIM_TIME_DMRG")
+    return d
 
 
 def load_model_bdmrg_simulation(filepath):
-    return load_dictionary(filepath, "INFO_SIM_BETA_DMRG")
+    d = {}
+    load_dictionary(filepath, d, folder="INFO_SIM_BETA_DMRG")
+    return d
+
+
+def load_mps(filepath, size, *, folder):
+    mps = []
+    for i in range(size):
+        mp = {}
+        load_single_mp(filepath, mp, i, folder=folder)
+        mps.append(mp)
+    return mps
 
 
 def create_hamiltonian(model_name, parameters, size):

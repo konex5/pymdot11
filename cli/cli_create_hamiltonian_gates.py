@@ -8,7 +8,6 @@ import os
 from pyfhmdot.utils.iotools import (
     check_filename_and_extension_to_create_h5,
     create_h5,
-    add_single_mp,
 )
 from pyfhmdot.utils.iodicts import check_filename_and_extension, read_dictionary
 
@@ -17,6 +16,7 @@ from pyfhmdot.general import (
     add_model_tdmrg_simulation,
     add_model_info,
     add_model_parameters,
+    add_mps,
     create_hamiltonian_gates,
     load_model_info_model_name,
     load_model_info_size,
@@ -75,8 +75,7 @@ if __name__ == "__main__":
             in_group=False,
         )
         for st, step in enumerate(ham_mpo):
-            for i, mp in enumerate(step):
-                add_single_mp(arguments.output, mp, i, folder=f"TEMP_GATE_{st:02g}")
+            add_mps(arguments.output, step, folder=f"TEMP_GATE_{st:02g}")
 
     if is_time_simulation:
         tdmrg_simulation_parameters = large_dictionary.pop("tdmrg_simulation")
@@ -89,8 +88,8 @@ if __name__ == "__main__":
             is_dgate=False,
             in_group=False,
         )
+
         for st, step in enumerate(ham_mpo):
-            for i, mp in enumerate(step):
-                add_single_mp(arguments.output, mp, i, folder=f"TIME_GATE_{st:02g}")
+            add_mps(arguments.output, step, folder=f"TIME_GATE_{st:02g}")
 
     print("Hamiltonian gates created successfully.")

@@ -8,13 +8,13 @@ import os
 from pyfhmdot.utils.iotools import (
     check_filename_and_extension_to_create_h5,
     create_h5,
-    add_single_mp,
 )
 from pyfhmdot.utils.iodicts import check_filename_and_extension, read_dictionary
 
 from pyfhmdot.general import (
     add_model_info,
     add_model_parameters,
+    add_mps,
     create_hamiltonian,
     load_model_info_model_name,
     load_model_info_size,
@@ -54,7 +54,6 @@ if __name__ == "__main__":
     model_name = load_model_info_model_name(arguments.output)
     size = load_model_info_size(arguments.output)
     ham_mpo = create_hamiltonian(model_name, parameters, size)
-    for i, mp in enumerate(ham_mpo):
-        add_single_mp(arguments.output, mp, i, folder="MPO")
+    add_mps(arguments.output, ham_mpo, folder="MPO")
 
     print("Hamiltonian mpo created successfully.")
