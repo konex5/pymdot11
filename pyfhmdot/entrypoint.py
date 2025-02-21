@@ -2,12 +2,12 @@ from pyfhmdot.initialize import (
     create_infinite_hamiltonian as _create_infinite_hamiltonian,
     initialize_idmrg_even_size as _initialize_idmrg_even_size,
     initialize_idmrg_odd_size as _initialize_idmrg_odd_size,
-    initialize_left_right,
-    initialize_left_right_variance,
+    initialize_left_right as _initialize_left_right,
+    initialize_left_right_variance as _initialize_left_right_variance,
 )
 
 from pyfhmdot.simulation import (
-    compress_mps,
+    compress_mps as _compress_mps,
     dmrg_sweeps as _dmrg_sweeps,
     dmrg_warmup as _dmrg_warmup,
     sweep_eleven_times as _sweep_eleven_times,
@@ -88,7 +88,7 @@ def infinite_to_finite_ground_state(
 
 def variational_ground_state(mps, ham, zdmrg_dict):
     # compress mps
-    compress_mps(
+    _compress_mps(
         mps,
         zdmrg_dict["chi_max_warmup"],
         True,
@@ -96,8 +96,8 @@ def variational_ground_state(mps, ham, zdmrg_dict):
         start_left=True,
     )
     # initialize
-    left_right = initialize_left_right(mps, ham, 2)
-    left_right_var = initialize_left_right_variance(mps, ham, 2)
+    left_right = _initialize_left_right(mps, ham, 2)
+    left_right_var = _initialize_left_right_variance(mps, ham, 2)
     # warmup
     _dmrg_warmup(mps, ham, left_right, zdmrg_dict, start_left=True)  # nb_warmup
     # initialize
