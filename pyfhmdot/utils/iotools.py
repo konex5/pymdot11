@@ -29,7 +29,7 @@ def load_dictionary(filepath, dictionary, folder="MODEL"):
     with _h5.File(filepath, "r") as f:
         grp = f[folder]
         for key in grp.keys():
-            dictionary[key] = grp[key].value
+            dictionary[key] = grp[key][()]
 
 
 def write_single_mp(file_path, mp_dictionary, site=0, folder="QMP"):
@@ -51,4 +51,4 @@ def load_single_mp(file_path, mp_dictionary, site=0, folder="QMP"):
             line = m.name.split("/")[-1]
             mp_dictionary[
                 tuple(int(line[_ : (_ + 2)]) for _ in range(0, len(line), 2))
-            ] = m.value
+            ] = m[()]
