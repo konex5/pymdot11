@@ -138,9 +138,9 @@ def sweep(size, *, from_site=None, to_site=None):
 
 def print_single(size, site_i):
     return "\r" + "".join(
-        ["A" for _ in range(site_i)]
-        + ["="]
-        + ["B" for _ in range(site_i, size, 1, end="")]
+        ["A" for _ in range(site_i-1)]
+        + ["*"]
+        + ["B" for _ in range(site_i-2, size, 1)]
     )
 
 
@@ -148,7 +148,7 @@ def print_double(size, site_i):
     return "\r" + "".join(
         ["A" for _ in range(site_i - 1)]
         + ["*="]
-        + ["B" for _ in range(site_i, size, 1, end="")]
+        + ["B" for _ in range(site_i-1, size, 1)]
     )
 
 
