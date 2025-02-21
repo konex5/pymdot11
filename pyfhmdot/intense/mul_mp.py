@@ -117,6 +117,7 @@ def list_degenerate_indices(destination_indices: _List[tuple]) -> _List[bool]:
         list_degenerate.append(is_degenerate)
     return list_degenerate
 
+
 def multiply_mp(
     new_blocks: _Dict[tuple, _np.ndarray],
     old_blocks1: _Dict[tuple, _np.ndarray],
