@@ -997,7 +997,7 @@ def suzu_trotter_exp_to_blocs(
     return blocks
 
 
-def suzu_trotter_obc_exp(arg, model_name, parameters, size, is_dgate):
+def suzu_trotter_obc_exp(arg, model_name, parameters, size, is_dgate, in_group):
     # for gate : GOES OUT IN SSWW order
     # # [('s',(l+1)),('s',(l+2)),('W',(l+1)),('W',(l+2))])
     #
