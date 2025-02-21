@@ -3,27 +3,27 @@ def pyhamiltonian(name):
         "skeleton": {
             "sub_model": "list_sub_ham_with_param",
             "on_site": "on_site_term",
-            "bond": "bond_term",
+            "nn_bond": "bond_term",
         },
         "sh_hx_no": {
             "sub_model": [],
             "on_site": [("hx", -1.0, "sh_sx_no")],
-            "bond": [],
+            "nn_bond": [],
         },
         "sh_hz_no": {
             "sub_model": [],
             "on_site": [("hz", -1.0, "sh_sz_no")],
-            "bond": [],
+            "nn_bond": [],
         },
         "sh_hz_u1": {
             "sub_model": [],
             "on_site": [("hz", -1.0, "sh_sz_u1")],
-            "bond": [],
+            "nn_bond": [],
         },
         "sh_xy_no": {
             "sub_model": [],
             "on_site": [],
-            "bond": [
+            "nn_bond": [
                 ("Jxy", 1.0 / 2.0, "sh_sp_no-sh_sm_no"),
                 ("Jxy", 1.0 / 2.0, "sh_sm_no-sh_sp_no"),
             ],
@@ -31,7 +31,7 @@ def pyhamiltonian(name):
         "sh_xy_u1": {
             "sub_model": [],
             "on_site": [],
-            "bond": [
+            "nn_bond": [
                 ("Jxy", 1.0 / 2.0, "sh_sp_u1-sh_sm_u1"),
                 ("Jxy", 1.0 / 2.0, "sh_sm_u1-sh_sp_u1"),
             ],
@@ -39,30 +39,45 @@ def pyhamiltonian(name):
         "sh_zz_no": {
             "sub_model": [],
             "on_site": [],
-            "bond": [("Jz", 1.0, "sh_sz_no-sh_sz_no")],
+            "nn_bond": [("Jz", 1.0, "sh_sz_no-sh_sz_no")],
         },
         "sh_zz_u1": {
             "sub_model": [],
             "on_site": [],
-            "bond": [("Jz", 1.0, "sh_sz_u1-sh_sz_u1")],
+            "nn_bond": [("Jz", 1.0, "sh_sz_u1-sh_sz_u1")],
         },
         "sh_xxz_no": {
             "sub_model": ["sh_xy_no", "sh_zz_no"],
             "on_site": [],
-            "bond": [],
+            "nn_bond": [],
         },
         "sh_xxz_u1": {
             "sub_model": ["sh_xy_u1", "sh_zz_u1"],
             "on_site": [],
-            "bond": [],
+            "nn_bond": [],
+        },
+        "sh_xxz_hz_no": {
+            "sub_model": ["sh_xxz_no", "sh_hz_no"],
+            "on_site": [],
+            "nn_bond": [],
+        },
+        "sh_xxz_hz_u1": {
+            "sub_model": ["sh_xxz_u1", "sh_hz_u1"],
+            "on_site": [],
+            "nn_bond": [],
         },
     }
-    hamiltonian = {"on_site": [], "bond": []}
-    for sub_name in models[name]["sub_model"]:
-        for on_site in models[sub_name]["on_site"]:
-            hamiltonian["on_site"].append(on_site)
-        for bond in models[sub_name]["bond"]:
-            hamiltonian["bond"].append(bond)
+    hamiltonian = {"on_site": [], "nn_bond": []}
+
+    def append_sub_model(models, name, dst_hamiltonian):
+        for sub_name in models[name]["sub_model"]:
+            for on_site in models[sub_name]["on_site"]:
+                dst_hamiltonian["on_site"].append(on_site)
+            for bond in models[sub_name]["nn_bond"]:
+                dst_hamiltonian["nn_bond"].append(bond)
+            append_sub_model(models, sub_name, dst_hamiltonian)
+
+    append_sub_model(models, name, hamiltonian)
 
     return hamiltonian
 
