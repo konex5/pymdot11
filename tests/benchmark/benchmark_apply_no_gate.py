@@ -22,6 +22,7 @@ def create_random_blocs(chi, max_index=3):
             blocs[(i, 2, j)] = create_random_matrix(chi, d=1)
     return blocs
 
+
 with open("/tmp/pyfhmdot_benchmark_apply_no_gate.txt", "w") as f:
     if add_header:
         f.write("N,time[ms],memory[KiB]\n")

@@ -14,11 +14,13 @@ def test_automation_import():
 @pytest.mark.skip(msg="module fhmdot not ready yet")
 def test_fhmdot():
     import fmd_operators
-    
+
     assert True
 
     from automation import is_fmdot_available
+
     assert is_fmdot_available()
+
 
 def test_h5py():
     import h5py
