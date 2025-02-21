@@ -1,7 +1,5 @@
 import pytest
 
-from pyfhmdot.routine.interface import mm_to_theta_with_gate
-
 
 def get_theta():
     from numpy import array
@@ -77,7 +75,7 @@ def get_theta():
     new_theta = create_hamiltonian_gates(
         "sh_xxz-hz_u1",
         {"Jxy": 0.25, "Jz": 0.5, "hz": 1.5},  # 1/4.*1, 1/4.*2, 1/2.*3
-        3,
+        4,
         dbeta=0.025,
         is_dgate=True,
         in_group=True,
@@ -118,6 +116,8 @@ def test_validation_theta_step_two_left():
 
     mps = [deepcopy(mpsL), deepcopy(mpsR), deepcopy(mpsNextR)]
     gate = [deepcopy(old_theta), deepcopy(old_theta)]
+
+    from pyfhmdot.routine.interface import mm_to_theta_with_gate
 
     tmp_blocs = {}
     mm_to_theta_with_gate(
