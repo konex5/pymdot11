@@ -137,7 +137,7 @@ def degeneracy_in_theta(
             tmp = []
             for it in keys:
                 if (middle[j] == internal_qn_sum(it[0], it[1])) and (
-                    middle[j] == internal_qn_sum(it[3], it[2])
+                    internal_qn_sum(middle[j],it[2]) == it[3]
                 ):
                     tmp.append(it)
             if len(tmp) > 1:
@@ -169,7 +169,7 @@ def degeneracy_in_theta(
             tmp = []
             for it in keys:
                 if (
-                    middle[j] == internal_qn_sub(it[3], it[2])
+                    internal_qn_sum(middle[j],it[2]) == it[3]
                 ):
                     tmp.append(it)
             if len(tmp) > 1:
