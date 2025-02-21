@@ -21,8 +21,6 @@ from pyfhmdot.utils.iotools import (
     create_h5,
 )
 
-from pyfhmdot.intense.interface import measure_dmps, measure_dmps_dmps, measure_mps_mps
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="cli, combine operator")
@@ -100,6 +98,20 @@ if __name__ == "__main__":
 
         ket_dmps[arguments.position - 1].clear()
         ket_dmps[arguments.position - 1] = new_dst
+        # no update indices required since we only sum the indices.
+        
+    else:
+        new_mp = {}
+        multiply_mp(new_mp, operator, ket_dmps[arguments.position - 1], [0], [1])
+        #    0|
+        #  1-|_|-2
+        new_dst = {}
+        permute_blocs(new_dst, new_mp, [(0, 1, 2), (1, 0, 2)])
+
+        ket_dmps[arguments.position - 1].clear()
+        ket_dmps[arguments.position - 1] = new_dst
+        # TODO Sp, Sm requires to increase, lower all the following blocks
+        #update_indices(ket_dmps,arguments.position,operator)
 
     create_h5(arguments.output)
     add_model_info(arguments.output, {"size": size, model_name: 0})

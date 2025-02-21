@@ -38,4 +38,10 @@ echo "energies"
 echo "ZERO TEMPERATURE"
 ./script/cli_idmrg.py -H /tmp/hamiltonian.h5 -o /tmp/2B_inf.h5
 ./script/cli_dmrg.py -H /tmp/hamiltonian.h5 -i /tmp/2B_inf.h5 -o /tmp/2B_inf_01.h5
+mkdir -p /tmp/2B_inf_01_sz_0005
+./script/cli_combine_operator.py -k /tmp/2B_inf_01.h5 -i 5 -n sh_sz_u1 -o /tmp/2B_inf_01_sz_0005/t_00.0000.h5
+
+echo "energies"
+./script/cli_energy.py -b /tmp/2B_inf.h5 -k /tmp/2B_inf.h5 -H /tmp/hamiltonian.h5
+./script/cli_energy.py -b /tmp/2B_inf_01.h5 -k /tmp/2B_inf_01.h5 -H /tmp/hamiltonian.h5
 
