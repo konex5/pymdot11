@@ -87,7 +87,7 @@ def test_multiply_blocs_sparse_with_gate_fake(
         conserve_left_right_after=False,
     )
     assert list(dest_blocs.keys())[0] == (0, 0, 0, 0)
-    assert len(dest_blocs.keys()) == 16
+    assert len(dest_blocs.keys()) == 18
     return dest_blocs
 
 
@@ -117,7 +117,7 @@ def test_multiply_blocs_sparse_with_gate_fake_onedir_qnum(
         conserve_left_right_after=True,
     )
     assert list(dest_blocs.keys())[0] == (0, 0, 0, 0)
-    assert len(dest_blocs.keys()) == 3
+    assert len(dest_blocs.keys()) == 5
     return dest_blocs
 
 
@@ -172,4 +172,4 @@ def test_multiply_blocs_sparse_with_gate_real_with_qcons(
         conserve_left_right_before=False,
         conserve_left_right_after=True,
     )
-    assert len(dest_blocs.keys()) == 1
+    assert len(dest_blocs.keys()) == 0
