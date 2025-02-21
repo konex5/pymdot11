@@ -205,11 +205,31 @@ def sweep_eleven_times(
     # this is to ensure the first steps without gate
     if start_left:
         if not start_odd_bonds:
-            # apply_mm_at(mps,1,dw_dict,chi_max,normalize,eps,is_um=True,conserve_left_right_before=False,conserve_direction_left_after=True)
+            apply_mm_at(
+                mps,
+                1,
+                dw_dict,
+                chi_max,
+                normalize,
+                eps,
+                is_um=True,
+                conserve_left_right_before=False,
+                conserve_direction_left_after=True,
+            )
             print_double(size, 1, sym="A*")
     else:
         if (is_even and not start_odd_bonds) or (not is_even and start_odd_bonds):
-            # apply_mm_at(mps,size,dw_dict,chi_max,normalize,eps,is_um=False,conserve_left_right_before=False,conserve_direction_left_after=False)
+            apply_mm_at(
+                mps,
+                size,
+                dw_dict,
+                chi_max,
+                normalize,
+                eps,
+                is_um=False,
+                conserve_left_right_before=False,
+                conserve_direction_left_after=False,
+            )
             print_double(size, size, sym="*B")
     # without the above, quantum numbers are not taken into account
 
@@ -224,55 +244,206 @@ def sweep_eleven_times(
         else:  # [1, 2, 3, 7, 8, 9]:
             gate = ggate[1]
 
+        # logic of the loop: always apply gate first
         if start_left and start_odd_bonds:
             for l in range(1, size - 2, 2):
                 print_double(size, l, "A=")
-                # apply_gate_UM(mps, gate, l - 1, simdict)
+                apply_gate_on_mm_at(
+                    mps,
+                    gate,
+                    l,
+                    dw_dict,
+                    chi_max,
+                    normalize,
+                    eps,
+                    is_um=True,
+                    conserve_left_right_before=False,
+                    conserve_direction_left_after=True,
+                )
                 print_double(size, l + 1, "A*")
-                # apply_UM(mps, [], l, simdict)
+                apply_mm_at(
+                    mps,
+                    l + 1,
+                    dw_dict,
+                    chi_max,
+                    normalize,
+                    eps,
+                    is_um=True,
+                    conserve_left_right_before=False,
+                    conserve_direction_left_after=True,
+                )
 
             if is_even:
                 print_double(size, size - 1, "=B")
-                # apply_gate_MV(mps, gate, L - 2, simdict)
+                apply_gate_on_mm_at(
+                    mps,
+                    gate,
+                    size - 1,
+                    dw_dict,
+                    chi_max,
+                    normalize,
+                    eps,
+                    is_um=False,
+                    conserve_left_right_before=False,
+                    conserve_direction_left_after=False,
+                )
             else:
                 print_double(size, size - 2, "A=")
-                # apply_gate_UM(mps, gate, L - 3, simdict)
+                apply_gate_on_mm_at(
+                    mps,
+                    gate,
+                    size - 2,
+                    dw_dict,
+                    chi_max,
+                    normalize,
+                    eps,
+                    is_um=True,
+                    conserve_left_right_before=False,
+                    conserve_direction_left_after=True,
+                )
 
         elif not start_left and not start_odd_bonds:
             for l in range(right_border, 2, -2):
                 print_double(size, l + 1, "=B")
-                # apply_gate_MV(mps, gate, l, simdict)
+                apply_gate_on_mm_at(
+                    mps,
+                    gate,
+                    l + 1,
+                    dw_dict,
+                    chi_max,
+                    normalize,
+                    eps,
+                    is_um=False,
+                    conserve_left_right_before=False,
+                    conserve_direction_left_after=False,
+                )
                 print_double(size, l, "*B")
-                # apply_MV(mps, [], l - 1, simdict)
+                apply_mm_at(
+                    mps,
+                    l,
+                    dw_dict,
+                    chi_max,
+                    normalize,
+                    eps,
+                    is_um=False,
+                    conserve_left_right_before=False,
+                    conserve_direction_left_after=False,
+                )
 
             # left border
             print_double(size, 2, "=B")
-            # apply_gate_MV(mps, gate, 1, simdict)
+            apply_gate_on_mm_at(
+                mps,
+                gate,
+                2,
+                dw_dict,
+                chi_max,
+                normalize,
+                eps,
+                is_um=False,
+                conserve_left_right_before=False,
+                conserve_direction_left_after=False,
+            )
 
         elif start_left and not start_odd_bonds:
             for l in range(2, size - 2, 2):
                 print_double(size, l, "A=")
-                # apply_gate_UM(mps, gate, l - 1, simdict)
+                apply_gate_on_mm_at(
+                    mps,
+                    gate,
+                    l,
+                    dw_dict,
+                    chi_max,
+                    normalize,
+                    eps,
+                    is_um=True,
+                    conserve_left_right_before=False,
+                    conserve_direction_left_after=True,
+                )
                 print_double(size, l + 1, "A*")
-                # apply_UM(mps, [], l, simdict)
+                apply_mm_at(
+                    mps,
+                    l + 1,
+                    dw_dict,
+                    chi_max,
+                    normalize,
+                    eps,
+                    is_um=True,
+                    conserve_left_right_before=False,
+                    conserve_direction_left_after=True,
+                )
 
             if is_even:
                 print_double(size, size - 2, "A=")
-                # apply_gate_UM(mps, gate, L - 3, simdict)
+                apply_gate_on_mm_at(
+                    mps,
+                    gate,
+                    size - 2,
+                    dw_dict,
+                    chi_max,
+                    normalize,
+                    eps,
+                    is_um=True,
+                    conserve_left_right_before=False,
+                    conserve_direction_left_after=True,
+                )
             else:
                 print_double(size, size - 1, "=B")
-                # apply_gate_MV(mps, gate, L - 2, simdict)
+                apply_gate_on_mm_at(
+                    mps,
+                    gate,
+                    size - 1,
+                    dw_dict,
+                    chi_max,
+                    normalize,
+                    eps,
+                    is_um=False,
+                    conserve_left_right_before=False,
+                    conserve_direction_left_after=False,
+                )
 
         elif not start_left and start_odd_bonds:
             for l in range(right_border, 1, -2):
                 print_double(size, l + 1, "=B")
-                # apply_gate_MV(mps, gate, l, simdict)
+                apply_gate_on_mm_at(
+                    mps,
+                    gate,
+                    l + 1,
+                    dw_dict,
+                    chi_max,
+                    normalize,
+                    eps,
+                    is_um=False,
+                    conserve_left_right_before=False,
+                    conserve_direction_left_after=False,
+                )
                 print_double(size, l, "*B")
-                # apply_MV(mps, [], l - 1, simdict)
+                apply_mm_at(
+                    mps,
+                    l + 1,
+                    dw_dict,
+                    chi_max,
+                    normalize,
+                    eps,
+                    is_um=False,
+                    conserve_left_right_before=False,
+                    conserve_direction_left_after=False,
+                )
 
             # left border
             print_double(size, 1, "A=")
-            # apply_gate_UM(mps, gate, 0, simdict)
+            apply_gate_on_mm_at(
+                mps,
+                gate,
+                1,
+                dw_dict,
+                chi_max,
+                normalize,
+                eps,
+                is_um=True,
+                conserve_left_right_before=False,
+                conserve_direction_left_after=True,
+            )
 
         start_left = not start_left
         start_odd_bonds = not start_odd_bonds
