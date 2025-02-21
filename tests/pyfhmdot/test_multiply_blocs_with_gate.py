@@ -37,3 +37,14 @@ def test_multiply_blocs_sparse(
     assert list(dest_blocs.keys())[0] == (0, 0, 0, 0)
     assert len(dest_blocs.keys()) == 14
     assert dest_blocs[(0, 0, 0, 0)].shape == (1, 2, 2, 2)
+
+def test_multiply_blocs_sparse_with_qcons(
+    make_single_blocs_mps, lhs_indices, lhs_chi_shapes, rhs_indices, rhs_chi_shapes
+):
+    lhs_blocs = make_single_blocs_mps(lhs_indices, lhs_chi_shapes)
+    rhs_blocs = make_single_blocs_mps(rhs_indices, rhs_chi_shapes)
+    dest_blocs = {}
+    multiply_blocs_no_gate_applied(dest_blocs, lhs_blocs, rhs_blocs,conserve_left_right=True)
+    assert list(dest_blocs.keys())[0] == (0, 0, 0, 0)
+    assert len(dest_blocs.keys()) == 3
+    assert dest_blocs[(0, 0, 0, 0)].shape == (1, 2, 2, 2)
