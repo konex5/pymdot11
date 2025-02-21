@@ -7,6 +7,10 @@ Jxy = 1.0
 Jz = 2.0
 hz = 3.0
 
+[idmrg_simulation]
+chi_max = 30
+eps_truncation = 1e-8
+
 [Tdmrg_simulation]
 dtau = 0.0125
 normalize = 1

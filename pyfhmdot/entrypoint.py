@@ -1,7 +1,7 @@
 from pyfhmdot.simulation import sweep_eleven_times as _sweep_eleven_times
 
 
-def infinite_to_finite_ground_state(size, impo, idmrg_dict):
+def infinite_to_finite_ground_state(left, ham, right, imps, idmrg_dict):
     pass
     # return
 

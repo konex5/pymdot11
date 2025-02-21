@@ -54,6 +54,16 @@ def add_model_parameters(filepath, parameters):
     add_dictionary(filepath, parameters, folder="INFO_PARAMETERS")
 
 
+def add_model_idmrg_simulation(filepath, parameters):
+    """
+    {
+        "eps_truncation": 10 ** -8,
+        "chi_max": 600,
+    }
+    """
+    add_dictionary(filepath, parameters, folder="INFO_SIM_IDMRG")
+
+
 def add_model_zdmrg_simulation(filepath, parameters):
     """
     {
@@ -132,6 +142,12 @@ def load_model_info_model_name(filepath):
 def load_model_parameters(filepath):
     d = {}
     load_dictionary(filepath, d, folder="INFO_PARAMETERS")
+    return d
+
+
+def load_model_idmrg_simulation(filepath):
+    d = {}
+    load_dictionary(filepath, d, folder="INFO_SIM_IDMRG")
     return d
 
 

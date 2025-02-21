@@ -9,11 +9,20 @@ from pyfhmdot.models.pymodels import hamiltonian_obc
 from pyfhmdot.models.pyoperators import single_operator
 
 
+
+def create_infinite_hamiltonian(model_name, parameters):
+    """
+    qnmodel='sh_xxz-hz_no' or 'ru_ldxxz-hz_u1'
+    """
+    ham = hamiltonian_obc(model_name, parameters, 4)
+    return ham[0], (ham[1],ham[2]), ham[3]
+
+
 def create_hamiltonian(model_name, parameters, size):
     """
     qnmodel='sh_xxz-hz_no' or 'ru_ldxxz-hz_u1'
     """
-    hamiltonian_obc(model_name, parameters, size)
+    return hamiltonian_obc(model_name, parameters, size)
 
 
 def create_hamiltonian_gates(

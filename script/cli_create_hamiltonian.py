@@ -12,8 +12,10 @@ from pyfhmdot.utils.iotools import (
 from pyfhmdot.utils.iodicts import check_filename_and_extension, read_dictionary
 
 from pyfhmdot.utils.general import (
+    add_model_idmrg_simulation,
     add_model_info,
     add_model_parameters,
+    add_model_zdmrg_simulation,
     add_mps,
     load_model_info_model_name,
     load_model_info_size,
@@ -34,7 +36,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "-o", "--output", type=str, action="store", help="output path", required=True
     )
-    arguments = parser.parse_args()
+    #arguments = parser.parse_args()
+    arguments = parser.parse_args(["-i", "./tests/example/model.toml", "-o", "/tmp/hamiltonian.h5"])
 
     if not check_filename_and_extension(arguments.input):
         sys.exit(
@@ -46,6 +49,10 @@ if __name__ == "__main__":
         )
 
     large_dictionary = read_dictionary(arguments.input)
+    is_idmrg_simulation = "idmrg_simulation" in large_dictionary.keys()
+    is_zdmrg_simulation = "zdmrg_simulation" in large_dictionary.keys()
+
+
     info = large_dictionary.pop("model")
     parameters = large_dictionary.pop("parameters")
 
@@ -54,6 +61,14 @@ if __name__ == "__main__":
     add_model_parameters(arguments.output, parameters)
     model_name = load_model_info_model_name(arguments.output)
     size = load_model_info_size(arguments.output)
+
+    if is_idmrg_simulation:
+        idmrg_simulation_parameters = large_dictionary.pop("idmrg_simulation")
+        add_model_idmrg_simulation(arguments.output, idmrg_simulation_parameters)
+    if is_zdmrg_simulation:
+        zdmrg_simulation_parameters = large_dictionary.pop("zdmrg_simulation")
+        add_model_zdmrg_simulation(arguments.output, zdmrg_simulation_parameters)
+    
     ham_mpo = create_hamiltonian(model_name, parameters, size)
     add_mps(arguments.output, ham_mpo, folder="MPO")
 
