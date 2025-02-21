@@ -647,24 +647,6 @@ def idmrg_minimize_two_sites(
     conserve_total,
     d,
 ):
-    # contract and permute
-    env_bloc = {}
-    contract_left_right_mpo_mpo_permute(
-        env_bloc, bloc_left, ham_mpo_left, ham_mpo_right, bloc_right
-    )
-    for key in list(env_bloc.keys()):
-        shape = env_bloc[key].shape
-        if not (
-            shape[0] * shape[1] * shape[2] * shape[3]
-            == shape[4] * shape[5] * shape[6] * shape[7]
-        ):
-            env_bloc.pop(key)
-            _warning("env bloc is not a square matrix.")
-    # minimize energy
-    eigenvalues = {}
-    eigenvectors = {}
-    minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
-
     # select_quantum_sector
     diff = min(size - conserve_total, conserve_total)
     if position < diff or position > size - diff:
@@ -676,15 +658,37 @@ def idmrg_minimize_two_sites(
     else:
         allowed_sector = []  # should never occur
 
-    for key in list(eigenvectors.keys()):
+    # contract and permute
+    env_bloc = {}
+    contract_left_right_mpo_mpo_permute(
+        env_bloc, bloc_left, ham_mpo_left, ham_mpo_right, bloc_right
+    )
+    for key in list(env_bloc.keys()):
+        shape = env_bloc[key].shape
         if not (
-            key[1] in allowed_sector and key[2] in allowed_sector and key[1] == key[2]
+            shape[0] * shape[1] * shape[2] * shape[3]
+            == shape[4] * shape[5] * shape[6] * shape[7]
         ):
-            eigenvectors.pop(key)
-            eigenvalues.pop(key)
+            env_bloc.pop(key) # non physical blocs
+        elif not (key[1] in allowed_sector) or not (key[2] in allowed_sector) or not (key[5] in allowed_sector) or not (key[6] in allowed_sector): 
+            env_bloc.pop(key) # quantum conserved is used here
+        elif not (key[1] == key[2] and key[5] == key[6]):
+            env_bloc.pop(key) # quantum sum is preserved here (left sum is same as right sum)
+    # minimize energy
+    eigenvalues = {}
+    eigenvectors = {}
+    minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
+
+    # for key in list(eigenvectors.keys()):
+    #     if not (
+    #         key[1] in allowed_sector and key[2] in allowed_sector and key[1] == key[2]
+    #     ):
+    #         eigenvectors.pop(key)
+    #         eigenvalues.pop(key)
+    #         _warning("eigenvectors removed a posteriori.")
     select_lowest_blocs(eigenvalues, eigenvectors)
     # select_quantum_sector(eigenvalues, eigenvectors)
-    # apply_eigenvalues(eigenvalues, eigenvectors)
+    #apply_eigenvalues(eigenvalues, eigenvectors)
 
     theta_to_mm(
         eigenvectors,
