@@ -191,6 +191,33 @@ def make_maximal_entangled_state_u1():
 
     return _make_maximal_entangled_state_u1
 
+@pytest.fixture
+def make_simplest_dummy_dgate():
+    def _make_simplest_dummy_dgate():
+        import numpy as np
+        dgate = {}
+        dgate[(0,0,0,0)] = np.array([0.994832]).reshape(1,1,1,1)
+        dgate[(0,0,1,1)] = np.array([0.992262, 0, 0, 1.00781]).reshape(1,1,2,2)
+        dgate[(0,1,0,1)] = np.array([ -0.00257052, 0, 0, -0.00261078]).reshape(1,2,1,2)
+        dgate[(0,1,1,2)] = np.array([0,-0.00260404,-0.00260404,0]).reshape(1,2,2,1)
+        dgate[(0,2,0,2)] = np.array([6.74592e-06]).reshape(1,1,1,1)
+        dgate[(1,0,1,0)] = np.array([-0.00257052,0,0,-0.00261078]).reshape(2,1,2,1)
+        dgate[(1,0,2,1)] = np.array([0, -0.00260404,-0.00260404, 0]).reshape(2,1,1,2)
+        dgate[(1,1,0,0)] = np.array([0.992262,0,0,1.00781]).reshape(2,2,1,1)
+        dgate[(1,1,1,1)] = np.array([0.979489, 0,0, 1.0052,0, 6.74592e-06,0, 0,0, 0,6.74592e-06, 0,1.0052, 0, 0, 1.01042]).reshape(2,2,2,2)
+        dgate[(1,1,2,2)] = np.array([0.992262,0,0,1.00781]).reshape(2,2,1,1)
+        dgate[(1,2,0,1)] = np.array([0, -0.00260404]).reshape(2,1,1,2)
+        dgate[(1,2,1,2)] = np.array([-0.00257052,0,0,-0.00261078]).reshape(2,1,2,1)
+        dgate[(2,0,2,0)] = np.array([6.74592e-06]).reshape(1,1,1,1)
+        dgate[(2,1,1,0)] = np.array([0, -0.00260404,-0.00260404,0]).reshape(1,2,2,1)
+        dgate[(2,1,2,1)] = np.array([-0.00257052, 0,0, -0.00261078]).reshape(1,2,1,2)
+        dgate[(2,2,0,0)] = np.array([1.0052]).reshape(1,1,1,1)
+        dgate[(2,2,1,1)] = np.array([0.992262, 0,0, 1.00781]).reshape(1,1,2,2)
+        dgate[(2,2,2,2)] = np.array([0.994832]).reshape(1,1,1,1)
+        return dgate
+    return _make_simplest_dummy_dgate
+
+
 
 def mps(make_mps):
     return make_mps()
