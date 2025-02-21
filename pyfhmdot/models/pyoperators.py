@@ -106,6 +106,16 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
         "sh_sm_u1-sh_sp_u1",
         "sh_sp_u1-sh_sm_u1",
         "sh_sz_u1-sh_sz_u1",
+        "so_id_no-so_id_no",
+        "so_sm_no-so_sp_no",
+        "so_sp_no-so_sm_no",
+        "so_sx_no-so_sx_no",
+        "so_sy_no-so_sy_no",
+        "so_sz_no-so_sz_no",
+        "so_id_u1-so_id_u1",
+        "so_sm_u1-so_sp_u1",
+        "so_sp_u1-so_sm_u1",
+        "so_sz_u1-so_sz_u1",
     ]
     if name in bonds:
         left_name, right_name = name.split("-")
@@ -118,66 +128,7 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
             return single_operator(left_name, coef), single_operator(right_name, 1.0)
         else:
             return single_operator(left_name, 1.0), single_operator(right_name, coef)
-
-
-"""
-    # the above is ill defined with QN conservation
-    "so-IdoId": {
-        "nb_site": 2,
-        0: "so-Id",
-        1: "so-Id",
-        "qchange": {
-            "so-None": [(0,), (0,)],
-            "so-U1": [(0,), (0,)],
-            "so-SO3": [(0,), (0,)],
-        },
-    },
-    "so-SzoSz": {
-        "nb_site": 2,
-        0: "so-Sz",
-        1: "so-Sz",
-        "qchange": {
-            "so-None": [(0,), (0,)],
-            "so-U1": [(0,), (0,)],
-            "so-SO3": [(0,), (0,)],
-        },
-    },
-    "so-SpoSm": {
-        "nb_site": 2,
-        0: "so-Sp",
-        1: "so-Sm",
-        "qchange": {
-            "so-None": [(0,), (0,)],
-            "so-U1": [(+2,), (-2,)],
-            "so-SO3": [(+2,), (-2,)],
-        },
-    },
-    "so-SmoSp": {
-        "nb_site": 2,
-        0: "so-Sm",
-        1: "so-Sp",
-        "qchange": {
-            "so-None": [(0,), (0,)],
-            "so-U1": [(-2,), (+2,)],
-            "so-SO3": [(-1,), (+1,)],
-        },
-    },
-    # the following is ill defined with QN conservation
-    "so-SxSx": {
-        "nb_site": 2,
-        0: "so-Sx",
-        1: "so-Sx",
-        "qchange": {"sh-None": [(0,), (0,)]},
-    },
-    "so-SySy": {
-        "nb_site": 2,
-        0: "so-Sy",
-        1: "so-Sy",
-        "qchange": {"sh-None": [(0,), (0,)]},
-    },
-
-"""
-
+    
 """
     # ### ldsh=ladder spin half
     # # the numbers correspond to legs
