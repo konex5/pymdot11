@@ -2,10 +2,36 @@ import numpy as _np
 
 
 def prepare_index_target_no_gate(lhs_indices, rhs_indices):
-    # let's try without lbasis (qname basis)
-    nondeg_index_target = []
-    deg_index_target = []
-    pass
+    # not sure it will work...
+    target_key12 = []
+    for it1 in lhs_indices:
+        for it2 in rhs_indices:
+            if it1[2] == it2[0]:
+                target_key12.append(((it1[0], it1[1], it2[1], it2[2]), it1, it2))
+    if len(target_key12) == 0:
+        raise ("No targeted indices possible for contraction")
+    target_key12_zipped = list(zip(*sorted(target_key12)))
+    tmp = []
+    for l in range(len(target_key12_zipped[0])):
+        if target_key12_zipped[0].index(target_key12_zipped[0][l]) == l:
+            tmp.append(
+                (
+                    True,
+                    target_key12_zipped[0][l],
+                    target_key12_zipped[1][l],
+                    target_key12_zipped[2][l],
+                )
+            )
+        else:
+            tmp.append(
+                (
+                    False,
+                    target_key12_zipped[0][l],
+                    target_key12_zipped[1][l],
+                    target_key12_zipped[2][l],
+                )
+            )
+    return tmp
 
 
 def prepare_index_target_with_gate(lhs_indices, rhs_indices, th_indices):
