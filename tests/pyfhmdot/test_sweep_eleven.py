@@ -29,7 +29,7 @@ def test_eleven_times(
         {"dw_one_serie": 0, "dw_total": 0},
         5,
         True,
-        10**-18,
+        10 ** -18,
         start_left=False,
         start_odd_bonds=start_odd_bonds,
     )

@@ -47,9 +47,9 @@ def test_hamiltonian_obc():
     multiply_mp(dst, tmp, ham[2], [5], [0])
     assert dst[(0, 0, 0, 0, 1, 0, 1, 0)][0, 0, 0, 0, 0, 0, 0, 0] == 400
     dst.clear()
-    
+
     # submodel
-    ham = hamiltonian_obc("sh_xxz-hz_u1", {"Jxy":0,"Jz":0, "hz": 7.0}, 2)
+    ham = hamiltonian_obc("sh_xxz-hz_u1", {"Jxy": 0, "Jz": 0, "hz": 7.0}, 2)
     assert ham[0][(0, 1, 1, 0)][0, 0, 0, 0] == 7
     assert ham[1][(0, 1, 1, 0)][0, 0, 0, 0] == 1
     assert ham[0][(0, 1, 1, 4)][0, 0, 0, 0] == 1

@@ -38,7 +38,7 @@ def test_outerprod_mpo():
     dst.clear()
     fuse_mp(dst, tmp, 1)
 
-    res = np.ndarray((2**4, 2**4))
+    res = np.ndarray((2 ** 4, 2 ** 4))
     res.fill(0)
     for i, j in dst.keys():
         res[i, j] = dst[(i, j)][0, 0]

@@ -29,7 +29,7 @@ def normalize_the_array(
 
 def truncation_strategy(
     list_of_array: _List[_np.array],
-    eps_truncation_error: float = 10**-32,
+    eps_truncation_error: float = 10 ** -32,
     chi_max: int = 600,
 ) -> _Tuple[list, float]:
     #
@@ -41,7 +41,7 @@ def truncation_strategy(
 
     A = _np.sort(_np.concatenate(list_of_array, axis=0))
     index2cutA = _np.searchsorted(
-        _np.cumsum(A**2), eps_truncation_error * norm**2, side="left"
+        _np.cumsum(A ** 2), eps_truncation_error * norm ** 2, side="left"
     )
 
     dw = _np.sum(A[:index2cutA] ** 2)

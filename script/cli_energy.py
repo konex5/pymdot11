@@ -41,7 +41,9 @@ if __name__ == "__main__":
         required=True,
     )
 
-    arguments = parser.parse_args("-b /tmp/2B_00.0000.h5 -k /tmp/2B_00.0000.h5 -H /tmp/hamiltonian.h5".split(" "))
+    arguments = parser.parse_args(
+        "-b /tmp/2B_00.0000.h5 -k /tmp/2B_00.0000.h5 -H /tmp/hamiltonian.h5".split(" ")
+    )
 
     if not check_filename_and_extension_h5(arguments.bra):
         sys.exit(
@@ -57,15 +59,18 @@ if __name__ == "__main__":
         )
 
     size = load_model_info_size(arguments.bra)
-    if size != load_model_info_size(arguments.ket) or size != load_model_info_size(arguments.hamiltonian):
-        sys.exit(f"cli_menergie.py: error: bra, ket or hamiltonian have different sizes.")
+    if size != load_model_info_size(arguments.ket) or size != load_model_info_size(
+        arguments.hamiltonian
+    ):
+        sys.exit(
+            f"cli_menergie.py: error: bra, ket or hamiltonian have different sizes."
+        )
 
     ket_dmps = load_mps(arguments.ket, size, folder="QMP")
     bra_dmps = load_mps(arguments.bra, size, folder="QMP")
     ham_mpo = load_mps(arguments.hamiltonian, size, folder="MPO")
 
-    energy = measure_dmps_mpo_dmps(ket_dmps,ham_mpo,bra_dmps)
+    energy = measure_dmps_mpo_dmps(ket_dmps, ham_mpo, bra_dmps)
     print(f"<bra|H|ket>={energy}")
-    variance = measure_dmps_mpo_mpo_dmps(ket_dmps,ham_mpo,ham_mpo,bra_dmps)
+    variance = measure_dmps_mpo_mpo_dmps(ket_dmps, ham_mpo, ham_mpo, bra_dmps)
     print(f"<bra|H^2|ket>={variance}")
-    

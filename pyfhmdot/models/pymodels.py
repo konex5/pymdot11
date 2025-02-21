@@ -869,7 +869,7 @@ def _exp_dgate(arg, dH, *, d):
     # thus one should permute the label in the correct way after one
     # conjugate
     # REMARK ENDED HERE !
-    dU = _np.outer(_np.conjugate(tmp).reshape(d**4), tmp.reshape(d**4)).reshape(
+    dU = _np.outer(_np.conjugate(tmp).reshape(d ** 4), tmp.reshape(d ** 4)).reshape(
         d, d, d, d, d, d, d, d
     )
     # dU=>[('s',-(l+1)),('s',-(l+2)),('W',-(l+1)),('W',-(l+2)),('W',+(l+1)),('W',+(l+2)),('s',+(l+1)),('s',+(l+2))]

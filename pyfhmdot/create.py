@@ -116,12 +116,12 @@ def create_id_mp(model_name, position, is_left):
         if is_left:
             new_blocs = {
                 (0, 0, 0): coef
-                * eye(2**position).reshape(2 ** (position - 1), 2, 2**position),
+                * eye(2 ** position).reshape(2 ** (position - 1), 2, 2 ** position),
             }
         else:
             new_blocs = {
                 (0, 0, 0): coef
-                * eye(2**position).reshape(2**position, 2, 2 ** (position - 1)),
+                * eye(2 ** position).reshape(2 ** position, 2, 2 ** (position - 1)),
             }
     elif operator_name == "sh_id_u1":
         if is_left and position == 1:

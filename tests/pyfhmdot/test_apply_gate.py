@@ -58,7 +58,7 @@ def test_apply_gate_previous_code(
         chi_max=100,
         normalize=True,
         direction_right=1,
-        eps=10**-10,
+        eps=10 ** -10,
         is_um=True,
     )
 

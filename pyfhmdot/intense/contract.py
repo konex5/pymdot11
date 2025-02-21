@@ -397,7 +397,9 @@ def contract_right_bloc_mps(dst, right_bloc, mps_down, mpo, mps_up):
     # 0 -|_|
 
 
-def contract_dmps_mpo_mpo_dmps_left_border(dst, mps_down, mpo_one_left,mpo_two_left, mps_up):
+def contract_dmps_mpo_mpo_dmps_left_border(
+    dst, mps_down, mpo_one_left, mpo_two_left, mps_up
+):
     mpo_left = {}
     tmp = {}
     # mps_down
@@ -411,14 +413,14 @@ def contract_dmps_mpo_mpo_dmps_left_border(dst, mps_down, mpo_one_left,mpo_two_l
     # 0 -|_|-2
     #    1|
     tmp_tmp = {}
-    multiply_mp(tmp_tmp, tmp, mpo_two_left, [3,4], [0,1])
+    multiply_mp(tmp_tmp, tmp, mpo_two_left, [3, 4], [0, 1])
     # tmp_tmp
     #    4|
     #    | |-5
     #    | |-3
     # 0 -|_|-2
     #    1|
-    multiply_mp(dst, tmp, mps_up, [0,1,4], [0, 2, 1])
+    multiply_mp(dst, tmp, mps_up, [0, 1, 4], [0, 2, 1])
     # dst
     #    | |-3
     #    | |-2
@@ -426,7 +428,9 @@ def contract_dmps_mpo_mpo_dmps_left_border(dst, mps_down, mpo_one_left,mpo_two_l
     #    |_|-0
 
 
-def contract_dmps_mpo_mpo_dmps_right_border(dst, mps_down, mpo_one_right, mpo_two_right, mps_up):
+def contract_dmps_mpo_mpo_dmps_right_border(
+    dst, mps_down, mpo_one_right, mpo_two_right, mps_up
+):
     mpo_left = {}
     tmp = {}
     # mps_down
@@ -440,7 +444,7 @@ def contract_dmps_mpo_mpo_dmps_right_border(dst, mps_down, mpo_one_right, mpo_tw
     # 0 -|_|-2
     #    1|
     tmp_tmp = {}
-    multiply_mp(tmp, tmp, mpo_two_right, [4,5], [1,3])
+    multiply_mp(tmp, tmp, mpo_two_right, [4, 5], [1, 3])
     # tmp
     #    5|
     # 4 -| |
@@ -455,7 +459,9 @@ def contract_dmps_mpo_mpo_dmps_right_border(dst, mps_down, mpo_one_right, mpo_tw
     # 0 -|_|
 
 
-def contract_left_very_big_bloc_dmps(dst, left_bloc, dmps_down, mpo_one, mpo_two, dmps_up):
+def contract_left_very_big_bloc_dmps(
+    dst, left_bloc, dmps_down, mpo_one, mpo_two, dmps_up
+):
     tmp = {}
     # dmps_down
     #    2|
@@ -482,7 +488,7 @@ def contract_left_very_big_bloc_dmps(dst, left_bloc, dmps_down, mpo_one, mpo_two
     tmp_tmp.clear()
     # tmp_tmp_tmp
     # 0 -| ||4
-    #    |   |-5 
+    #    |   |-5
     #    |   |-3
     #    |___|-2
     #      1|
@@ -494,7 +500,9 @@ def contract_left_very_big_bloc_dmps(dst, left_bloc, dmps_down, mpo_one, mpo_two
     #    |_|- 0
 
 
-def contract_right_very_big_bloc_dmps(dst, right_bloc, dmps_down, mpo_one,mpo_two, dmps_up):
+def contract_right_very_big_bloc_dmps(
+    dst, right_bloc, dmps_down, mpo_one, mpo_two, dmps_up
+):
     tmp = {}
     # mps_down
     #    2|
@@ -531,6 +539,5 @@ def contract_right_very_big_bloc_dmps(dst, right_bloc, dmps_down, mpo_one,mpo_tw
     # 0 -|_|
 
 
-
-def contract_left_right_very_big_bloc(dst, left_bloc,right_bloc):
-    multiply_mp(dst, left_bloc, right_bloc, [0,1,2,3], [0,1,2,3])
+def contract_left_right_very_big_bloc(dst, left_bloc, right_bloc):
+    multiply_mp(dst, left_bloc, right_bloc, [0, 1, 2, 3], [0, 1, 2, 3])
