@@ -114,13 +114,22 @@ def mul_mv_deg(
     subnewsize: _List,
     dst_lhs_blocs: _Dict[_Tuple[int, int, int], _np.ndarray],
     dst_rhs_blocs: _Dict[_Tuple[int, int, int], _np.ndarray],
+    is_um: bool=False
 ) -> None:
     i_Nb = len(deg)  # index for deg and subnewsize.. we
     for i in range(i_Nb):  # reversed, and pop each value.
         Dsi = cut.pop()
         if Dsi > 0:
-            M = _np.dot(array_U.pop()[:, :Dsi], _np.diag(array_S.pop()[:Dsi]))
-            V = array_V.pop()  # [Dsi:,:]
+            if is_um:
+                # U
+                mat_left = array_U.pop()  # [:,:Dsi]
+                # M
+                mat_right = _np.dot(_np.diag(array_S.pop()[:Dsi]), array_V.pop()[:Dsi, :])
+            else:
+                # M
+                mat_left = _np.dot(array_U.pop()[:, :Dsi], _np.diag(array_S.pop()[:Dsi]))
+                # V
+                mat_right = array_V.pop()  # [Dsi:,:]
 
             tmp = subnewsize.pop()
             tmp_deg = deg.pop()
@@ -132,10 +141,10 @@ def mul_mv_deg(
                 offR = tmp[6][posR]
                 dimR = tmp[7][posR]
 
-                dst_lhs_blocs[(it[0], it[1], tmp_deg[0])] = M[
+                dst_lhs_blocs[(it[0], it[1], tmp_deg[0])] = mat_left[
                     slice(offL, offL + dimL[0] * dimL[1]), :Dsi
                 ].reshape(dimL[0], dimL[1], Dsi)
-                dst_rhs_blocs[(tmp_deg[0], it[2], it[3])] = V[
+                dst_rhs_blocs[(tmp_deg[0], it[2], it[3])] = mat_right[
                     :Dsi, slice(offR, offR + dimR[0] * dimR[1])
                 ].reshape(Dsi, dimR[0], dimR[1])
         else:
