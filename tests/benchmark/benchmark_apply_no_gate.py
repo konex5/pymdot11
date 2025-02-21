@@ -2,7 +2,7 @@ import tracemalloc
 import time
 import numpy as np
 
-from pyfhmdot.algorithm import apply_gate_on_mm_at
+from pyfhmdot.algorithm import apply_mm_at
 
 add_header = True
 
@@ -22,24 +22,9 @@ def create_random_blocs(chi, max_index=3):
             blocs[(i, 2, j)] = create_random_matrix(chi, d=1)
     return blocs
 
-
-def create_gate():
-    from pyfhmdot.initialize import create_hamiltonian_gates
-
-    return create_hamiltonian_gates(
-        "sh_xxz-hz_u1",
-        {"Jxy": 0.25, "Jz": 0.25, "hz": 0},
-        3,
-        dbeta=0.0125,
-        is_dgate=True,
-        in_group=True,
-    )[0][1]
-
-
-with open("/tmp/pyfhmdot_benchmark_apply_gate.txt", "w") as f:
+with open("/tmp/pyfhmdot_benchmark_apply_no_gate.txt", "w") as f:
     if add_header:
         f.write("N,time[ms],memory[KiB]\n")
-    th = [create_gate()]
     for N in datalist:
         mp = [create_random_blocs(N), create_random_blocs(N)]
         dst = {}
@@ -47,16 +32,15 @@ with open("/tmp/pyfhmdot_benchmark_apply_gate.txt", "w") as f:
         tracemalloc.start()
         time_start = time.time()
         #
-        apply_gate_on_mm_at(
+        apply_mm_at(
             mp,
-            th,
             1,
             {"dw_one_serie": 0},
             N,
             True,
             10 ** -62,
             is_um=None,
-            conserve_left_right_after_gate=False,
+            conserve_left_right_before=False,
             direction_right=-1,
         )
         #
