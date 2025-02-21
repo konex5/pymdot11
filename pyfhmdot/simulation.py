@@ -52,10 +52,12 @@ def should_apply(site_i, start_odd_bonds):
 def sweep_move(size, *, start_position, end_position, apply_UM, apply_MV, **kwargs):
     if start_position < end_position:
         for site_i in sweep(size, from_site=start_position, to_site=end_position):
-            apply_UM(kwargs["mps_left"][site_i - 1], kwargs["mps_right"][site_i])
+            apply_UM(kwargs["mps_left"][site_i - 1],
+                     kwargs["mps_right"][site_i])
     else:
         for site_i in sweep(size, from_site=start_position, to_site=end_position):
-            apply_MV(kwargs["mps_left"][site_i - 1], kwargs["mps_right"][site_i])
+            apply_MV(kwargs["mps_left"][site_i - 1],
+                     kwargs["mps_right"][site_i])
 
 
 def should_go_left(size, layer, position, start_left):
@@ -432,7 +434,8 @@ def sweep_eleven_times(
 def initialize_idmrg(imps_left, imps_right, ham_left, ham_right, ham_supp_left):
     left_bloc = {}
     right_bloc = {}
-    contract_mps_mpo_mps_left_border(left_bloc, imps_left[0], ham_left, imps_left[0])
+    contract_mps_mpo_mps_left_border(
+        left_bloc, imps_left[0], ham_left, imps_left[0])
     contract_mps_mpo_mps_right_border(
         right_bloc, imps_right[0], ham_right, imps_right[0]
     )
@@ -452,19 +455,25 @@ def idmrg_minimize_two_sites(
 ):
     # contract and permute
     env_bloc = {}
-    contract_left_right_mpo_mpo_permute(env_bloc,bloc_left,bloc_right,ham_mpo_left,ham_mpo_right)
+    contract_left_right_mpo_mpo_permute(
+        env_bloc, bloc_left, bloc_right, ham_mpo_left, ham_mpo_right)
     # minimize energy
     eigenvalues = {}
     eigenvectors = {}
-    minimize_theta(env_bloc,eigenvalues,eigenvectors,sim_dict["chi_max"])
+    minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
     # remove blocks with too large values
-
+    vals = sorted(set(eigenvalues.values()))
+    for key in eigenvalues.keys():
+        if eigenvalues[key] not in vals:
+            eigenvectors.pop(key)
     #
-    theta_to_mm(eigenvectors,dst_left,dst_right,sim_dict,sim_dict["chi_max"],True,True,1,sim_dict["eps_truncation"])
+    theta_to_mm(eigenvectors, dst_left, dst_right, sim_dict,
+                sim_dict["chi_max"], True, True, 1, sim_dict["eps_truncation"])
     #
     new_bloc_left = {}
     new_bloc_right = {}
-    contract_left_bloc_mps(new_bloc_left, bloc_left, dst_left, ham_mpo_left, dst_left)
+    contract_left_bloc_mps(new_bloc_left, bloc_left,
+                           dst_left, ham_mpo_left, dst_left)
     contract_right_bloc_mps(
         new_bloc_right, bloc_right, dst_right, ham_mpo_right, dst_right
     )
