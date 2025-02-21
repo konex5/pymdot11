@@ -32,66 +32,23 @@ def load_dictionary(filepath, dictionary, folder="MODEL"):
             dictionary[key] = grp[key].value
 
 
-def write_save_mp(filepath, MP):
-    with _h5.File(filepath, "w") as f:
-        grpMP = f.create_group("MP")
-        for i in range(len(MP)):
-            grpMP.create_dataset(
-                "{0:04g}".format(i + 1),
-                data=MP[i],
+def write_single_mp(file_path, mp_dictionary, site=0, folder="QMP"):
+    with _h5.File(file_path, "r+") as f:
+        grp = f.create_group(f"/{folder}/{site:04g}")
+        for it, val in mp_dictionary.items():
+            grp.create_dataset(
+                "".join(["{0:02g}".format(_) for _ in it]),
+                data=val,
                 compression="gzip",
                 compression_opts=9,
             )
 
 
-def load_generator_mp(filepath):
-    with _h5.File(filepath, "r") as f:
-        for m in f["/MP"].values():
-            yield m.value
-
-
-def writeIn_QMP_dict(QMP_dict, file_path, name="QMP", site=0):
-    if not _h5.is_hdf5(file_path):
-        raise Exception(f" <HDF5> {file_path} is not a valid hdf5 file")
-    f = _h5.File(file_path, "r+")
-    grp = f.create_group(name + "/{0:04g}".format(site))
-    for it, val in QMP_dict.items():
-        grp.create_dataset(
-            "".join(["{0:02g}".format(_) for _ in it]),
-            data=val,
-            compression="gzip",
-            compression_opts=9,
-        )
-    f.close()
-
-
-def readIn_generator_QMP(file_path, rootname="QMP", coefsite=False, conjugate=False):
-    if not _h5.is_hdf5(file_path):
-        raise Exception(f" <HDF5> {file_path} is not a valid hdf5 file")
-    f = _h5.File(file_path, "r")
-    if coefsite:
-        coefonsite_gen = (_ for _ in f["/" + rootname + "_coefsite"].value)
-    for per_site in f["/" + rootname].values():
-        block_array = dict()
-        if coefsite:
-            coefonsite = coefonsite_gen.next()
-        for m in per_site.values():
+def load_single_mp(file_path, mp_dictionary, site=0, folder="QMP"):
+    mp_dictionary.clear()
+    with _h5.File(file_path, "r") as f:
+        for m in f[f"/{folder}/{site:04g}"].values():
             line = m.name.split("/")[-1]
-            if coefsite and conjugate:
-                block_array[
-                    tuple(int(line[_ : (_ + 2)]) for _ in range(0, len(line), 2))
-                ] = (coefonsite * m.value.conjugate())
-            elif coefsite and not conjugate:
-                block_array[
-                    tuple(int(line[_ : (_ + 2)]) for _ in range(0, len(line), 2))
-                ] = (coefonsite * m.value)
-            elif not coefsite and conjugate:
-                block_array[
-                    tuple(int(line[_ : (_ + 2)]) for _ in range(0, len(line), 2))
-                ] = m.value.conjugate()
-            else:
-                block_array[
-                    tuple(int(line[_ : (_ + 2)]) for _ in range(0, len(line), 2))
-                ] = m.value
-        yield block_array
-    f.close()
+            mp_dictionary[
+                tuple(int(line[_ : (_ + 2)]) for _ in range(0, len(line), 2))
+            ] = m.value
