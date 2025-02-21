@@ -1,8 +1,88 @@
 import numpy as _np
 from typing import Dict as _Dict
+from typing import KeysView as _KeysView
 from typing import List as _List
 from typing import Optional as _Optional
 from typing import Tuple as _Tuple
+
+
+def indices_prepare_destination_without_gate(
+    left_indices: _KeysView[tuple],
+    right_indices: _KeysView[tuple],
+    *,
+    conserve_left_right: bool = False
+) -> _List[_Tuple[tuple, tuple, tuple]]:
+    about_indices_to_contract = []
+
+    for left_index in left_indices:
+        for right_index in right_indices:
+            if left_index[2] == right_index[0]:
+                if (not conserve_left_right) or (
+                    conserve_left_right
+                    and (
+                        left_index[0] + left_index[1] + right_index[1] == right_index[2]
+                    )
+                ):
+                    about_indices_to_contract.append(
+                        (
+                            (
+                                left_index[0],
+                                left_index[1],
+                                right_index[1],
+                                right_index[2],
+                            ),
+                            left_index,
+                            right_index,
+                        )
+                    )
+
+    return sorted(set(about_indices_to_contract))
+
+
+def indices_theta_prepare_conservation_for_gate(
+    theta_indices: _KeysView[tuple],
+    gate_indices: _KeysView[tuple],
+    *,
+    conserve_left_right: bool = False
+) -> _List[_Tuple[tuple, tuple, tuple]]:
+    destination_indices = []
+    for theta_index in theta_indices:
+        for gate_index in gate_indices:
+            if gate_index[2] == theta_index[1] and gate_index[3] == theta_index[2]:
+                if (not conserve_left_right) or (
+                    conserve_left_right
+                    and (
+                        theta_index[0] + gate_index[0] + gate_index[1] == theta_index[3]
+                    )
+                ):
+                    destination_indices.append(
+                        (
+                            (
+                                theta_index[0],
+                                gate_index[0],
+                                gate_index[1],
+                                theta_index[3],
+                            ),
+                            theta_index,
+                            gate_index,
+                        )
+                    )
+
+    return sorted(set(destination_indices))
+
+
+def list_degenerate_indices(destination_indices: _List[tuple]) -> _List[bool]:
+    list_degenerate = []
+    for l in range(len(destination_indices)):
+        if destination_indices.index(destination_indices[l]) == l:
+            is_degenerate = True
+        else:
+            is_degenerate = False
+        list_degenerate.append(is_degenerate)
+    return list_degenerate
+
+
+##########################################################33 older files down there
 
 
 def merge_map_indices_slices_according_to_qnum(qname):
