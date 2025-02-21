@@ -1,6 +1,6 @@
 [model]
 sh_xxz-hz_u1 = 0
-size = 20
+size = 10
 
 [parameters]
 Jxy = 1.0
@@ -24,15 +24,15 @@ eps_truncation = 1e-8
 normalize = 1
 
 [Tdmrg_simulation]
-chi_max = 30
+chi_max = 100
 dtau = 0.0125
 dw_one_step = 0
 dw_total = 0
-eps_truncation = 1e-8
+eps_truncation = 1e-62
 normalize = 1
 save_every = 1
-start_left = 0
-start_odd_bonds = 1
+start_left = 1
+start_odd_bonds = 0
 tau_max = 0.1
 
 [tdmrg_simulation]
