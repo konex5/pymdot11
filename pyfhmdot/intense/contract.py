@@ -1,4 +1,4 @@
-from pyfhmdot.intense.mul_mp import multiply_mp, fuse_mp, permute_blocs, trace_mp
+from pyfhmdot.intense.mul_mp import multiply_mp, fuse_mp, permute_blocs, rm_border_mpo, trace_mp
 
 
 def contract_left_right_mpo_mpo_permute(dst,left_bloc,right_bloc,mpo_one,mpo_two):
@@ -17,7 +17,7 @@ def contract_left_right_mpo_mpo_permute(dst,left_bloc,right_bloc,mpo_one,mpo_two
     mpos.clear()
     # tmp
     # 1   | |_|3, 5|_
-    #     |  _  __  _| - 6
+    #     |  _  __  _|- 6
     # 0   |_| |2, 4|
     tmp_tmp = {}
     multiply_mp(tmp_tmp,tmp,right_bloc,[6],[1])
@@ -26,11 +26,11 @@ def contract_left_right_mpo_mpo_permute(dst,left_bloc,right_bloc,mpo_one,mpo_two
     # 1   | |_|3, 5|_| |   7
     #     |  _  __  _| |
     # 0   |_| |2, 4| | |   6
-    permute_blocs(dst,tmp_tmp,[(0,1,2,3,4,5,6,7),(0,2,4,6,1,3,5,7)])
+    permute_blocs(dst,tmp_tmp,[(0,1,2,3,4,5,6,7),(1,3,5,7,0,2,4,6)])
     # dst
-    # 2   | |_|4, 6|_| |   8
+    # 4   | |_|5, 6|_| |   7
     #     |  _  __  _| |
-    # 0   |_| |1, 3| | |   5
+    # 0   |_| |1, 2| | |   3
     
 
 def contract_dmps_left_border(dst, dmps):
@@ -308,17 +308,17 @@ def contract_left_right_bloc_with_mpo(dst, left_blocs, mpo, right_blocs):
 
 def contract_mps_mpo_mps_left_border(dst, mps_down, mpo, mps_up):
     mpo_left = {}
-    fuse_mp(mpo_left, mpo, 0)
+    rm_border_mpo(mpo_left, mpo, is_left=True)
     tmp = {}
     # mps_down
     #    1|
     # 0 -|_|-2
-    multiply_mp(tmp, mps_down, mpo_left, [1], [0])
+    multiply_mp(tmp, mps_up, mpo_left, [1], [1])
     # tmp
-    #    2|
+    # 0 -| |-1
     #    | |-3
-    # 0 -|_|-1
-    multiply_mp(dst, tmp, mps_up, [0, 2], [0, 1])
+    #     |2
+    multiply_mp(dst, tmp, mps_down, [0, 2], [0, 1])
     # dst
     #    | |-2
     #    | |-1
@@ -332,17 +332,17 @@ def contract_mps_mpo_mps_right_border(dst, mps_down, mpo, mps_up):
     # mps_down
     #    1|
     # 0 -|_|-2
-    multiply_mp(tmp, mps_down, mpo_right, [1], [1])
+    multiply_mp(tmp, mps_up, mpo_right, [1], [2])
     # tmp
+    # 0 -| |-1
+    # 2 -| |
     #    3|
-    # 2 -| |
-    # 0 -|_|-1
     # tmp_left_bloc = {}
-    multiply_mp(dst, tmp, mps_up, [1, 3], [2, 1])
+    multiply_mp(dst, tmp, mps_up, [1, 3], [1, 2])
     # dst
-    # 2 -| |
+    # 0 -| |
     # 1 -| |
-    # 0 -|_|
+    # 2 -|_|
 
 
 def contract_left_bloc_mps(dst, left_bloc, mps_down, mpo, mps_up):
