@@ -70,9 +70,9 @@ if __name__ == "__main__":
         len(list(bra_dmps[0].values())[0].shape) == 3
         and len(list(ket_dmps[0].values())[0].shape) == 3
     ):
-        bra_norm = measure_mps_mps(bra_dmps,bra_dmps)
+        bra_norm = measure_mps_mps(bra_dmps, bra_dmps)
         print(f"<bra|bra>= {bra_norm}")
-        ket_norm = measure_mps_mps(ket_dmps,ket_dmps)
+        ket_norm = measure_mps_mps(ket_dmps, ket_dmps)
         print(f"<ket|ket>= {ket_norm}")
-        braket_norm = measure_mps_mps(bra_dmps,ket_dmps)
+        braket_norm = measure_mps_mps(bra_dmps, ket_dmps)
         print(f"<bra|ket>= {braket_norm}")

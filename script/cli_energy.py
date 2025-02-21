@@ -11,7 +11,12 @@ from pyfhmdot.utils.general import (
 )
 from pyfhmdot.utils.iotools import check_filename_and_extension_h5
 
-from pyfhmdot.intense.interface import measure_dmps_mpo_dmps, measure_dmps_mpo_mpo_dmps, measure_mps_mpo_mpo_mps, measure_mps_mpo_mps
+from pyfhmdot.intense.interface import (
+    measure_dmps_mpo_dmps,
+    measure_dmps_mpo_mpo_dmps,
+    measure_mps_mpo_mpo_mps,
+    measure_mps_mpo_mps,
+)
 
 
 if __name__ == "__main__":
@@ -86,4 +91,3 @@ if __name__ == "__main__":
         hsquare = measure_mps_mpo_mpo_mps(ket_dmps, ham_mpo, ham_mpo, bra_dmps)
         print(f"<bra|H^2|ket>= {hsquare}")
         print(f"<bra|(H-E)^2|ket>= {hsquare-energy**2}")
-    

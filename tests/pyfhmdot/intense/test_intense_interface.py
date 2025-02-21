@@ -7,10 +7,10 @@ def test_measure_dmps():
     import numpy as _np
 
     _, dmps = create_maximal_entangled_state(11, "sh_xxz_u1")
-    for l in range(-1,len(dmps)-1):
-        val = measure_dmps(dmps,l)
+    for l in range(-1, len(dmps) - 1):
+        val = measure_dmps(dmps, l)
         assert _np.abs(val - _np.sqrt(2) ** 11) < 1e-8
-        val = measure_dmps_dmps(dmps, dmps,l)
+        val = measure_dmps_dmps(dmps, dmps, l)
         assert _np.abs(val - 1) < 1e-8
 
 

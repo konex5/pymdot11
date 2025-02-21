@@ -1,4 +1,3 @@
-
 from collections import defaultdict as _defaultdict
 from numpy import array as _array
 
@@ -57,7 +56,7 @@ from pyfhmdot.intense.contract import (
 
 def measure_dmps(mps_one, position=-1):
     """
-    position corresponds to the left-bloc position, 
+    position corresponds to the left-bloc position,
     It might be 0,1,...,len(mps_one)-2.
     A -1 value picks up a middle value.
     """

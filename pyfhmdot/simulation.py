@@ -675,7 +675,10 @@ def idmrg_minimize_two_sites(
             or not (key[6] in allowed_sector)
         ):
             env_bloc.pop(key)  # quantum conserved is used here
-        elif not (key[0]+key[1]-key[2]-key[3] == 0 and key[4]+key[5]-key[6]-key[7]==0):
+        elif not (
+            key[0] + key[1] - key[2] - key[3] == 0
+            and key[4] + key[5] - key[6] - key[7] == 0
+        ):
             env_bloc.pop(
                 key
             )  # quantum sum is preserved here (left sum is same as right sum)

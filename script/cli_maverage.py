@@ -12,7 +12,12 @@ from pyfhmdot.utils.general import (
 )
 from pyfhmdot.utils.iotools import check_filename_and_extension_h5
 
-from pyfhmdot.intense.interface import measure_dmps_mpo_dmps, measure_dmps_mpo_mpo_dmps, measure_mps_mpo_mpo_mps, measure_mps_mpo_mps
+from pyfhmdot.intense.interface import (
+    measure_dmps_mpo_dmps,
+    measure_dmps_mpo_mpo_dmps,
+    measure_mps_mpo_mpo_mps,
+    measure_mps_mpo_mps,
+)
 from pyfhmdot.models.pyoperators import operator_mpo
 
 from numpy import mean
@@ -58,9 +63,7 @@ if __name__ == "__main__":
 
     size = load_model_info_size(arguments.bra)
     if size != load_model_info_size(arguments.ket):
-        sys.exit(
-            f"cli_maverage.py: error: bra and ket have different sizes."
-        )
+        sys.exit(f"cli_maverage.py: error: bra and ket have different sizes.")
 
     model_name = load_model_info_model_name(arguments.ket)
     head, _, tail = model_name.split("_")
@@ -81,14 +84,24 @@ if __name__ == "__main__":
     ):
         average = []
         if "-" in arguments.name:
-            for l in range(size-1):
-                average.append(measure_dmps_mpo_dmps(bra_dmps,operator_mpo(arguments.name,1.,position=l+1,size=size),ket_dmps))
+            for l in range(size - 1):
+                average.append(
+                    measure_dmps_mpo_dmps(
+                        bra_dmps,
+                        operator_mpo(arguments.name, 1.0, position=l + 1, size=size),
+                        ket_dmps,
+                    )
+                )
         else:
             for l in range(size):
-                average.append(measure_dmps_mpo_dmps(bra_dmps,operator_mpo(arguments.name,1.,position=l+1,size=size),ket_dmps))
+                average.append(
+                    measure_dmps_mpo_dmps(
+                        bra_dmps,
+                        operator_mpo(arguments.name, 1.0, position=l + 1, size=size),
+                        ket_dmps,
+                    )
+                )
 
-
-        
     if (
         len(list(bra_dmps[0].values())[0].shape) == 3
         and len(list(ket_dmps[0].values())[0].shape) == 3
@@ -97,4 +110,3 @@ if __name__ == "__main__":
 
     print(f"<bra|A|ket>= {average}")
     print(f"1/N sum <bra|A|ket>= {mean(average)}")
-    
