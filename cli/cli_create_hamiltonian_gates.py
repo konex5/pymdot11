@@ -14,6 +14,7 @@ from pyfhmdot.utils.iodicts import check_filename_and_extension, read_dictionary
 
 from pyfhmdot.general import (
     add_model_bdmrg_simulation,
+    add_model_tdmrg_simulation,
     add_model_info,
     add_model_parameters,
     create_hamiltonian_gates,
@@ -64,7 +65,7 @@ if __name__ == "__main__":
 
     if is_beta_simulation:
         bdmrg_simulation_parameters = large_dictionary.pop("Tdmrg_simulation")
-        add_model_bdmrg_simulation(bdmrg_simulation_parameters)
+        add_model_bdmrg_simulation(arguments.output, bdmrg_simulation_parameters)
         ham_mpo = create_hamiltonian_gates(
             model_name,
             parameters,
@@ -79,7 +80,7 @@ if __name__ == "__main__":
 
     if is_time_simulation:
         tdmrg_simulation_parameters = large_dictionary.pop("tdmrg_simulation")
-        add_model_bdmrg_simulation(tdmrg_simulation_parameters)
+        add_model_tdmrg_simulation(arguments.output, tdmrg_simulation_parameters)
         ham_mpo = create_hamiltonian_gates(
             model_name,
             parameters,
@@ -90,6 +91,6 @@ if __name__ == "__main__":
         )
         for st, step in enumerate(ham_mpo):
             for i, mp in enumerate(step):
-                add_single_mp(arguments.output, mp, i, folder=f"TIMEGATE_{st:02g}")
+                add_single_mp(arguments.output, mp, i, folder=f"TIME_GATE_{st:02g}")
 
     print("Hamiltonian gates created successfully.")
