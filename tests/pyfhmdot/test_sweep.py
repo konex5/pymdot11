@@ -41,3 +41,12 @@ def test_sweep_move(size):
 
     assert size == size
     pass
+
+
+def test_modulo_odd_bonds_should_apply():
+    from pyfhmdot.algorithm import should_apply
+
+    assert should_apply(3, True)
+    assert not should_apply(2, True)
+    assert not should_apply(5, False)
+    assert should_apply(6, False)

@@ -68,7 +68,7 @@ def theta_to_mm(
     dw_dict: dict,
     chi_max: int,
     normalize: bool,
-    is_um:bool,
+    is_um: bool,
     conserve_direction_left: _Optional[bool] = None,
     eps: float = 10 ** -8,
 ) -> None:
@@ -91,9 +91,9 @@ def theta_to_mm(
     slices_degenerate_blocs(theta_blocs, deg, subnewsize_deg)
     nondeg_dims = [theta_blocs[_[1]].shape for _ in nondeg]
 
-    array_of_U : _List[_np.ndarray]= []
-    array_of_S : _List[_np.array]= []
-    array_of_V : _List[_np.ndarray] = []
+    array_of_U: _List[_np.ndarray] = []
+    array_of_S: _List[_np.array] = []
+    array_of_V: _List[_np.ndarray] = []
 
     svd_nondeg(theta_blocs, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V)
     svd_deg(theta_blocs, deg, subnewsize_deg, array_of_U, array_of_S, array_of_V)
