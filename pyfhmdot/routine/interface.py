@@ -171,8 +171,19 @@ def select_lowest_blocs(
     eigenvalues: _Dict[tuple, float], eigenvectors: _Dict[tuple, _np.ndarray]
 ):
     # remove non minimal blocs
-    min_val = sorted(set(eigenvalues.values()))[0]
+    _ = sorted(set(eigenvalues.values()))
+    min_val = _[0]
+    max_val = _[-1]
+    #print("sum of eigenvalues is :", _np.sum(list(eigenvalues.values())))
     for key in list(eigenvalues.keys()):
-        if not abs(eigenvalues[key] - min_val) < 1e-8:
+        if not abs(eigenvalues[key] - min_val) <= abs(max_val-min_val)/5:
             eigenvectors.pop(key)
             eigenvalues.pop(key)
+    # should keep sectors by Qnum and not by energy -_-'
+
+
+def apply_eigenvalues(
+    eigenvalues: _Dict[tuple, float], eigenvectors: _Dict[tuple, _np.ndarray]
+):
+    for key in list(eigenvalues.keys()):
+        eigenvectors[key] *= eigenvalues[key]

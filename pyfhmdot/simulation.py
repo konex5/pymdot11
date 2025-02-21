@@ -12,7 +12,7 @@ from pyfhmdot.intense.contract import (
 )
 from pyfhmdot.intense.mul_mp import multiply_mp, permute_blocs
 from pyfhmdot.routine.eig_routine import smallest_eigenvectors_from_scipy
-from pyfhmdot.routine.interface import minimize_theta, select_lowest_blocs, theta_to_mm
+from pyfhmdot.routine.interface import apply_eigenvalues, minimize_theta, select_lowest_blocs, theta_to_mm
 
 
 def sweep(size, *, from_site=None, to_site=None):
@@ -469,7 +469,7 @@ def initialize_idmrg(
         sim_dict["chi_max"],
         True,
         None,
-        -1,
+        1,
         sim_dict["eps_truncation"],
     )
 
@@ -491,6 +491,7 @@ def idmrg_minimize_two_sites(
     contract_left_right_mpo_mpo_permute(
         env_bloc, bloc_left, ham_mpo_left, ham_mpo_right, bloc_right
     )
+    a=1
     for key in list(env_bloc.keys()):
         shape = env_bloc[key].shape
         # if not (
@@ -504,18 +505,13 @@ def idmrg_minimize_two_sites(
             shape[0] * shape[1] * shape[2] * shape[3]
             == shape[4] * shape[5] * shape[6] * shape[7]
         ):
-            # or not (
-            #     key[0] == key[4]
-            #     and key[1] == key[5]
-            #     and key[2] == key[6]
-            #     and key[3] == key[7]
-            # )
             env_bloc.pop(key)
     # minimize energy
     eigenvalues = {}
     eigenvectors = {}
     minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
     select_lowest_blocs(eigenvalues, eigenvectors)
+    apply_eigenvalues(eigenvalues, eigenvectors)
 
     theta_to_mm(
         eigenvectors,
@@ -525,7 +521,7 @@ def idmrg_minimize_two_sites(
         sim_dict["chi_max"],
         True,
         None,
-        -1,
+        1,
         sim_dict["eps_truncation"],
     )
 

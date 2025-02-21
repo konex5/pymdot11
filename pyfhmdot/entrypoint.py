@@ -31,8 +31,11 @@ def infinite_to_finite_ground_state(
         iterations=(size - len(dst_imps_left) - 1) // 2,
     )
 
-    dst_imps = dst_imps_left + [_ for _ in dst_imps_left]
-
+    for i in range(len(dst_imps_left)):
+        dst_imps.append(dst_imps_left[i])
+    for i in range(len(dst_imps_right)):
+        dst_imps.append(dst_imps_right[len(dst_imps_right)-1-i])
+    
 
 def variational_ground_state(mps, mpo, zdmrg_dict):
     # left_bloc right_bloc

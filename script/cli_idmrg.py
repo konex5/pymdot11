@@ -51,11 +51,9 @@ if __name__ == "__main__":
     model_name = load_model_info_model_name(arguments.hamiltonian)
     parameters = load_model_parameters(arguments.hamiltonian)
     idmrg_simulation_parameters = load_model_idmrg_simulation(arguments.hamiltonian)
-
-    left, ham, right = create_infinite_hamiltonian(model_name, parameters)
-
+    idmrg_simulation_parameters["dw_one_serie"] = 0
     imps = []
-    infinite_to_finite_ground_state(imps, left, ham, right, idmrg_simulation_parameters)
+    infinite_to_finite_ground_state(imps, model_name, parameters, idmrg_simulation_parameters,size=size)
 
     create_h5(arguments.output)
     add_model_info(arguments.output, {"size": size, model_name: 0})
