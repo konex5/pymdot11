@@ -1,8 +1,8 @@
 from pyfhmdot.routine import mpsQ_svd_th2Um, mpsQ_svd_th2mV
 from tests.pyfhmdot.test_multiply_blocs_with_gate import (
-    test_multiply_blocs_sparse_with_gate,
-    test_multiply_blocs_sparse_with_gate_onedir_qnum,
-    test_multiply_blocs_sparse_with_gate_with_qcons,
+    test_multiply_blocs_sparse_with_gate_fake,
+    test_multiply_blocs_sparse_with_gate_fake_onedir_qnum,
+    test_multiply_blocs_sparse_with_gate_fake_with_qcons,
 )
 import pytest
 from pyfhmdot.indices import (
@@ -22,7 +22,7 @@ def theta_blocs_large(
     rhs_chi_shapes,
     gate_indices,
 ):
-    return test_multiply_blocs_sparse_with_gate(
+    return test_multiply_blocs_sparse_with_gate_fake(
         make_single_blocs_mps,
         make_single_blocs_gate,
         lhs_indices,
@@ -43,7 +43,7 @@ def theta_blocs_average(
     rhs_chi_shapes,
     gate_indices,
 ):
-    return test_multiply_blocs_sparse_with_gate_onedir_qnum(
+    return test_multiply_blocs_sparse_with_gate_fake_onedir_qnum(
         make_single_blocs_mps,
         make_single_blocs_gate,
         lhs_indices,
@@ -64,7 +64,7 @@ def theta_blocs_small(
     rhs_chi_shapes,
     gate_indices,
 ):
-    return test_multiply_blocs_sparse_with_gate_with_qcons(
+    return test_multiply_blocs_sparse_with_gate_fake_with_qcons(
         make_single_blocs_mps,
         make_single_blocs_gate,
         lhs_indices,
