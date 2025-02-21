@@ -2,6 +2,7 @@ from pyfhmdot.create import create_infinite_hamiltonian as _create_infinite_hami
 from pyfhmdot.simulation import (
     sweep_eleven_times as _sweep_eleven_times,
     initialize_idmrg_even_size as _initialize_idmrg_even_size,
+    initialize_idmrg_odd_size as _initialize_idmrg_odd_size,
     idmrg_even as _idmrg_even,
 )
 
@@ -26,20 +27,37 @@ def infinite_to_finite_ground_state(
 
     imps_left, imps_right = {}, {}
     bloc_left, bloc_right = {}, {}
-    _initialize_idmrg_even_size(
-        bloc_left,
-        imps_left,
-        bloc_right,
-        imps_right,
-        ham_left,
-        ham_right,
-        position=1,
-        size=size,
-        conserve_total=conserve_total,
-        d=d,
-    )
-    dst_imps_left.append(imps_left)
-    dst_imps_right.append(imps_right)
+    if size % 2 == 0:
+        _initialize_idmrg_even_size(
+            bloc_left,
+            imps_left,
+            bloc_right,
+            imps_right,
+            ham_left,
+            ham_right,
+            position=1,
+            size=size,
+            conserve_total=conserve_total,
+            d=d,
+        )
+        dst_imps_left.append(imps_left)
+        dst_imps_right.append(imps_right)
+    else:
+        imps_middle = {}
+        _initialize_idmrg_odd_size(
+            bloc_left,
+            imps_left,
+            bloc_right,
+            imps_right,
+            imps_middle,
+            ham_left,
+            ham_right,
+            ham_mpo[0],
+            position=1,
+            size=size,
+            conserve_total=conserve_total,
+            d=d,
+        )
 
     _idmrg_even(
         dst_imps_left,

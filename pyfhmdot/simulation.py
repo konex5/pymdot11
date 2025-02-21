@@ -457,6 +457,109 @@ def sweep_eleven_times(
         dw_dict["dw_total"] += dw_dict["dw_one_serie"]
 
 
+def initialize_idmrg_odd_size(
+    dst_left_bloc,
+    imps_left,
+    dst_right_bloc,
+    imps_right,
+    imps_middle,
+    ham_left,
+    ham_right,
+    ham_middle,
+    *,
+    position,
+    size,
+    conserve_total,
+    d,
+):
+    tmp_tmp_env_blocs = {}
+    multiply_mp(tmp_tmp_env_blocs, ham_left, ham_middle, [3], [0])
+    # tmp_tmp_env_blocs
+    #    2| |4
+    # 0 -|___|- 5
+    #    1| |3
+    tmp_env_blocs = {}
+    multiply_mp(tmp_env_blocs, tmp_tmp_env_blocs, ham_right, [5], [0])
+    # tmp_env_blocs
+    #    2| |4 |6
+    # 0 -|_____ _|- 7
+    #    1| |3 |5
+    env_bloc = {}
+    for key in tmp_env_blocs.keys():
+        new_key = (0, key[1], key[3], key[5], 0, 0, key[2], key[4], key[6], 0)
+        tmp_shape = tmp_env_blocs[key].shape
+        new_shape = (
+            1,
+            tmp_shape[1],
+            tmp_shape[3],
+            tmp_shape[5],
+            1,
+            1,
+            tmp_shape[2],
+            tmp_shape[4],
+            tmp_shape[5],
+            1,
+        )
+        env_bloc[new_key] = (
+            tmp_env_blocs[key].transpose([0, 1, 3, 5, 2, 4, 6, 7]).reshape(new_shape)
+        )
+
+    sim_dict = {
+        "dw_one_serie": 0,
+        "dw_total": 0,
+        "chi_max": 10,
+        "eps_truncation": 1e-20,
+    }
+    # minimize energy
+    eigenvalues = {}
+    eigenvectors = {}
+    for keys in env_bloc.keys():
+        mat = env_bloc[keys]
+        new_shape = (
+            mat.shape[0] * mat.shape[1] * mat.shape[2] * mat.shape[3] * mat.shape[4],
+            mat.shape[5] * mat.shape[6] * mat.shape[7] * mat.shape[8] * mat.shape[9],
+        )
+        E, vec = smallest_eigenvectors_from_scipy(mat.reshape(new_shape))
+        eigenvalues[(keys[0], keys[1], keys[2], keys[3], keys[4])] = E[0]
+        eigenvectors[(keys[0], keys[1], keys[2], keys[3], keys[4])] = vec.reshape(
+            (mat.shape[0], mat.shape[1], mat.shape[2], mat.shape[3], mat.shape[4])
+        )
+
+    # select_quantum_sector
+    diff = min(size - conserve_total, conserve_total)
+    if position < diff or position > size - diff:
+        allowed_sector = list(range(d))  # all
+    elif conserve_total <= size // 2:
+        allowed_sector = list(range(d - 1))  # inc
+    elif size - conserve_total <= size // 2:
+        allowed_sector = list(range(1, d))  # dec
+    else:
+        allowed_sector = []  # should never occur
+
+    for key in list(eigenvectors.keys()):
+        if not (key[1] in allowed_sector and key[2] in allowed_sector and key[3]):
+            eigenvectors.pop(key)
+            eigenvalues.pop(key)
+    # select_lowest_blocs(eigenvalues, eigenvectors)
+    # apply_eigenvalues(eigenvalues, eigenvectors)
+
+    # TODO!
+    theta_to_mm(
+        eigenvectors,
+        imps_middle,
+        imps_right,
+        sim_dict,
+        sim_dict["chi_max"],
+        True,
+        None,
+        1,
+        sim_dict["eps_truncation"],
+    )
+
+    contract_mps_mpo_mps_left_border(dst_left_bloc, imps_left, ham_left, imps_left)
+    contract_mps_mpo_mps_right_border(dst_right_bloc, imps_right, ham_right, imps_right)
+
+
 def initialize_idmrg_even_size(
     dst_left_bloc,
     imps_left,
@@ -528,12 +631,6 @@ def initialize_idmrg_even_size(
 
     contract_mps_mpo_mps_left_border(dst_left_bloc, imps_left, ham_left, imps_left)
     contract_mps_mpo_mps_right_border(dst_right_bloc, imps_right, ham_right, imps_right)
-    # if len(imps_left) == 2:
-    #     tmp = {}
-    #     contract_left_bloc_mps(
-    #         tmp, left_bloc, imps_left[1], ham_supp_left, imps_left[1]
-    #     )
-    #     left_bloc = tmp
 
 
 def idmrg_minimize_two_sites(
