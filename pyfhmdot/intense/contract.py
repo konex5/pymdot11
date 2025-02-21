@@ -393,6 +393,12 @@ def contract_right_bloc_mps(dst, right_bloc, mps_down, mpo, mps_up):
     # 0 -|_|
 
 
+def filter_left_right(left_or_right):
+    for key in list(left_or_right.keys()):
+        if not key[0] == key[2]:
+            left_or_right.pop(key)
+
+
 def contract_mps_mpo_mpo_mps_left_border(dst, mps_down, mpo_one, mpo_two, mps_up):
     # mps_down
     #    1|

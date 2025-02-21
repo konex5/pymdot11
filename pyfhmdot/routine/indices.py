@@ -111,7 +111,7 @@ def potential_middle_indices(
         for theta_index in theta_indices:
             middle_indices.append(internal_qn_sum(theta_index[0], theta_index[1]))
             middle_indices.append(internal_qn_sum(theta_index[3], theta_index[2]))
-    elif direction_right in [1,-3]:  # take from left sum
+    elif direction_right in [1, -3]:  # take from left sum
         for theta_index in theta_indices:
             middle_indices.append(internal_qn_sum(theta_index[0], theta_index[1]))
     elif direction_right == 2:  # take from right sub

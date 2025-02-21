@@ -1,3 +1,4 @@
+from locale import normalize
 import pytest
 
 
@@ -12,7 +13,7 @@ def test_idmrg_all():
         {"Jxy": 1, "Jz": 1, "hz": 0},
         {"chi_max": 10, "eps_truncation": 1e-8, "dw_total": 0, "dw_one_serie": 0},
         size=20,
-        conserve_total=20,
+        conserve_total=10,
     )
 
     from pyfhmdot.entrypoint import variational_ground_state
@@ -20,4 +21,17 @@ def test_idmrg_all():
 
     ham = create_hamiltonian("sh_xxz-hz_u1", {"Jxy": 1, "Jz": 1, "hz": 0}, len(imps))
 
-    variational_ground_state(imps, ham, {"nb_warmup": 3, "nb_sweeps": 5, "chi_max": 30})
+    variational_ground_state(
+        imps,
+        ham,
+        {
+            "dw_one_serie": 0,
+            "nb_sweeps_warmup": 3,
+            "nb_sweeps": 5,
+            "chi_max_warmup": 30,
+            "normalize": True,
+            "eps": 10**-8,
+            "max_iteration": 20,
+            "tolerance": 10**-8,
+        },
+    )

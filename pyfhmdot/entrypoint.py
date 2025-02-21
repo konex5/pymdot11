@@ -5,6 +5,7 @@ from pyfhmdot.initialize import (
     initialize_left_right,
     initialize_left_right_variance,
 )
+from pyfhmdot.intense.contract import filter_left_right
 
 from pyfhmdot.simulation import (
     dmrg_sweeps as _dmrg_sweeps,
@@ -87,24 +88,21 @@ def infinite_to_finite_ground_state(
 
 def variational_ground_state(mps, ham, zdmrg_dict):
     # initialize
-    left_blocs, right_blocs = initialize_left_right(mps, ham)
-    left_var, right_var = initialize_left_right_variance(mps, ham)
+    left, right = initialize_left_right(mps, ham)
+    # left_var, right_var = initialize_left_right_variance(mps, ham)
     # warmup
-    chi_max = max(zdmrg_dict["chi_max"] // 4, 1)
-    _dmrg_warmup(
-        mps, ham, left_blocs, right_blocs, zdmrg_dict, chi_max=chi_max
-    )  # nb_warmup
+    _dmrg_warmup(mps, ham, left, right, zdmrg_dict, start_left=True)  # nb_warmup
     # converge
-    _dmrg_sweeps(
-        mps,
-        ham,
-        left_blocs,
-        right_blocs,
-        left_var,
-        right_var,
-        zdmrg_dict,
-        chi_max=zdmrg_dict["chi_max"],
-    )  # nb_sweeps
+    # _dmrg_sweeps(
+    #     mps,
+    #     ham,
+    #     left,
+    #     right,
+    #     left_var,
+    #     right_var,
+    #     zdmrg_dict,
+    #     chi_max=zdmrg_dict["chi_max"],
+    # )  # nb_sweeps
 
 
 def time_evolve_single(mps, ggate, sdmrg_dict):

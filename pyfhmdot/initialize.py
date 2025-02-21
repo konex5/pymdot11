@@ -9,7 +9,7 @@ from pyfhmdot.models.pymodels import suzu_trotter_obc_exp
 from pyfhmdot.models.pymodels import hamiltonian_obc
 from pyfhmdot.models.pyoperators import single_operator
 from pyfhmdot.conservation import conserve_qnum
-from pyfhmdot.routine.indices import internal_qn_sum,internal_qn_sub
+from pyfhmdot.routine.indices import internal_qn_sum, internal_qn_sub
 
 from pyfhmdot.intense.contract import (
     contract_left_bloc_mps,
@@ -21,6 +21,7 @@ from pyfhmdot.intense.contract import (
     contract_mps_mpo_mps_right_border,
     contract_right_bloc_mps,
     contract_right_bloc_mps_mpo,
+    filter_left_right,
 )
 
 from pyfhmdot.intense.mul_mp import multiply_mp
@@ -311,15 +312,19 @@ def initialize_idmrg_even_size(
             tmp_env_blocs[key].transpose([0, 1, 3, 2, 4, 5]).reshape(new_shape)
         )
 
-    allowed_sector_left = conserve_qnum(1,size=size,qnum_conserved=conserve_total,d=d)
-    allowed_sector_right = conserve_qnum(size-1,size=size,qnum_conserved=conserve_total,d=d)
+    allowed_sector_left = conserve_qnum(
+        1, size=size, qnum_conserved=conserve_total, d=d
+    )
+    allowed_sector_right = conserve_qnum(
+        size - 1, size=size, qnum_conserved=conserve_total, d=d
+    )
     for key in list(env_bloc.keys()):
         shape = env_bloc[key].shape
         if (
-            not (internal_qn_sum(key[0],key[1]) in allowed_sector_left)
-            or not (internal_qn_sub(key[3],key[2]) in allowed_sector_right)
-            or not (internal_qn_sum(key[4],key[5]) in allowed_sector_left)
-            or not (internal_qn_sub(key[7],key[6]) in allowed_sector_right)
+            not (internal_qn_sum(key[0], key[1]) in allowed_sector_left)
+            or not (internal_qn_sub(key[3], key[2]) in allowed_sector_right)
+            or not (internal_qn_sum(key[4], key[5]) in allowed_sector_left)
+            or not (internal_qn_sub(key[7], key[6]) in allowed_sector_right)
         ):
             env_bloc.pop(key)  # quantum conserved is used here
         elif not (
@@ -327,7 +332,6 @@ def initialize_idmrg_even_size(
             == shape[4] * shape[5] * shape[6] * shape[7]
         ):
             env_bloc.pop(key)  # non physical blocs
-        
 
     sim_dict = {
         "dw_one_serie": 0,
@@ -339,7 +343,7 @@ def initialize_idmrg_even_size(
     eigenvalues = {}
     eigenvectors = {}
     minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
-    
+
     # select_lowest_blocs(eigenvalues, eigenvectors)
     # apply_eigenvalues(eigenvalues, eigenvectors)
 
@@ -385,8 +389,12 @@ def finalize_idmrg_even_size(
     d,
 ):
     # select_quantum_sector
-    allowed_sector_left = conserve_qnum(position,size=size,qnum_conserved=conserve_total,d=d)
-    allowed_sector_right = conserve_qnum(size-position,size=size,qnum_conserved=conserve_total,d=d)
+    allowed_sector_left = conserve_qnum(
+        position, size=size, qnum_conserved=conserve_total, d=d
+    )
+    allowed_sector_right = conserve_qnum(
+        size - position, size=size, qnum_conserved=conserve_total, d=d
+    )
 
     # contract and permute
     env_bloc = {}
@@ -396,10 +404,10 @@ def finalize_idmrg_even_size(
     for key in list(env_bloc.keys()):
         shape = env_bloc[key].shape
         if (
-            not (internal_qn_sum(key[0],key[1]) in allowed_sector_left)
-            or not (internal_qn_sub(key[3],key[2]) in allowed_sector_right)
-            or not (internal_qn_sum(key[4],key[5]) in allowed_sector_left)
-            or not (internal_qn_sub(key[7],key[6]) in allowed_sector_right)
+            not (internal_qn_sum(key[0], key[1]) in allowed_sector_left)
+            or not (internal_qn_sub(key[3], key[2]) in allowed_sector_right)
+            or not (internal_qn_sum(key[4], key[5]) in allowed_sector_left)
+            or not (internal_qn_sub(key[7], key[6]) in allowed_sector_right)
         ):
             env_bloc.pop(key)  # quantum conserved is used here
         elif not (
@@ -407,7 +415,7 @@ def finalize_idmrg_even_size(
             == shape[4] * shape[5] * shape[6] * shape[7]
         ):
             env_bloc.pop(key)  # non physical blocs
-    
+
     # minimize energy
     eigenvalues = {}
     eigenvectors = {}
@@ -420,9 +428,9 @@ def finalize_idmrg_even_size(
     #         eigenvectors.pop(key)
     #         eigenvalues.pop(key)
     #         _warning("eigenvectors removed a posteriori.")
-    #select_lowest_blocs(eigenvalues, eigenvectors)
+    # select_lowest_blocs(eigenvalues, eigenvectors)
     # select_quantum_sector(eigenvalues, eigenvectors)
-    #apply_eigenvalues(eigenvalues, eigenvectors)
+    # apply_eigenvalues(eigenvalues, eigenvectors)
 
     theta_to_mm(
         eigenvectors,
@@ -442,21 +450,25 @@ def initialize_left_right(mps, ham):
     right_blocs = []
     tmp_dst = {}
     contract_mps_mpo_mps_left_border(tmp_dst, mps[0], ham[0], mps[0])
+    filter_left_right(tmp_dst)
     left_blocs.append(_copy(tmp_dst))
     tmp_dst.clear()
     contract_mps_mpo_mps_right_border(tmp_dst, mps[-1], ham[-1], mps[-1])
+    filter_left_right(tmp_dst)
     right_blocs.append(_copy(tmp_dst))
     tmp_dst.clear()
 
     for l in range(1, len(mps) - 1):
         tmp_dst = {}
         contract_left_bloc_mps(tmp_dst, left_blocs[-1], mps[l], ham[l], mps[l])
+        filter_left_right(tmp_dst)
         left_blocs.append(_copy(tmp_dst))
         tmp_dst.clear()
 
     for l in range(len(mps) - 1, 1, -1):
         tmp_dst = {}
         contract_right_bloc_mps(tmp_dst, right_blocs[-1], mps[l], ham[l], mps[l])
+        filter_left_right(tmp_dst)
         right_blocs.append(_copy(tmp_dst))
         tmp_dst.clear()
 
