@@ -4,50 +4,44 @@ _real_t = "float64"
 _cplx_t = "complex128"
 
 
-def single_operator_dense(name, coef):
+def single_operator(name, coef):
 
     operators = {
-        "sh_id_no": [{(0, 0): coef * _np.array([[1, 0], [0, 1]], dtype=_real_t)}],
-        "sh_id_u1": [
-            ((1, 1), coef * _np.array([[1]], dtype=_real_t)),
-            ((0, 0), coef * _np.array([[1]], dtype=_real_t)),
-        ],
-        "sh_sp_no": [{(0, 0): coef * _np.array([[0, 1], [0, 0]], dtype=_real_t)}],
-        "sh_sp_u1": [{(1, 0): coef * _np.array([[1]], dtype=_real_t)}],
-        "sh_sm_no": [{(0, 0): coef * _np.array([[0, 0], [1, 0]], dtype=_real_t)}],
-        "sh_sm_u1": [{(0, 1): coef * _np.array([[1]], dtype=_real_t)}],
-        "sh_sx_no": [{(0, 0): coef * _np.array([[0, 1], [1, 0]], dtype=_real_t)}],
-        "sh_sx_u1": [
-            {
-                (1, 0): coef * _np.array([[1]], dtype=_real_t),
-                (0, 1): coef * _np.array([[1]], dtype=_real_t),
-            }
-        ],
-        "sh_sz_no": [{(0, 0): coef * _np.array([[1, 0], [0, -1]], dtype=_real_t)}],
-        "sh_sz_u1": [
-            {
-                (0, 0): coef * _np.array([[1]], dtype=_real_t),
-                (1, 1): coef * _np.array([[-1]], dtype=_real_t),
-            }
-        ],
-        "sh_id_cplx_no": [{(0, 0): coef * _np.array([[1, 0], [0, 1]], dtype=_cplx_t)}],
-        "sh_id_cplx_u1": [
-            {(1, 1): coef * _np.array([[1]], dtype=_cplx_t)},
-            {(0, 0): coef * _np.array([[1]], dtype=_cplx_t)},
-        ],
-        "sh_sy_no": [{(0, 0): coef * _np.array([[0, -1j], [1j, 0]], dtype=_cplx_t)}],
-        "sh_sy_u1": [
-            {
-                (1, 0): coef * _np.array([[-1]], dtype=_cplx_t),
-                (0, 1): coef * _np.array([[1j]], dtype=_cplx_t),
-            }
-        ],
+        "sh_id_no": {(0, 0): coef * _np.array([[1, 0], [0, 1]], dtype=_real_t)},
+        "sh_id_u1": {
+            (1, 1): coef * _np.array([[1]], dtype=_real_t),
+            (0, 0): coef * _np.array([[1]], dtype=_real_t),
+        },
+        "sh_sp_no": {(0, 0): coef * _np.array([[0, 1], [0, 0]], dtype=_real_t)},
+        "sh_sp_u1": {(1, 0): coef * _np.array([[1]], dtype=_real_t)},
+        "sh_sm_no": {(0, 0): coef * _np.array([[0, 0], [1, 0]], dtype=_real_t)},
+        "sh_sm_u1": {(0, 1): coef * _np.array([[1]], dtype=_real_t)},
+        "sh_sx_no": {(0, 0): coef * _np.array([[0, 1], [1, 0]], dtype=_real_t)},
+        "sh_sx_u1": {
+            (1, 0): coef * _np.array([[1]], dtype=_real_t),
+            (0, 1): coef * _np.array([[1]], dtype=_real_t),
+        },
+        "sh_sz_no": {(0, 0): coef * _np.array([[1, 0], [0, -1]], dtype=_real_t)},
+        "sh_sz_u1": {
+            (0, 0): coef * _np.array([[1]], dtype=_real_t),
+            (1, 1): coef * _np.array([[-1]], dtype=_real_t),
+        },
+        "sh_id_cplx_no": {(0, 0): coef * _np.array([[1, 0], [0, 1]], dtype=_cplx_t)},
+        "sh_id_cplx_u1": {
+            (1, 1): coef * _np.array([[1]], dtype=_cplx_t),
+            (0, 0): coef * _np.array([[1]], dtype=_cplx_t),
+        },
+        "sh_sy_no": {(0, 0): coef * _np.array([[0, -1j], [1j, 0]], dtype=_cplx_t)},
+        "sh_sy_u1": {
+            (1, 0): coef * _np.array([[-1]], dtype=_cplx_t),
+            (0, 1): coef * _np.array([[1j]], dtype=_cplx_t),
+        },
     }
 
     return operators[name]
 
     """
-    ### the above is ill defined with QN conservation
+    # the above is ill defined with QN conservation
     "sh-SzoSz": {  # ok
         "nb_site": 2,
         0: "sh-Sz",
@@ -78,7 +72,7 @@ def single_operator_dense(name, coef):
             "sh-SU2": [(0, -1), (0, +1)],
         },
     },
-    ### the following is ill defined with QN conservation
+    # the following is ill defined with QN conservation
     "sh-SxoSx": {
         "nb_site": 2,
         0: "sh-Sx",
@@ -91,7 +85,7 @@ def single_operator_dense(name, coef):
         1: "sh-Sy",
         "qchange": {"sh-None": [(0,), (0,)]},
     },
-    ### the above is ill defined with QN conservation
+    # the above is ill defined with QN conservation
     # -----------------------------------------------------------
     # ### so
     # ### PLEASE CHECK VERY CAREFULLY SINCE
@@ -107,7 +101,8 @@ def single_operator_dense(name, coef):
                 [
                     (0, 0),
                     (1 / _np.sqrt(3))
-                    * _np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=_real_t),
+                    * _np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]],
+                                dtype=_real_t),
                 ]
             ],
             "so-U1": [
@@ -127,7 +122,8 @@ def single_operator_dense(name, coef):
                 [
                     (0, 0),
                     (1 / _np.sqrt(2))
-                    * _np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0]], dtype=_real_t),
+                    * _np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0]],
+                                dtype=_real_t),
                 ]
             ],
             "so-U1": [
@@ -146,7 +142,8 @@ def single_operator_dense(name, coef):
                 [
                     (0, 0),
                     (1 / _np.sqrt(2))
-                    * _np.array([[0, 1, 0], [0, 0, 1], [0, 0, 0]], dtype=_real_t),
+                    * _np.array([[0, 1, 0], [0, 0, 1], [0, 0, 0]],
+                                dtype=_real_t),
                 ]
             ],
             "so-U1": [
@@ -165,7 +162,8 @@ def single_operator_dense(name, coef):
                 [
                     (0, 0),
                     (1 / _np.sqrt(2))
-                    * _np.array([[-1, 0, 0], [0, 0, 0], [0, 0, 1]], dtype=_real_t),
+                    * _np.array([[-1, 0, 0], [0, 0, 0],
+                                [0, 0, 1]], dtype=_real_t),
                 ]
             ],
             "so-U1": [
@@ -184,7 +182,8 @@ def single_operator_dense(name, coef):
                 [
                     (0, 0),
                     (1 / _np.sqrt(2))
-                    * _np.array([[+1, 0, 0], [0, 0, 0], [0, 0, +1]], dtype=_real_t),
+                    * _np.array([[+1, 0, 0], [0, 0, 0],
+                                [0, 0, +1]], dtype=_real_t),
                 ]
             ],
             "so-U1": [
@@ -195,7 +194,7 @@ def single_operator_dense(name, coef):
         },
         "qchange": {"so-None": [(0,)], "so-U1": [(0,)], "sh-SO3": [(0,)]},
     },
-    ### the following is ill defined with QN conservation
+    # the following is ill defined with QN conservation
     "so-Sx": {  # ok
         "nb_site": 1,
         "qchange": [[0, 0]],
@@ -205,7 +204,8 @@ def single_operator_dense(name, coef):
                 [
                     (0, 0),
                     (1 / 2.0)
-                    * _np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]], dtype=_real_t),
+                    * _np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]],
+                                dtype=_real_t),
                 ]
             ]
         },
@@ -219,12 +219,13 @@ def single_operator_dense(name, coef):
                 [
                     (0, 0),
                     (1 / 2.0)
-                    * _np.array([[0, 1j, 0], [-1j, 0, 1j], [0, -1j, 0]], dtype=_cmpx_t),
+                    * _np.array([[0, 1j, 0], [-1j, 0, 1j],
+                                [0, -1j, 0]], dtype=_cmpx_t),
                 ]
             ]
         },
     },
-    ### the above is ill defined with QN conservation
+    # the above is ill defined with QN conservation
     "so-IdoId": {
         "nb_site": 2,
         0: "so-Id",
@@ -265,7 +266,7 @@ def single_operator_dense(name, coef):
             "so-SO3": [(-1,), (+1,)],
         },
     },
-    ### the following is ill defined with QN conservation
+    # the following is ill defined with QN conservation
     "so-SxSx": {
         "nb_site": 2,
         0: "so-Sx",
@@ -278,7 +279,7 @@ def single_operator_dense(name, coef):
         1: "so-Sy",
         "qchange": {"sh-None": [(0,), (0,)]},
     },
-    ### the above is ill defined with QN conservation
+    # the above is ill defined with QN conservation
     # -----------------------------------------------------------
     # ### ldsh=ladder spin half
     # # the numbers correspond to legs
@@ -366,7 +367,8 @@ def single_operator_dense(name, coef):
                     (0, 0),
                     (1 / 2.0)
                     * _np.array(
-                        [[-1, 0, 0, 0], [0, +1, 0, 0], [0, 0, -1, 0], [0, 0, 0, +1]],
+                        [[-1, 0, 0, 0], [0, +1, 0, 0],
+                            [0, 0, -1, 0], [0, 0, 0, +1]],
                         dtype=_real_t,
                     ),
                 ]
@@ -398,7 +400,8 @@ def single_operator_dense(name, coef):
                     (0, 0),
                     (1 / 2.0)
                     * _np.array(
-                        [[+1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, +1]],
+                        [[+1, 0, 0, 0], [0, -1, 0, 0],
+                            [0, 0, -1, 0], [0, 0, 0, +1]],
                         dtype=_real_t,
                     ),
                 ]
@@ -829,7 +832,8 @@ basis = {  #
         "2qn": [(-4,), (-2,), (0,), (+2,), (+4,)],
         "2deg": [1, 2, 3, 2, 1],
         "map": [
-            [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)],
+            [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1),
+              (1, 2), (2, 0), (2, 1), (2, 2)],
             [2, 1, 0, 3, 2, 1, 4, 3, 2],
             [
                 slice(0, 1),
@@ -864,7 +868,8 @@ basis = {  #
         "2qn": [(-4,), (-2,), (0,), (+2,), (+4,)],
         "2deg": [1, 4, 6, 4, 1],
         "map": [
-            [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)],
+            [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1),
+              (1, 2), (2, 0), (2, 1), (2, 2)],
             [2, 1, 0, 3, 2, 1, 4, 3, 2],
             [
                 slice(0, 1),
@@ -999,7 +1004,8 @@ hamiltonian = {
         "submodel": [],
         "ham_expr": [
             [],
-            [(("M", 1.0 / 2.0, 0), ("SpoSm", 0)), (("M", 1.0 / 2.0, 0), ("SmoSp", 0))],
+            [(("M", 1.0 / 2.0, 0), ("SpoSm", 0)),
+              (("M", 1.0 / 2.0, 0), ("SmoSp", 0))],
             [],
             [],
         ],
@@ -1241,7 +1247,8 @@ hamiltonian = {
         "period": 1,
         "submodel": [],
         "ham_expr": [
-            [(("M", 1.0 / 2.0, 0), ("SpSm", 0)), (("M", 1.0 / 2.0, 0), ("SmSp", 0))],
+            [(("M", 1.0 / 2.0, 0), ("SpSm", 0)),
+              (("M", 1.0 / 2.0, 0), ("SmSp", 0))],
             [],
             [],
             [],
