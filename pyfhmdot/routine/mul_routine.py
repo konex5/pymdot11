@@ -42,13 +42,13 @@ def mul_theta_with_gate(
             new_blocks[target] = _np.tensordot(
                 old_blocks1[it1],
                 old_blocks2[it2],
-                axes=([1, 2], [2, 3]),
+                axes=([1, 2], [0, 3]),
             ).transpose(0, 2, 3, 1)
         else:
             new_blocks[target] += _np.tensordot(
                 old_blocks1[it1],
                 old_blocks2[it2],
-                axes=([1, 2], [2, 3]),
+                axes=([1, 2], [0, 3]),
             ).transpose(0, 2, 3, 1)
 
 

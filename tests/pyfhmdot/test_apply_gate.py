@@ -37,7 +37,7 @@ def test_apply_gate_previous_code(
     gate = make_single_dummy_dgate()
 
     tmp_blocs = {}
-    mm_to_theta_with_gate_to_delete_at_some_point(
+    mm_to_theta_with_gate(
         dst_blocs=tmp_blocs,
         lhs_blocs=a_before,
         rhs_blocs=b_before,

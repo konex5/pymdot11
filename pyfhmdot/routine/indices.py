@@ -48,7 +48,7 @@ def indices_dst_theta_with_gate(
     destination_indices = []
     for theta_index in theta_indices:
         for gate_index in gate_indices:
-            if theta_index[1] == gate_index[2] and theta_index[2] == gate_index[3]:
+            if theta_index[1] == gate_index[0] and theta_index[2] == gate_index[3]:
                 if (not conserve_left_right) or (
                     conserve_left_right
                     and (
@@ -59,8 +59,8 @@ def indices_dst_theta_with_gate(
                         (
                             (
                                 theta_index[0],
-                                gate_index[0],
                                 gate_index[1],
+                                gate_index[2],
                                 theta_index[3],
                             ),
                             theta_index,
