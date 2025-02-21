@@ -12,25 +12,20 @@ def prepare_index_target_no_gate(lhs_indices, rhs_indices):
         raise ("No targeted indices possible for contraction")
     target_key12_zipped = list(zip(*sorted(target_key12)))
     tmp = []
+    is_degenerate = None
     for l in range(len(target_key12_zipped[0])):
         if target_key12_zipped[0].index(target_key12_zipped[0][l]) == l:
-            tmp.append(
-                (
-                    True,
-                    target_key12_zipped[0][l],
-                    target_key12_zipped[1][l],
-                    target_key12_zipped[2][l],
-                )
-            )
+            is_degenerate = True
         else:
-            tmp.append(
-                (
-                    False,
-                    target_key12_zipped[0][l],
-                    target_key12_zipped[1][l],
-                    target_key12_zipped[2][l],
-                )
+            is_degenerate = False
+        tmp.append(
+            (
+                is_degenerate,
+                target_key12_zipped[0][l],
+                target_key12_zipped[1][l],
+                target_key12_zipped[2][l],
             )
+        )
     return tmp
 
 
