@@ -1,6 +1,6 @@
 import pytest
 
-@pytest.mark.skip(msg="theta matrix was with wrong indices")
+
 def test_multiply_blocs_sparse_with_gate_real(
     make_maximal_entangled_state_u1, make_single_dummy_dgate
 ):
@@ -9,8 +9,14 @@ def test_multiply_blocs_sparse_with_gate_real(
         mm_to_theta_with_gate,
     )
 
-    all = make_maximal_entangled_state_u1(2, 1 / np.sqrt(2))
-    lhs_blocs, rhs_blocs = all[0], all[1]
+    lhs_blocs = {
+        (0, 0, 0): np.array([1]).reshape(1, 1, 1),
+        (0, 2, 0): np.array([1]).reshape(1, 1, 1),
+    }
+    rhs_blocs = {
+        (0, 0, 0): np.array([1]).reshape(1, 1, 1),
+        (0, 2, 0): np.array([1]).reshape(1, 1, 1),
+    }
 
     gate_blocs = make_single_dummy_dgate()
     dest_blocs = {}
