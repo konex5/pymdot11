@@ -155,5 +155,28 @@ def make_single_dense_gate():
     return _make_single_dense_gate
 
 
+@pytest.fixture
+def make_single_blocs_gate():
+    import numpy as np
+
+    def _make_single_dense_gate(d=1, isreal=True):
+        if isreal:
+            gate = np.random.random(d * d * d * d)
+        else:
+            gate = (
+                np.random.random(d * d * d * d) + np.random.random(d * d * d * d) * 1j
+            )
+        gate_out = gate.reshape(d, d, d, d) / np.sum(gate ** 2)
+        return gate_out
+
+    def _make_single_blocs_gate(gate_indices, d=1, isreal=True):
+        blocs_out = {}
+        for i in range(len(gate_indices)):
+            blocs_out[gate_indices[i]] = _make_single_dense_gate(d, isreal)
+        return blocs_out
+
+    return _make_single_blocs_gate
+
+
 def mps(make_mps):
     return make_mps()
