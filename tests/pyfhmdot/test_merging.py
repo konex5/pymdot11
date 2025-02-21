@@ -1,4 +1,5 @@
 from tests.pyfhmdot.test_multiply_blocs_with_gate import (
+    test_multiply_blocs_sparse_with_gate,
     test_multiply_blocs_sparse_with_gate_onedir_qnum,
     test_multiply_blocs_sparse_with_gate_with_qcons,
 )
@@ -8,8 +9,6 @@ from pyfhmdot.indices import (
     slices_degenerate_blocs,
     potential_middle_indices,
 )
-
-from test_multiply_blocs_with_gate import test_multiply_blocs_sparse_with_gate
 
 
 @pytest.fixture
@@ -120,6 +119,7 @@ def test_find_degeneracy_in_theta(theta_blocs_large):
     assert degenerate[0][-1][0] == (0, 0, 0, 0)
     assert degenerate[0][-1][1] == (0, 0, 0, 1)
     assert degenerate[0][-1][2] == (0, 0, 0, 2)
+    assert degenerate[0][-1][-1] == (0, 0, 1, 4)
     assert degenerate[1][-1][0] == (0, 1, 0, 0)
     assert degenerate[1][-1][2] == (0, 1, 0, 2)
 
@@ -132,3 +132,21 @@ def test_find_degeneracy_in_theta_with_qcons(theta_blocs_small):
     assert len(degenerate) == 1
     assert degenerate[0][-1][0] == (0, 0, 0, 0)
     assert degenerate[0][-1][1] == (0, 0, 1, 1)
+
+
+def test_check_slices_degenerate_blocs_dimone(theta_blocs_small):
+    middle_list = potential_middle_indices(theta_blocs_small.keys())
+    nondeg, degenerate = degeneracy_in_theta(theta_blocs_small.keys(), middle_list)
+    newsubsize = []
+    slices_degenerate_blocs(theta_blocs_small, degenerate, newsubsize)
+    assert len(newsubsize) == 1
+
+
+def test_check_slices_degenerate_blocs_dimtwo(theta_blocs_large):
+    middle_list = potential_middle_indices(theta_blocs_large.keys())
+    nondeg, degenerate = degeneracy_in_theta(
+        theta_blocs_large.keys(), middle_list, direction_right=True
+    )
+    newsubsize = []
+    slices_degenerate_blocs(theta_blocs_large, degenerate, newsubsize)
+    assert len(newsubsize) == 2

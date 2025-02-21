@@ -187,7 +187,7 @@ def slices_degenerate_blocs(thetaQ, degenerate_list, subnewsize):
         right_loc_dim = len(right_loc_basis) * [(0, 0)]
         # for each local_index
         for it in degenerate_list[i][1]:
-            dims = thetaQ._blocks[it].shape
+            dims = thetaQ[it].shape
             left__loc_dim[left__loc_basis.index((it[0], it[1]))] = (dims[0], dims[1])
             right_loc_dim[right_loc_basis.index((it[2], it[3]))] = (dims[2], dims[3])
         # find the totdim
