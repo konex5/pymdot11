@@ -72,6 +72,77 @@ def pyhamiltonian(name):
             "on_site": [],
             "nn_bond": [],
         },
+        "so_hx_no": {
+            "sub_model": [],
+            "on_site": [("hx", -1.0, "so_sx_no")],
+            "nn_bond": [],
+        },
+        "so_hz_no": {
+            "sub_model": [],
+            "on_site": [("hz", -1.0, "so_sz_no")],
+            "nn_bond": [],
+        },
+        "so_hz_u1": {
+            "sub_model": [],
+            "on_site": [("hz", -1.0, "so_sz_u1")],
+            "nn_bond": [],
+        },
+        "so_sz^2_no": {
+            "sub_model": [],
+            "on_site": [("D", 1.0, "so_sz^2_no")],
+            "nn_bond": [],
+        },
+        "so_sz^2_u1": {
+            "sub_model": [],
+            "on_site": [("D", 1.0, "so_sz^2_u1")],
+            "nn_bond": [],
+        },
+        "so_xy_no": {
+            "sub_model": [],
+            "on_site": [],
+            "nn_bond": [
+                ("Jxy", 1.0 / 2.0, "so_sp_no-so_sm_no"),
+                ("Jxy", 1.0 / 2.0, "so_sm_no-so_sp_no"),
+            ],
+        },
+        "so_xy_u1": {
+            "sub_model": [],
+            "on_site": [],
+            "nn_bond": [
+                ("Jxy", 1.0 / 2.0, "so_sp_u1-so_sm_u1"),
+                ("Jxy", 1.0 / 2.0, "so_sm_u1-so_sp_u1"),
+            ],
+        },
+        "so_zz_no": {
+            "sub_model": [],
+            "on_site": [],
+            "nn_bond": [("Jz", 1.0, "so_sz_no-so_sz_no")],
+        },
+        "so_zz_u1": {
+            "sub_model": [],
+            "on_site": [],
+            "nn_bond": [("Jz", 1.0, "so_sz_u1-so_sz_u1")],
+        },
+        "so_xxz_no": {
+            "sub_model": ["so_xy_no", "so_zz_no"],
+            "on_site": [],
+            "nn_bond": [],
+        },
+        "so_xxz_u1": {
+            "sub_model": ["so_xy_u1", "so_zz_u1"],
+            "on_site": [],
+            "nn_bond": [],
+        },
+        "so_xxz-hz_no": {
+            "sub_model": ["so_xxz_no", "so_hz_no"],
+            "on_site": [],
+            "nn_bond": [],
+        },
+        "so_xxz-hz_u1": {
+            "sub_model": ["so_xxz_u1", "so_hz_u1"],
+            "on_site": [],
+            "nn_bond": [],
+        },
     }
     hamiltonian = {"on_site": [], "nn_bond": []}
 
@@ -125,140 +196,6 @@ def nn_bond_operators_from_hamiltonian(name, parameters, *, weight_on_left=None)
             "period": "ham_periodicity",
             "submodel": "list_of_submodel",
             "ham_expr": "expression_to_add__1-ONSITE__2-NEAREST_NEIGHBOR__3-SPECIAL-SITE__4-SPECIAL-BOND",
-        },
-        # ### sh-so CHAINS
-        "hx": {
-            "nb_param": 1,
-            "qn_name_allowed": ["no"],
-            "period": 1,
-            "submodel": [],
-            "ham_expr": [[(("hx", -1.0, 0), ("sx", 0))], [], [], []],
-        },
-        "hz": {
-            "nb_param": 1,
-            "qn_name_allowed": ["no", "u1"],
-            "period": 1,
-            "submodel": [],
-            "ham_expr": [[(("hz", -1.0, 0), ("sz", 0))], [], [], []],
-        },
-        "xy": {
-            "nb_param": 1,
-            "qn_name_allowed": ["no", "u1"],
-            "period": 1,
-            "submodel": [],
-            "ham_expr": [
-                [],
-                [
-                    (("Jxy", 1.0 / 2.0, 0), ("SpoSm", 0)),
-                    (("Jxy", 1.0 / 2.0, 0), ("SmoSp", 0)),
-                ],
-                [],
-                [],
-            ],
-        },
-        "xydimer": {
-            "nb_param": 2,
-            "qn_name_allowed": ["no", "u1"],
-            "period": 2,
-            "submodel": [],
-            "ham_expr": [
-                [],
-                [
-                    (("Jxy_LIST", 1.0 / 2.0, 0), ("SpoSm", 0)),
-                    (("Jxy_LIST", 1.0 / 2.0, 0), ("SmoSp", 0)),
-                    (("Jxy_LIST", 1.0 / 2.0, 1), ("SpoSm", 1)),
-                    (("Jxy_LIST", 1.0 / 2.0, 1), ("SmoSp", 1)),
-                ],
-                [],
-                [],
-            ],
-        },
-        "xyflux": {
-            "nb_param": 1,
-            "qn_name_allowed": ["no", "u1"],
-            "period": 1,
-            "submodel": [],
-            "ham_expr": [
-                [],
-                [
-                    (("Jxy_EXP", [1.0 / 2.0, +1.0j], [0, 1]), ("SpoSm", 0)),
-                    (("Jxy_EXP", [1.0 / 2.0, -1.0j], [0, 1]), ("SmoSp", 0)),
-                ],
-                [],
-                [],
-            ],
-        },
-        "zz": {
-            "nb_param": 1,
-            "qn_name_allowed": ["no", "u1"],
-            "period": 1,
-            "submodel": [],
-            "ham_expr": [[], [(("Jz", 1.0, 0), ("SzoSz", 0))], [], []],
-        },
-        "zzdimer": {
-            "nb_param": 2,
-            "qn_name_allowed": ["no", "u1"],
-            "period": 2,
-            "submodel": [],
-            "ham_expr": [
-                [],
-                [
-                    (("Jz_LIST", 1.0, 0), ("SzoSz", 0)),
-                    (("Jz_LIST", 1.0, 1), ("SzoSz", 1)),
-                ],
-                [],
-                [],
-            ],
-        },
-        "ionanisotropy": {
-            "nb_param": 1,
-            "qn_name_allowed": ["no", "u1"],
-            "period": 1,
-            "submodel": [],
-            "ham_expr": [[(("D", +1.0, 0), ("Sz^2", 0))], [], [], []],
-        },
-        "xxz": {
-            "nb_param": 2,
-            "qn_name_allowed": ["no", "u1"],
-            "period": 1,
-            "submodel": [("xy", [0]), ("zz", [1])],
-            "ham_expr": [[], [], [], []],
-        },
-        "xxz-hz": {
-            "nb_param": 3,
-            "qn_name_allowed": ["no", "u1"],
-            "period": 1,
-            "submodel": [("xxz", [0, 1]), ("hz", [2])],
-            "ham_expr": [[], [], [], []],
-        },
-        "xxx-dimer": {
-            "nb_param": 2,
-            "qn_name_allowed": ["no", "u1"],
-            "period": 1,
-            "submodel": [("xydimer", [0, 1]), ("zzdimer", [0, 1])],
-            "ham_expr": [[], [], [], []],
-        },
-        "xxx-dimer-hz": {
-            "nb_param": 3,
-            "qn_name_allowed": ["no", "u1"],
-            "period": 1,
-            "submodel": [("xydimer", [0, 1]), ("zzdimer", [0, 1]), ("hz", [2])],
-            "ham_expr": [[], [], [], []],
-        },
-         "xxz-SxBord": {
-            "nb_param": 3,
-            "qn_name_allowed": ["no", "u1"],
-            "period": 1,
-            "submodel": [("xy", [0]), ("zz", [1]), ("SxRIGHT", [2]), ("SxLEFT", [2])],
-            "ham_expr": [[], [], [], []],
-        }, 
-        # ### so spin ONE
-        "xxz-Dz-hz": {
-            "nb_param": 4,
-            "qn_name_allowed": ["no", "u1"],
-            "period": 1,
-            "submodel": [("xxz", [0, 1]), ("ionanisotropy", [2]), ("hz", [3])],
-            "ham_expr": [[], [], [], []],
         },
         # ### ld LADDERS
         "ldhxId": {
@@ -826,8 +763,7 @@ def _exp_dgate(arg, dH, *, d):
     #   | |   Wm,-l Wm,-(l+1)
     # ------- => exp(+conj(arg) dH)
 
-    # REMARK ABOUT TIME EVOLUTION WITH COMPLEX HAMILTONIAN !
-    #
+    # REMARK ABOUT TIME EVOLUTION WITH COMPLEX HAMILTONIAN!
     # let's call dU = exp(-i dt dH)     (where arg=-i*dt for time)
     # of course dU^\dagger = exp(+i dt dH)
     #
@@ -838,24 +774,13 @@ def _exp_dgate(arg, dH, *, d):
     #
     # thus one should permute the label in the correct way after one
     # conjugate
-    #
     # REMARK ENDED HERE !
-
-    ###
-    # # CORRECT BUT ALONE!
-    # dU1 = _np.outer(tmp.reshape(d**4),_np.eye(d**2,d**2).reshape(d**4)).reshape(d,d,d,d,d,d,d,d)
-    # dU1 = _np.outer(_np.eye(d**2,d**2).reshape(d**4),tmp.reshape(d**4)).reshape(d,d,d,d,d,d,d,d)
-    # # CORRECT BUT ALONE!
-
-    # dU2b = _np.outer(_np.conjugate(tmp).reshape(d**4),tmp.reshape(d**4)).reshape(d,d,d,d,d,d,d,d)
-    # #dU2b=>[('s',-(l+1)),('s',-(l+2)),('W',-(l+1)),('W',-(l+2)),('W',+(l+1)),('W',+(l+2)),('s',+(l+1)),('s',+(l+2))]
-
-    dU2 = _np.outer(_np.conjugate(tmp).reshape(d ** 4), tmp.reshape(d ** 4)).reshape(
+    dU = _np.outer(_np.conjugate(tmp).reshape(d ** 4), tmp.reshape(d ** 4)).reshape(
         d, d, d, d, d, d, d, d
     )
-    # dU2=>[('s',-(l+1)),('s',-(l+2)),('W',-(l+1)),('W',-(l+2)),('W',+(l+1)),('W',+(l+2)),('s',+(l+1)),('s',+(l+2))]
+    # dU=>[('s',-(l+1)),('s',-(l+2)),('W',-(l+1)),('W',-(l+2)),('W',+(l+1)),('W',+(l+2)),('s',+(l+1)),('s',+(l+2))]
     # dU.setflags(write=0)
-    return dU2
+    return dU
 
 
 def _suzu_trotter_exp_numpy(
