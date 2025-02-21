@@ -71,8 +71,8 @@ if __name__ == "__main__":
             parameters,
             size,
             dbeta=bdmrg_simulation_parameters["dtau"],
-            is_dgate=False,
-            in_group=False,
+            is_dgate=True,
+            in_group=True,
         )
         for st, step in enumerate(ham_mpo):
             add_mps(arguments.output, step, folder=f"TEMP_GATE_{st:02g}")
