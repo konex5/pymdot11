@@ -7,6 +7,8 @@ from pyfhmdot.initialize import finalize_idmrg_even_size
 from pyfhmdot.intense.contract import (
     contract_left_bloc_mps,
     contract_left_right_mpo_mpo_permute,
+    contract_mps_mpo_mps_left_border,
+    contract_mps_mpo_mps_right_border,
     contract_right_bloc_mps,
     filter_left_right,
 )
@@ -536,18 +538,23 @@ def dmrg_minimize_two_sites(
     )
 
 
-def update_left(mps, ham, left):
+def update_left(mps, ham, left, is_border=False):
     new_bloc_left = {}
-
-    contract_left_bloc_mps(new_bloc_left, left, mps, ham, mps)
+    if is_border:
+        contract_mps_mpo_mps_left_border(new_bloc_left, mps, ham, mps)
+    else:
+        contract_left_bloc_mps(new_bloc_left, left, mps, ham, mps)
     filter_left_right(new_bloc_left)
 
     return new_bloc_left
 
 
-def update_right(mps, ham, right):
+def update_right(mps, ham, right, is_border=False):
     new_bloc_right = {}
-    contract_right_bloc_mps(new_bloc_right, right, mps, ham, mps)
+    if is_border:
+        contract_mps_mpo_mps_right_border(new_bloc_right, mps, ham, mps)
+    else:
+        contract_right_bloc_mps(new_bloc_right, right, mps, ham, mps)
     filter_left_right(new_bloc_right)
     return new_bloc_right
 
@@ -608,6 +615,54 @@ def idmrg_even(
     dst_imps_right.append(_copy(tmp_imps_right))
 
 
+def compress_mps(
+    mps,
+    dw_dict,
+    chi_max,
+    normalize,
+    eps,
+    *,
+    start_left=True,
+):
+    size = len(mps)
+    for _ in range(2):
+        if start_left:
+            direction_right = 2
+        else:
+            direction_right = -3
+
+        if start_left:
+            for l in range(1, size, 1):
+                apply_mm_at(
+                    mps,
+                    l,
+                    dw_dict,
+                    chi_max,
+                    normalize,
+                    eps,
+                    is_um=True,
+                    conserve_left_right_before=False,
+                    direction_right=direction_right,
+                )
+                print_double(size, l, "A=")
+        else:
+            for l in range(size - 1, 0, -1):
+                apply_mm_at(
+                    mps,
+                    l,
+                    dw_dict,
+                    chi_max,
+                    normalize,
+                    eps,
+                    is_um=False,
+                    conserve_left_right_before=False,
+                    direction_right=direction_right,
+                )
+                print_double(size, l, "=B")
+
+        start_left = not start_left
+
+
 def dmrg_sweep_lanczos(
     mps,
     ham,
@@ -622,7 +677,7 @@ def dmrg_sweep_lanczos(
     *,
     start_left=True,
 ):
-    from pyfhmdot.routine.minimize import minimize_lanczos
+    from pyfhmdot.routine.minimize import minimize_lanczos_and_move, minimize_lanczos
 
     size = len(mps)
 
@@ -658,46 +713,47 @@ def dmrg_sweep_lanczos(
         print(f"dmrg sweep {layer+1}/{nb_sweeps}")
 
         if start_left:
-            direction_right = 1
-        else:
-            direction_right = 3
-
-        if start_left:
             for l in range(2, size - 2, 1):
-                minimize_lanczos(l, mps, ham, left_right, max_iteration, tolerance)
-                apply_mm_at(
-                    mps,
+                minimize_lanczos_and_move(
                     l,
-                    dw_dict,
+                    mps,
+                    ham,
+                    left_right,
+                    max_iteration,
+                    tolerance,
                     chi_max,
-                    normalize,
                     eps,
+                    direction_right=2,
                     is_um=True,
-                    conserve_left_right_before=False,
-                    direction_right=direction_right,
                 )
-                left_right[l] = update_left(mps[l], ham[l], left_right[l - 1])
+                left_right[l - 1] = update_left(
+                    mps[l - 1], ham[l - 1], left_right[l - 2], l == 1
+                )
                 print_double(size, l, "A=")
+                # left_right[l] = update_left(mps[l], ham[l], left_right[l-1])
+                # print_double(size, l+1, "A=")
         else:
-            for l in range(size - 2, 2, -1):
-                minimize_lanczos(l, mps, ham, left_right, max_iteration, tolerance)
-                apply_mm_at(
-                    mps,
+            for l in range(size - 1, 2, -1):
+                minimize_lanczos_and_move(
                     l,
-                    dw_dict,
+                    mps,
+                    ham,
+                    left_right,
+                    max_iteration,
+                    tolerance,
                     chi_max,
-                    normalize,
                     eps,
+                    direction_right=-3,
                     is_um=False,
-                    conserve_left_right_before=False,
-                    direction_right=direction_right,
                 )
-                left_right[l] = update_right(mps[l], ham[l], left_right[l + 1])
+                left_right[l - 1] = update_right(
+                    mps[l], ham[l], left_right[l], l == size
+                )
                 print_double(size, l, "=B")
+                # left_right[l-1] = update_right(mps[l-1], ham[l-1], left_right[l])
+                # print_double(size, l-1, "=B")
 
         start_left = not start_left
-        print("dw_one_serie", dw_dict["dw_one_serie"])
-        dw_dict["dw_total"] += dw_dict["dw_one_serie"]
 
 
 def dmrg_warmup(mps, ham, left_right, sim_dict, *, start_left):

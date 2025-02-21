@@ -465,7 +465,7 @@ def initialize_left_right(mps, ham, position):
         left_blocs.append(_copy(tmp_dst))
         tmp_dst.clear()
 
-    for l in range(len(mps)-1, position -1, -1):
+    for l in range(len(mps) - 1, position - 1, -1):
         tmp_dst = {}
         contract_right_bloc_mps(tmp_dst, right_blocs[-1], mps[l], ham[l], mps[l])
         filter_left_right(tmp_dst)

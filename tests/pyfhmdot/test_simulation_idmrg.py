@@ -26,12 +26,13 @@ def test_idmrg_all():
         ham,
         {
             "dw_one_serie": 0,
-            "nb_sweeps_warmup": 3,
+            "nb_sweeps_warmup": 7,
             "nb_sweeps": 5,
             "chi_max_warmup": 30,
             "normalize": True,
             "eps": 10**-8,
-            "max_iteration": 60,
-            "tolerance": 10**-4,
+            "max_iteration": 100,
+            "tolerance": 10**-7,
         },
     )
+    pass
