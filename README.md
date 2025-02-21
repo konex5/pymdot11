@@ -1,12 +1,30 @@
-# Welcome to pyfhmdot
+# Welcome to pyfhmdot (Fast Hilbert Matrix DOT)
 
-**mdot** is a simple python project for dmrg and exact diagonalisation.
+**pyfhmdot** provides scientific simulations for density matrix
+renormalization group (DMRG) on spins.
 
-It is mainly a high level library. When it uses **fmd** it is already
-faster but optimaly, one would need to stay in C++.
+From our knowledge, this is the only library providing such
+simulations based on quantum numbers without any quantum number
+representation. How? When _S^z_tot_ is conserved, it mainly says that
+quantum sectors are following a sum of _S^z_i_ which translates in
+"indices of blocs simply sums"! For fermions or hardcore bosons, we
+can map them on spins with small costs -- and I never understood how
+to implement it in fermion representation to be honest.
 
-The library purpose is to code fast with the option of returning to
-lower level whenever it is needed.
+The advantage of removal of quantum numbers representation is to be
+much closer to the computer world so the reshuffling of quantum
+sectors are now avoided. In theory, the blocs could even be statically
+allocated (but in practice it is a very hard task -- better use a
+simple hashmap for the blocs at runtime).
+
+The library purpose is to be able to return to low level languages
+(C++) whenever it is needed using **mdot** and **pymdot**. In theory,
+it could be possible to chain the dmrg simulations using the __TBB__
+library (but in practice it is a very hard task).
+
+A nice surprise was to see that mpo hamiltonian representation in such
+blocs structure can induce exact diagonalization (ED) simulations as
+well for spins. Enjoy!
 
 # Todo list
 
