@@ -52,4 +52,4 @@ def test_prepare_targets_two_mps_without_gate(lhs_indices, rhs_indices, gate_ind
         [_[0] for _ in dst_indices], gate_indices, conserve_left_right=True
     )
     assert destination_indices[0][0] == (0, 0, 0, 0)
-    assert len(destination_indices) == 5
+    assert len(destination_indices) == 6

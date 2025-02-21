@@ -52,7 +52,7 @@ def indices_dst_theta_with_gate(
                 if (not conserve_left_right) or (
                     conserve_left_right
                     and (
-                        theta_index[0] + gate_index[0] + gate_index[1] == theta_index[3]
+                        theta_index[0] + gate_index[1] + gate_index[2] == theta_index[3]
                     )
                 ):
                     destination_indices.append(
