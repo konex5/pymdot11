@@ -4,8 +4,47 @@ from typing import List as _List
 from typing import Tuple as _Tuple
 import numpy as _np
 
-from pyfhmdot.routine.indices import list_degenerate_indices
 
+def map_order(neworder, oldorder):
+    indices = [
+        (i, j) for i, x in enumerate(oldorder) for j, y in enumerate(neworder) if x == y
+    ]
+    tmp = list(zip(*indices))  # removed zip
+    if set(tmp[0]) != set(tmp[1]):
+        raise (Exception("Cannot permute indices if they are not the same (bijective)"))
+    return tmp  # list(tmp[0]),list(tmp[1]) #[0]->oldindex map [1]->newindex
+
+
+def permute_blocs(new_blocks, old_blocks, map_old2new):
+    for it in old_blocks.keys():
+        tmp = list(it)
+        for i in range(len(it)):
+            tmp[map_old2new[1][i]] = it[map_old2new[0][i]]
+        new_blocks[tuple(tmp)] = old_blocks[it].transpose(
+            [
+                i
+                for j, y in enumerate(map_old2new[0])
+                for i, x in enumerate(map_old2new[1])
+                if (x == y)
+            ]
+        )
+
+
+def fuse_mpo(dst_blocs, mpo_blocs, index1, index2):
+    """
+    This method is used for ED only
+    """
+    pass
+
+
+def trace_mpo(dst_blocs, mpo_blocs, index1, index2):
+    for it in mpo_blocs.keys():
+        dst_indices = tuple([_ for i, _ in enumerate(it)
+                             if i not in [index1, index2]])
+        if dst_indices in dst_blocs.keys():
+            dst_blocs[dst_indices] += _np.trace(mpo_blocs[it], axis1=index1, axis2=index2)
+        else:                        
+            dst_blocs[dst_indices] = _np.trace(mpo_blocs[it], axis1=index1, axis2=index2)
 
 def indices_dst_mul_mpo(
         left_indices: _KeysView[tuple],
@@ -45,8 +84,9 @@ def multiply_mp(new_blocks: _Dict[tuple, _np.ndarray],
     This method is used for ED
     """
     from pyfhmdot.routine.indices import list_degenerate_indices
-    buildtarget = indices_dst_mul_mpo(old_blocks1.keys(), old_blocks2.keys(),index1,index2)
-    
+    buildtarget = indices_dst_mul_mpo(
+        old_blocks1.keys(), old_blocks2.keys(), index1, index2)
+
     list_isnew = list_degenerate_indices([_[0] for _ in buildtarget])
     for new, it in zip(list_isnew, buildtarget):
         target, it1, it2 = it[0], it[1], it[2]
@@ -64,3 +104,13 @@ def multiply_mp(new_blocks: _Dict[tuple, _np.ndarray],
             )
 
 
+def trace_mp(new_blocks: _Dict[tuple, _np.ndarray],
+             old_blocks1: _Dict[tuple, _np.ndarray],
+             old_blocks2: _Dict[tuple, _np.ndarray],
+             index1: int,
+             index2: int
+             ) -> None:
+    """
+    This method is used for ED
+    """
+    pass
