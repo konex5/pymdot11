@@ -170,7 +170,7 @@ def test_check_slices_degenerate_blocs_dimtwo(theta_blocs_large):
         potential_middle_indices,
     )
 
-    middle_list = potential_middle_indices(theta_blocs_large.keys())
+    middle_list = potential_middle_indices(theta_blocs_large.keys(), direction_right=1)
     nondeg, degenerate = degeneracy_in_theta(
         theta_blocs_large.keys(), middle_list, direction_right=1
     )
