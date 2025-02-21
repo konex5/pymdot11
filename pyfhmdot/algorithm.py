@@ -136,7 +136,7 @@ def should_apply_gate(size, layer, position, start_left, start_odd_bonds):
     is_even = size % 2 == 0
     is_currently_start_left = (layer % 2 == 0) == start_left
     is_currently_applying_left = (position % 2 == 1) == start_odd_bonds
-    
+
     if is_currently_start_left:
         return is_currently_applying_left
     else:
@@ -144,6 +144,7 @@ def should_apply_gate(size, layer, position, start_left, start_odd_bonds):
             return not is_currently_applying_left
         else:
             return is_currently_applying_left
+
 
 def sweep_eleven_times_easy(
     size,
