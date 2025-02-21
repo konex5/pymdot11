@@ -52,4 +52,4 @@ def test_dgesvd():
     )
 
     usvd = np.dot(np.dot(u, np.diag(s)), v)
-    assert np.all(usvd == adeep)
+    assert np.all(usvd == b)
