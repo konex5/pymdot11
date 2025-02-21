@@ -1,8 +1,12 @@
 import numpy as _np
 from typing import Dict as _Dict
 
-
-from pyfhmdot.mul_routine import multiply_arrays, multiply_arrays_and_transpose
+from pyfhmdot.svd_routine import (
+    normalize_the_array,
+    truncation_strategy,
+    svd_nondeg,
+    svd_deg,
+)
 from pyfhmdot.indices import (
     indices_dst_theta_no_gate,
     indices_dst_theta_with_gate,
@@ -10,19 +14,14 @@ from pyfhmdot.indices import (
     potential_middle_indices,
     slices_degenerate_blocs,
 )
-
-
-from pyfhmdot.svd_routine import (
-    normalize_the_array,
-    truncation_strategy,
-    svd_nondeg,
-    svd_deg,
-    mult_nondeg_MV,
-    mult_deg_MV,
-    mult_nondeg_UM,
-    mult_deg_UM,
+from pyfhmdot.mul_routine import (
+    mul_mm_blocs,
+    mul_theta_with_gate,
+    mul_mv_nondeg,
+    mul_mv_deg,
+    mul_um_nondeg,
+    mul_um_deg,
 )
-
 
 
 def mm_to_theta_no_gate(
@@ -35,7 +34,7 @@ def mm_to_theta_no_gate(
     dest_indices = indices_dst_theta_no_gate(
         lhs_blocs.keys(), rhs_blocs.keys(), conserve_left_right=conserve_left_right
     )
-    multiply_arrays(dst_blocs, lhs_blocs, rhs_blocs, dest_indices)
+    mul_mm_blocs(dst_blocs, lhs_blocs, rhs_blocs, dest_indices)
 
 
 def mm_to_theta_with_gate(
@@ -53,13 +52,13 @@ def mm_to_theta_with_gate(
         rhs_blocs.keys(),
         conserve_left_right=conserve_left_right_before,
     )
-    multiply_arrays(tmp_blocs, lhs_blocs, rhs_blocs, tmp_indices)
+    mul_mm_blocs(tmp_blocs, lhs_blocs, rhs_blocs, tmp_indices)
     dst_indices = indices_dst_theta_with_gate(
         tmp_blocs.keys(),
         gate_blocs.keys(),
         conserve_left_right=conserve_left_right_after,
     )
-    multiply_arrays_and_transpose(dst_blocs, tmp_blocs, gate_blocs, dst_indices)
+    mul_theta_with_gate(dst_blocs, tmp_blocs, gate_blocs, dst_indices)
 
 
 def theta_to_um(theta_blocs, lhs_blocs, rhs_blocs, simdict, **kwargs):
@@ -99,7 +98,7 @@ def theta_to_um(theta_blocs, lhs_blocs, rhs_blocs, simdict, **kwargs):
     # simdict['dw_max'] = max(dw,simdict['dw_max'])
     cut_nondeg = [cut[i] for i in range(len(nondeg))]
     cut_deg = [cut[i] for i in range(len(nondeg), len(nondeg) + len(deg))]
-    mult_deg_UM(
+    mul_um_deg(
         array_of_U,
         array_of_S,
         cut_deg,
@@ -109,7 +108,7 @@ def theta_to_um(theta_blocs, lhs_blocs, rhs_blocs, simdict, **kwargs):
         lhs_blocs,
         rhs_blocs,
     )
-    mult_nondeg_UM(
+    mul_um_nondeg(
         array_of_U,
         array_of_S,
         cut_nondeg,
@@ -162,7 +161,7 @@ def theta_to_mv(theta_blocs, lhs_blocs, rhs_blocs, simdict, **kwargs):
     cut_nondeg = [cut[i] for i in range(len(nondeg))]
     cut_deg = [cut[i] for i in range(len(nondeg), len(nondeg) + len(deg))]
 
-    mult_deg_MV(
+    mul_mv_deg(
         array_of_U,
         array_of_S,
         cut_deg,
@@ -172,7 +171,7 @@ def theta_to_mv(theta_blocs, lhs_blocs, rhs_blocs, simdict, **kwargs):
         lhs_blocs,
         rhs_blocs,
     )
-    mult_nondeg_MV(
+    mul_mv_nondeg(
         array_of_U,
         array_of_S,
         cut_nondeg,
