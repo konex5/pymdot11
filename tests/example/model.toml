@@ -1,6 +1,6 @@
 [model]
 sh_xxz-hz_u1 = 0
-size = 10
+size = 20
 
 [parameters]
 Jxy = 1.0
@@ -28,5 +28,5 @@ eps_truncation = 1e-8
 chi_max = 30
 save_every = -1
 tau_max = 0.5
-start_left = 1
-start_odd_bonds = 0
+start_left = 0
+start_odd_bonds = 1

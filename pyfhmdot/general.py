@@ -79,7 +79,7 @@ def add_model_tdmrg_simulation(filepath, parameters):
     """
     {
         "dtau": 0.025,
-        "normalize": 1, #False
+        "normalize": 1, #True
         "dw_one_step": 0,
         "dw_total": 0,
         "eps_truncation": 10 ** -8,
@@ -95,7 +95,7 @@ def add_model_bdmrg_simulation(filepath, parameters):
     """
     {
         "dtau": 0.025
-        "normalize" : 0, #True
+        "normalize" : 0, #False
         "dw_one_step": 0,
         "dw_total": 0,
         "eps_truncation": 10 ** -8,
