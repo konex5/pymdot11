@@ -130,26 +130,25 @@ def test_multiply_blocs_sparse_with_gate_fake_with_qcons(
     return dest_blocs
 
 
-
-
-def test_multiply_blocs_sparse_with_gate_fake(
-    make_maximal_entangled_state_u1,
-    make_single_dummy_dgate
+def test_multiply_blocs_sparse_with_gate_real(
+    make_maximal_entangled_state_u1, make_single_dummy_dgate
 ):
     import numpy as np
-    all = make_maximal_entangled_state_u1(2,1/np.sqrt(2))
-    lhs_blocs,rhs_blocs = all[0],all[1]
+
+    all = make_maximal_entangled_state_u1(2, 1 / np.sqrt(2))
+    lhs_blocs, rhs_blocs = all[0], all[1]
 
     gate_blocs = make_single_dummy_dgate()
-    # dest_blocs = {}
-    # multiply_blocs_with_gate_applied(
-    #     dest_blocs,
-    #     lhs_blocs,
-    #     rhs_blocs,
-    #     gate_blocs,
-    #     conserve_left_right_before=False,
-    #     conserve_left_right_after=False,
-    # )
+    dest_blocs = {}
+    multiply_blocs_with_gate_applied(
+        dest_blocs,
+        lhs_blocs,
+        rhs_blocs,
+        gate_blocs,
+        conserve_left_right_before=False,
+        conserve_left_right_after=False,
+    )
     # assert list(dest_blocs.keys())[0] == (0, 0, 0, 0)
     # assert len(dest_blocs.keys()) == 16
     # return dest_blocs
+    pass

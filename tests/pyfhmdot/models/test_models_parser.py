@@ -1,5 +1,6 @@
 import pytest
 
+
 @pytest.mark.skip
 def test_hamiltonian_read_line():
     from pyfhmdot.models.parser import read_parameters
