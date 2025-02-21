@@ -16,7 +16,7 @@ from pyfhmdot.general import (
     load_mps,
     change_right_index,
 )
-from pyfhmdot.models.splitgroup import group_dmps, group_four_dgate, split_dmps
+from pyfhmdot.intense.splitgroup import group_dmps, group_four_dgate, split_dmps
 from pyfhmdot.utils.iotools import (
     check_filename_and_extension_h5,
     create_h5,

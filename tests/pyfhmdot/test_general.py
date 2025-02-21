@@ -5,7 +5,7 @@ def test_general():
     import numpy as np
 
     from pyfhmdot.models.pymodels import suzu_trotter_obc_exp
-    from pyfhmdot.models.splitgroup import group_four_dgate, split_four_dgate
+    from pyfhmdot.intense.splitgroup import group_four_dgate, split_four_dgate
 
     gate = suzu_trotter_obc_exp(
         0.025,

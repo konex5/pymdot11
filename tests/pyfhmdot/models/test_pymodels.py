@@ -1,7 +1,5 @@
 import pytest
 
-from pyfhmdot.models.pymodels import suzu_trotter_obc_exp
-
 
 def test_pyhamiltonian():
 

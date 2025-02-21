@@ -2,7 +2,7 @@ import numpy as _np
 from scipy.linalg import expm as _expm
 
 from pyfhmdot.models.pyoperators import single_operator, two_sites_bond_operator
-from pyfhmdot.models.splitgroup import group_four_dgate, reshape_and_group
+from pyfhmdot.intense.splitgroup import group_four_dgate, reshape_and_group
 
 
 def pyhamiltonian(name):

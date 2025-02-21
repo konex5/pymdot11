@@ -2,7 +2,7 @@ import pytest
 
 
 def test_mapping():
-    from pyfhmdot.models.splitgroup import splitgroup_mapping
+    from pyfhmdot.intense.splitgroup import splitgroup_mapping
 
     assert splitgroup_mapping("sh_xxz-hz_u1", section="deg")[0] == 1
     assert splitgroup_mapping("sh_xxz-hz_no", section="deg")[0] == 2
@@ -10,7 +10,7 @@ def test_mapping():
 
 def test_reshape_group(make_maximal_entangled_state_u1):
     import numpy as np
-    from pyfhmdot.models.splitgroup import reshape_and_split, reshape_and_group
+    from pyfhmdot.intense.splitgroup import reshape_and_split, reshape_and_group
 
     dmps = make_maximal_entangled_state_u1(3)[0]
     dst_blocs = {}
