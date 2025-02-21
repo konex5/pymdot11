@@ -20,7 +20,6 @@ def dynamical_dmps(dmps, ggate, sim_dict):
 
     dw_dict = {"dw_one_serie": 0}
     _sweep_eleven_times(
-        len(dmps),
         dmps,
         ggate,
         dw_dict=dw_dict,
@@ -30,8 +29,8 @@ def dynamical_dmps(dmps, ggate, sim_dict):
         start_left=sim_dict["start_left"],
         start_odd_bonds=sim_dict["start_odd_bonds"],
     )
-    dw_dict["dw_one_serie"] = sim_dict["dw_one_serie"]
-    dw_dict["dw_total"] += _sum(sim_dict["dw_one_serie"])
+    sim_dict["dw_one_serie"] = dw_dict["dw_one_serie"]
+    sim_dict["dw_total"] += _sum(dw_dict["dw_one_serie"])
     print("discarded weight in one step :", sim_dict["dw_one_serie"])
     print("discarded weight accumulate  :", sim_dict["dw_total"])
 

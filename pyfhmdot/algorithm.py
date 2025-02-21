@@ -161,7 +161,6 @@ def sweep_eleven_times_easy(
 
 
 def sweep_eleven_times(
-    size,
     mps,
     ggate,
     dw_dict,
@@ -171,7 +170,7 @@ def sweep_eleven_times(
     start_left=True,
     start_odd_bonds=True,
 ):
-
+    size = len(mps)
     is_even = size % 2 == 0
     right_border = 0
     if (start_left and start_odd_bonds) or (not start_left and not start_odd_bonds):
