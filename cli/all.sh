@@ -7,5 +7,5 @@
 ./cli/cli_Tdmrg.py -G /tmp/hamiltonian_gates.h5 -M /tmp/2B_00.0000.h5 -o /tmp/
 ./cli/cli_tdmrg.py -G /tmp/hamiltonian_gates.h5 -M /tmp/2B_00.0250.h5 -o /tmp/
 
-./cli/cli_mbracket.py -l /tmp/2B_00.0250.h5 -r /tmp/2B_00.0250_00.0125.h5
+./cli/cli_mbracket.py -b /tmp/2B_00.0250.h5 -k /tmp/2B_00.0250_00.0125.h5
 
