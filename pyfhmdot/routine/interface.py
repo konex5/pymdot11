@@ -67,9 +67,9 @@ def theta_to_mm(
     dw_dict: dict,
     chi_max: int,
     normalize: bool,
+    is_um:bool,
     conserve_direction_left: _Optional[bool] = None,
     eps: float = 10 ** -8,
-    is_um=bool,
 ) -> None:
 
     keys = list(theta_blocs.keys())
