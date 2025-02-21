@@ -4,22 +4,13 @@
 import argparse
 import sys
 import os
-from pyfhmdot.intense.interface import measure_dmps
+from pyfhmdot.intense.interface import measure_dmps, measure_mps_mps
 
 from pyfhmdot.general import (
-    add_model_bdmrg_simulation,
-    add_mps,
-    load_model_bdmrg_simulation,
-    load_model_info_model_name,
     load_model_info_size,
     load_mps,
-    change_right_index,
 )
-from pyfhmdot.intense.splitgroup import group_dmps, group_four_dgate
-from pyfhmdot.utils.iotools import (
-    check_filename_and_extension_h5,
-    create_h5,
-)
+from pyfhmdot.utils.iotools import check_filename_and_extension_h5
 
 
 if __name__ == "__main__":
@@ -54,21 +45,33 @@ if __name__ == "__main__":
         sys.exit(
             f"cli_mbracket.py: error: the hamiltonian path {arguments.ket} is not a valid path."
         )
-    # if not os.path.exists(os.path.dirname(arguments.output)):
-    #     sys.exit(
-    #         f"cli_Tdmrg.py: error: the output dirpath {os.path.dirname(arguments.output)} is not a valid directory path."
-    #     )
 
     size = load_model_info_size(arguments.bra)
     if size == load_model_info_size(arguments.ket):
-        pass
+        sys.exit(
+            f"cli_mbracket.py: error: bra and ket have different sizes."
+        )
 
     bra_dmps = load_mps(arguments.bra, size, folder="QMP")
     ket_dmps = load_mps(arguments.ket, size, folder="QMP")
-    
-    bra_norm = measure_dmps(bra_dmps)
-    print(f"{bra_norm}")
-    ket_norm = measure_dmps(ket_dmps)
-    print(f"{ket_norm}")    
-    # bra_dnorm = measure_dmps_dmps(bra_dmps,bra_dmps)
-    # ket_dnorm = measure_dmps_dmps(bra_dmps)
+
+    if len(list(bra_dmps[0].values())[0].shape) == 4 and len(list(ket_dmps[0].values())[0].shape) == 4:
+        bra_norm = measure_dmps(bra_dmps)
+        print(f"{bra_norm}")        
+        ket_norm = measure_dmps(ket_dmps)
+        print(f"{ket_norm}")
+        # bra_dnorm = measure_dmps_dmps(bra_dmps,bra_dmps)
+        # print(f"{bra_dnorm}")
+        # ket_dnorm = measure_dmps_dmps(bra_dmps,bra_dmps)
+        # print(f"{ket_dnorm}")
+        # braket_norm = measure_dmps_dmps(bra_dmps,ket_dmps)
+        pass
+
+    if len(list(bra_dmps[0].values())[0].shape) == 3 and len(list(ket_dmps[0].values())[0].shape) == 3:
+        # bra_norm = measure_mps_mps(bra_dmps,bra_dmps)
+        # print(f"{bra_norm}")        
+        # ket_norm = measure_dmps(ket_dmps)
+        # print(f"{ket_norm}")
+        # braket_norm = measure_mps_mps(bra_mps,ket_mps)
+        # print(f"{braket_norm}")
+        pass
