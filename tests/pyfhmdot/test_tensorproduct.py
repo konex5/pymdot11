@@ -14,5 +14,5 @@ def ma():
 @pytest.mark.parametrize("a", [ma()])
 def test_transpose(a):
     assert a[2, 0, 1] == 3
-    # a.transpose([1,0,2])
-    # assert a[0,2,1] == 3
+    b = a.transpose([1,0,2])
+    assert b[0,2,1] == 3

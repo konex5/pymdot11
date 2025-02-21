@@ -158,7 +158,9 @@ def multiply(ma, mb):  # -> mdest
 
 
 def multiply_with_gate(ma, mb, mtheta):  # -> mdest
-    mdest = _np.tensordot(ma, _np.tensordot(mtheta, mb, (3, 0)), (3, 4))
+    mtmp = _np.tensordot(ma, mb, (3, 0))
+    mdest = _np.tensordot(mtheta, mtmp, ([0, 1], [1, 2])).transpose([2, 0, 1, 3])
+    return mdest
 
 
 def apply_UM(array_A, array_B):
