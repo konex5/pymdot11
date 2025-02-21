@@ -18,3 +18,8 @@ def test_sweeps():
         assert i + 2 + 1 == j
 
     assert j + 1 == 4
+
+def test_print_single():
+    from pyfhmdot.algorithm import print_single
+
+    assert print_single(5,2) == "\rAA=BBB"
