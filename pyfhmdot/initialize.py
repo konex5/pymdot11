@@ -9,6 +9,7 @@ from pyfhmdot.models.pymodels import suzu_trotter_obc_exp
 from pyfhmdot.models.pymodels import hamiltonian_obc
 from pyfhmdot.models.pyoperators import single_operator
 from pyfhmdot.conservation import conserve_qnum
+from pyfhmdot.routine.indices import internal_qn_sum,internal_qn_sub
 
 from pyfhmdot.intense.contract import (
     contract_left_bloc_mps,
@@ -315,10 +316,10 @@ def initialize_idmrg_even_size(
     for key in list(env_bloc.keys()):
         shape = env_bloc[key].shape
         if (
-            not (key[0]+key[1] in allowed_sector_left)
-            or not (key[3]-key[2] in allowed_sector_right)
-            or not (key[4]+key[5] in allowed_sector_left)
-            or not (key[7]-key[6] in allowed_sector_right)
+            not (internal_qn_sum(key[0],key[1]) in allowed_sector_left)
+            or not (internal_qn_sub(key[3],key[2]) in allowed_sector_right)
+            or not (internal_qn_sum(key[4],key[5]) in allowed_sector_left)
+            or not (internal_qn_sub(key[7],key[6]) in allowed_sector_right)
         ):
             env_bloc.pop(key)  # quantum conserved is used here
         elif not (
@@ -340,7 +341,7 @@ def initialize_idmrg_even_size(
     minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
     
     # select_lowest_blocs(eigenvalues, eigenvectors)
-    apply_eigenvalues(eigenvalues, eigenvectors)
+    # apply_eigenvalues(eigenvalues, eigenvectors)
 
     theta_to_mm(
         eigenvectors,
@@ -395,10 +396,10 @@ def finalize_idmrg_even_size(
     for key in list(env_bloc.keys()):
         shape = env_bloc[key].shape
         if (
-            not (key[0] + key[1] in allowed_sector_left)
-            or not (key[3]-key[2] in allowed_sector_right)
-            or not (key[4] + key[5] in allowed_sector_left)
-            or not (key[7]-key[6] in allowed_sector_right)
+            not (internal_qn_sum(key[0],key[1]) in allowed_sector_left)
+            or not (internal_qn_sub(key[3],key[2]) in allowed_sector_right)
+            or not (internal_qn_sum(key[4],key[5]) in allowed_sector_left)
+            or not (internal_qn_sub(key[7],key[6]) in allowed_sector_right)
         ):
             env_bloc.pop(key)  # quantum conserved is used here
         elif not (
@@ -419,9 +420,9 @@ def finalize_idmrg_even_size(
     #         eigenvectors.pop(key)
     #         eigenvalues.pop(key)
     #         _warning("eigenvectors removed a posteriori.")
-    select_lowest_blocs(eigenvalues, eigenvectors)
+    #select_lowest_blocs(eigenvalues, eigenvectors)
     # select_quantum_sector(eigenvalues, eigenvectors)
-    apply_eigenvalues(eigenvalues, eigenvectors)
+    #apply_eigenvalues(eigenvalues, eigenvectors)
 
     theta_to_mm(
         eigenvectors,
