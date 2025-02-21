@@ -2,7 +2,7 @@ import pytest
 
 
 def test_apply_gate_previous_code(single_ab_before,single_tmp_theta,make_single_dummy_dgate,single_ab_after):
-    from pyfhmdot.routine.interface import mm_to_theta_with_gate, theta_to_mm
+    from pyfhmdot.routine.interface import mm_to_theta_with_gate, theta_to_mm,mm_to_theta_with_gate_to_delete_at_some_point
     import numpy as np
 
     a_before, b_before = single_ab_before
@@ -12,7 +12,7 @@ def test_apply_gate_previous_code(single_ab_before,single_tmp_theta,make_single_
 
 
     tmp_blocs = {}
-    mm_to_theta_with_gate(
+    mm_to_theta_with_gate_to_delete_at_some_point(
         dst_blocs=tmp_blocs,
         lhs_blocs=a_before,
         rhs_blocs=b_before,
@@ -20,6 +20,9 @@ def test_apply_gate_previous_code(single_ab_before,single_tmp_theta,make_single_
         conserve_left_right_before=False,
         conserve_left_right_after=False,
     )
+    for key in tmp_theta.keys():
+        assert np.all(np.abs(tmp_theta[key] - tmp_blocs[key])<1e-8)
+
     dst_a = {}
     dst_b = {}
     theta_to_mm(

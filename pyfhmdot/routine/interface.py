@@ -50,7 +50,7 @@ def mm_to_theta_with_gate_to_delete_at_some_point(
 
     tmp_blocs: _Dict[tuple, _np.ndarray] = {}
 
-    multiply_mp(tmp_blocs, lhs_blocs, gate_blocs, [1], [2])
+    multiply_mp(tmp_blocs, lhs_blocs, gate_blocs, [1], [0])
     multiply_mp(dst_blocs, tmp_blocs, rhs_blocs, [1, 4], [0, 1])
 
 
