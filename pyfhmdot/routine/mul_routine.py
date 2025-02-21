@@ -34,6 +34,7 @@ def mul_mm_blocs_snd(
             axes=(2, 0),
         )
 
+
 def mul_theta_with_gate_new(
     new_blocks: _Dict[tuple, _np.ndarray],
     old_blocks1: _Dict[tuple, _np.ndarray],
@@ -46,6 +47,7 @@ def mul_theta_with_gate_new(
             old_blocks2[it2],
             axes=([1, 2], [0, 3]),
         ).transpose(0, 2, 3, 1)
+
 
 def mul_theta_with_gate_snd(
     new_blocks: _Dict[tuple, _np.ndarray],

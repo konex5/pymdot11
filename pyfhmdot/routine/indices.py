@@ -15,7 +15,7 @@ def split_degenerate_indices(indices: _List[tuple]) -> _List[bool]:
             list_nondeg.append(indices[l])
         else:
             list_deg.append(indices[l])
-    return list_nondeg, list_deg 
+    return list_nondeg, list_deg
 
 
 def indices_dst_theta_no_gate(

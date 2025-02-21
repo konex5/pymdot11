@@ -35,9 +35,11 @@ def mm_to_theta_no_gate(
     *,
     conserve_left_right: bool = False
 ) -> None:
-    dest_indices_new,dest_indices_snd = split_degenerate_indices(indices_dst_theta_no_gate(
-        lhs_blocs.keys(), rhs_blocs.keys(), conserve_left_right=conserve_left_right
-    ))
+    dest_indices_new, dest_indices_snd = split_degenerate_indices(
+        indices_dst_theta_no_gate(
+            lhs_blocs.keys(), rhs_blocs.keys(), conserve_left_right=conserve_left_right
+        )
+    )
     mul_mm_blocs_new(dst_blocs, lhs_blocs, rhs_blocs, dest_indices_new)
     mul_mm_blocs_snd(dst_blocs, lhs_blocs, rhs_blocs, dest_indices_snd)
 
@@ -69,18 +71,22 @@ def mm_to_theta_with_gate(
     conserve_left_right_after: bool = False
 ) -> None:
     tmp_blocs: _Dict[tuple, _np.ndarray] = {}
-    tmp_indices_new,tmp_indices_snd = split_degenerate_indices(indices_dst_theta_no_gate(
-        lhs_blocs.keys(),
-        rhs_blocs.keys(),
-        conserve_left_right=conserve_left_right_before,
-    ))
+    tmp_indices_new, tmp_indices_snd = split_degenerate_indices(
+        indices_dst_theta_no_gate(
+            lhs_blocs.keys(),
+            rhs_blocs.keys(),
+            conserve_left_right=conserve_left_right_before,
+        )
+    )
     mul_mm_blocs_new(tmp_blocs, lhs_blocs, rhs_blocs, tmp_indices_new)
     mul_mm_blocs_snd(tmp_blocs, lhs_blocs, rhs_blocs, tmp_indices_snd)
-    dst_indices_new,dst_indices_snd = split_degenerate_indices(indices_dst_theta_with_gate(
-        theta_indices=tmp_blocs.keys(),
-        gate_indices=gate_blocs.keys(),
-        conserve_left_right=conserve_left_right_after,
-    ))
+    dst_indices_new, dst_indices_snd = split_degenerate_indices(
+        indices_dst_theta_with_gate(
+            theta_indices=tmp_blocs.keys(),
+            gate_indices=gate_blocs.keys(),
+            conserve_left_right=conserve_left_right_after,
+        )
+    )
     mul_theta_with_gate_new(dst_blocs, tmp_blocs, gate_blocs, dst_indices_new)
     mul_theta_with_gate_snd(dst_blocs, tmp_blocs, gate_blocs, dst_indices_snd)
 
