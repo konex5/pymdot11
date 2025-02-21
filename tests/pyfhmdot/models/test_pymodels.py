@@ -1,6 +1,8 @@
 from asyncio.proactor_events import _ProactorBaseWritePipeTransport
 import pytest
 
+from pyfhmdot.models.pymodels import suzu_trotter_obc_exp
+
 
 def test_pyhamiltonian():
 
@@ -11,7 +13,7 @@ def test_pyhamiltonian():
     assert a["nn_bond"][0][-1] == "sh_sp_no-sh_sm_no"
     assert a["nn_bond"][2][0] == "Jz"
     assert a["nn_bond"][2][-1] == "sh_sz_no-sh_sz_no"
-    b = pyhamiltonian("sh_xxz_hz_u1")
+    b = pyhamiltonian("sh_xxz-hz_u1")
     assert b["nn_bond"][0][0] == "Jxy"
     assert b["nn_bond"][0][-1] == "sh_sp_u1-sh_sm_u1"
     assert b["nn_bond"][2][0] == "Jz"
@@ -28,11 +30,11 @@ def test_operators_from_hamiltonian():
     import numpy as np
 
     on_site = on_site_operators_from_hamiltonian(
-        "sh_xxz_hz_no", {"Jxy": 5.0, "Jz": 3.0, "hz": -0.5}
+        "sh_xxz-hz_no", {"Jxy": 5.0, "Jz": 3.0, "hz": -0.5}
     )
     assert on_site[0][(0, 0)][0, 0] == 0.5
     nn_bond = nn_bond_operators_from_hamiltonian(
-        "sh_xxz_hz_no", {"Jxy": 5.0, "Jz": 3.0, "hz": -0.5}
+        "sh_xxz-hz_no", {"Jxy": 5.0, "Jz": 3.0, "hz": -0.5}
     )
     assert nn_bond[0][0][(0, 0)][0, 1] == np.sqrt(2.5)
 
@@ -69,4 +71,25 @@ def test_hamiltonian_gate():
     nn_bond = nn_bond_operators_from_hamiltonian(model_name, parameters)
     before_exp = _hamiltonian_gate_from_dense(id_bloc, on_site, on_site, nn_bond, d=2)
 
-    a = _exp_gate(0.01, before_exp, d=2)
+    a = _exp_gate(-0.01j, before_exp, d=2)
+
+
+def test_gate_exp():
+    from pyfhmdot.models.pyoperators import single_operator
+    from pyfhmdot.models.pymodels import suzu_trotter_obc_exp
+
+    model_name = "sh_xxz-hz_u1"
+    parameters = {"Jxy": 7, "Jz": -5, "hz": 3}
+
+    a = suzu_trotter_obc_exp(-0.01, model_name, parameters, 10, is_dgate=True)
+    model_name = "sh_xxz-hz_no"
+    parameters = {"Jxy": 7, "Jz": -5, "hz": 3}
+    b = suzu_trotter_obc_exp(-0.01, model_name, parameters, 10, is_dgate=False)
+    ############################################################
+    # MATRICES ARE CORRECT!
+    # manybody.models.quantum_name = 'sh-None'
+    # A = manybody.matrices.suzu_trotter_obc_exp(-0.02,'sh-xxz-hz',[1,1,2],10,True)[0]
+    # manybody.models.quantum_name = 'sh-U1'
+    # B = manybody.matrices.suzu_trotter_obc_exp(-0.02,'sh-xxz-hz',[1,1,2],10,True)[0]
+    # for i in xrange(len(B)):
+    #     print(B[i][1][0,0,0,0] == A[0][1][tuple(B[i][0])])

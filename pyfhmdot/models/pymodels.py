@@ -764,7 +764,7 @@ def hamiltonian_obc(model_name, parameters, size):
     return mpo
 
 
-def _hamiltonian_gate_from_dense(id_bloc, on_site_left, on_site_right, nn_bond, *, d):
+def _hamiltonian_gate_from_dense(id_dense, on_site_left, on_site_right, nn_bond, *, d):
 
     if (
         _np.any([isinstance(x, complex) for x in on_site_left])
@@ -778,12 +778,12 @@ def _hamiltonian_gate_from_dense(id_bloc, on_site_left, on_site_right, nn_bond, 
         t.fill(0)
 
     # on_site_left
-    t[:, :, :, :] += (_np.outer(on_site_left[0][(0, 0)], id_bloc[(0, 0)])).reshape(
+    t[:, :, :, :] += (_np.outer(on_site_left[0][(0, 0)], id_dense[(0, 0)])).reshape(
         d, d, d, d
     )
 
     # on_site_right
-    t[:, :, :, :] += (_np.outer(id_bloc[(0, 0)], on_site_right[0][(0, 0)])).reshape(
+    t[:, :, :, :] += (_np.outer(id_dense[(0, 0)], on_site_right[0][(0, 0)])).reshape(
         d, d, d, d
     )
 
@@ -813,7 +813,7 @@ def _exp_gate(arg, dH, *, d):
 
 def _exp_dgate(arg, dH, *, d):
     # TMP correspond to exp(+arg dH)
-    tmp = _exp_gate(arg, dH, d)
+    tmp = _exp_gate(arg, dH, d=d)
     #####
     # REMARK : exp(+arg dH) is before contracted with s..
     # ------- => dU = exp(+arg dH) et dU | ket >
@@ -858,27 +858,29 @@ def _exp_dgate(arg, dH, *, d):
     return dU2
 
 
-def _suzu_trotter_period2_exp_numpy(arg, site_L, site_R, bond_M, quantum_name, dgate):
-    quantum_name_NONE = quantum_name.split("-")[0] + "-None"
-    d = _models.basis[quantum_name_NONE]["deg"][0]
+def _suzu_trotter_exp_numpy(
+    arg, id_dense, on_site_left, on_site_right, nn_bond, is_dgate, *, d
+):
 
-    dH = _gate_ham_period2_numpy(site_L, site_R, bond_M, quantum_name)
-    if dgate == False:
-        return _exp_gate(arg, dH, d)
+    dH = _hamiltonian_gate_from_dense(
+        id_dense, on_site_left, on_site_right, nn_bond, d=d
+    )
+    if is_dgate == False:
+        return _exp_gate(arg, dH, d=d)
     else:
-        return _exp_dgate(arg, dH, d)
+        return _exp_dgate(arg, dH, d=d)
 
 
 # below, cut from dense to quantum number (index + matrix)
 def _generate_slices(d, deg):
     offi = 0
-    for i in xrange(d):
+    for i in range(d):
         offj = 0
-        for j in xrange(d):
+        for j in range(d):
             offk = 0
-            for k in xrange(d):
+            for k in range(d):
                 offl = 0
-                for l in xrange(d):
+                for l in range(d):
                     yield i, j, k, l, slice(offi, (offi + deg[i])), slice(
                         offj, (offj + deg[j])
                     ), slice(offk, (offk + deg[k])), slice(offl, (offl + deg[l]))
@@ -890,21 +892,21 @@ def _generate_slices(d, deg):
 
 def _generate_slices_dgate(d, deg):
     offi = 0
-    for i in xrange(d):
+    for i in range(d):
         offj = 0
-        for j in xrange(d):
+        for j in range(d):
             offk = 0
-            for k in xrange(d):
+            for k in range(d):
                 offl = 0
-                for l in xrange(d):
+                for l in range(d):
                     offm = 0
-                    for m in xrange(d):
+                    for m in range(d):
                         offn = 0
-                        for n in xrange(d):
+                        for n in range(d):
                             offo = 0
-                            for o in xrange(d):
+                            for o in range(d):
                                 offp = 0
-                                for p in xrange(d):
+                                for p in range(d):
                                     yield i, j, k, l, m, n, o, p, slice(
                                         offi, (offi + deg[i])
                                     ), slice(offj, (offj + deg[j])), slice(
@@ -932,27 +934,33 @@ def _generate_slices_dgate(d, deg):
 
 # above, cut from dense to quantum number (index + matrix)
 
-############################################################
-############################################################
-############################################################
 
-
-def suzu_trotter_period2_exp(arg, site_L, site_R, bond_M, quantum_name, dgate):
+def suzu_trotter_exp_to_blocs(
+    arg,
+    id_dense,
+    on_site_left,
+    on_site_right,
+    nn_bond,
+    is_dgate,
+    *,
+    degenerate_list,
+    dense_d
+):
     # for gate : GOES OUT IN SSWW order
     # # [('s',(l+1)),('s',(l+2)),('W',(l+1)),('W',(l+2))])
     #
     # for dgate : GOES OUT IN SSWW-SSWW order
     # # [('s',(l+1)),('s',(l+2)),('W',(l+1)),('W',(l+2)),('W',-(l+1)),('W',-(l+2)),('s',-(l+1)),('s',-(l+2))])
     #
-    deg = _models.basis[quantum_name]["deg"]
-    d = len(deg)
-    t = _suzu_trotter_period2_exp_numpy(
-        arg, site_L, site_R, bond_M, quantum_name, dgate
+    # deg = _models.basis[quantum_name]["deg"]
+    fake_d = len(degenerate_list)
+    t = _suzu_trotter_exp_numpy(
+        arg, id_dense, on_site_left, on_site_right, nn_bond, is_dgate, d=dense_d
     )
 
     blocks = []
-    if dgate == False:
-        for i, j, k, l, si, sj, sk, sl in _generate_slices(d, deg):
+    if is_dgate == False:
+        for i, j, k, l, si, sj, sk, sl in _generate_slices(fake_d, degenerate_list):
             tmp = t[si, sj, sk, sl]
             if not _np.all(tmp == 0):
                 tmp.setflags(write=0)
@@ -975,7 +983,7 @@ def suzu_trotter_period2_exp(arg, site_L, site_R, bond_M, quantum_name, dgate):
             sn,
             so,
             sp,
-        ) in _generate_slices_dgate(d, deg):
+        ) in _generate_slices_dgate(fake_d, degenerate_list):
             tmp = t[si, sj, sk, sl, sm, sn, so, sp]
             if not _np.all(tmp == 0):
                 tmp.setflags(write=0)
@@ -986,59 +994,64 @@ def suzu_trotter_period2_exp(arg, site_L, site_R, bond_M, quantum_name, dgate):
 ############################################################
 
 
-def suzu_trotter_obc_exp(arg, qnmodel, param, L, dgate):
+def suzu_trotter_obc_exp(arg, model_name, parameters, size, is_dgate):
     # for gate : GOES OUT IN SSWW order
     # # [('s',(l+1)),('s',(l+2)),('W',(l+1)),('W',(l+2))])
     #
     # for dgate : GOES OUT IN SSWW-SSWW order
     # # [('s',(l+1)),('s',(l+2)),('W',(l+1)),('W',(l+2)),('W',-(l+1)),('W',-(l+2)),('s',-(l+1)),('s',-(l+2))])
     #
-    qname = qnmodel.split("-")[0]
-    # if qname[0:2]=='ld':
-    #     model = 'ld-'+qnmodel.split(qname+'-')[-1]
-    # else:
-    #     model = qnmodel.split(qname+'-')[-1]
-
-    quantum_name = (
-        qname
-        + "-"
-        + _models.hamiltonian[qnmodel.split(qname + "-")[-1]]["qname_ideal"][0]
-    )
-
     mpo = []
-    onsite, onbond = finite_hamiltonian_terms(qnmodel, param, L)
 
-    for l in xrange(L - 1):
-        if l == 0:
-            effectif_onsite_L = onsite[l]
-        else:
-            effectif_onsite_L = [(param / 2.0, name) for param, name in onsite[l]]
+    head, mod, tail = model_name.split("_")
+    if head == "sh" and tail == "no":
+        degenerate_list = [2]
+        dense_d = 2
+    elif head == "sh" and tail == "u1":
+        degenerate_list = [1, 1]
+        dense_d = 2
+    elif head == "so" and tail == "no":
+        degenerate_list = [3]
+        dense_d = 3
+    elif head == "so" and tail == "u1":
+        degenerate_list = [1, 1, 1]
+        dense_d = 3
+    elif head == "ru" and tail == "u1":
+        degenerate_list = [1, 2, 1]
+        dense_d = 4
+    else:
+        degenerate_list = [4]
+        dense_d = 4
 
-        if l == L - 2:
-            effectif_onsite_R = onsite[L - 1]
-        else:
-            effectif_onsite_R = [(param / 2.0, name) for param, name in onsite[l + 1]]
+    id_dense = single_operator(name=head + "_id_no", coef=1.0)
+    on_site = on_site_operators_from_hamiltonian(head + "_" + mod + "_no", parameters)
+    # fuse on_site
 
-        effectif_onbond = onbond[l]
+    # fuse
+    nn_bond = nn_bond_operators_from_hamiltonian(head + "_" + mod + "_no", parameters)
+
+    for l in range(size - 1):
+        # if l == 0:
+        #    effectif_onsite_L = onsite[l]
+        # else:
+        #    effectif_onsite_L = [(param / 2.0, name) for param, name in onsite[l]]
+
+        # if l == L - 2:
+        #    effectif_onsite_R = onsite[L - 1]
+        # else:
+        #    effectif_onsite_R = [(param / 2.0, name) for param, name in onsite[l + 1]]
+
         mpo.append(
-            suzu_trotter_period2_exp(
+            suzu_trotter_exp_to_blocs(
                 arg,
-                effectif_onsite_L,
-                effectif_onsite_R,
-                effectif_onbond,
-                quantum_name,
-                dgate,
+                id_dense,
+                on_site,
+                on_site,
+                nn_bond,
+                is_dgate,
+                degenerate_list=degenerate_list,
+                dense_d=dense_d,
             )
         )
 
     return mpo
-
-
-############################################################
-# MATRICES ARE CORRECT!
-# manybody.models.quantum_name = 'sh-None'
-# A = manybody.matrices.suzu_trotter_obc_exp(-0.02,'sh-xxz-hz',[1,1,2],10,True)[0]
-# manybody.models.quantum_name = 'sh-U1'
-# B = manybody.matrices.suzu_trotter_obc_exp(-0.02,'sh-xxz-hz',[1,1,2],10,True)[0]
-# for i in xrange(len(B)):
-#     print(B[i][1][0,0,0,0] == A[0][1][tuple(B[i][0])])
