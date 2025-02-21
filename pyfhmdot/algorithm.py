@@ -138,19 +138,30 @@ def sweep(size, *, from_site=None, to_site=None):
 
 def print_single(size, site_i):
     return "\r" + "".join(
-        ["A" for _ in range(1, site_i,1)] + ["*"] + ["B" for _ in range(site_i, size, 1)]
+        ["A" for _ in range(1, site_i, 1)]
+        + ["*"]
+        + ["B" for _ in range(site_i, size, 1)]
     )
 
 
 def print_double(size, site_i):
     return "\r" + "".join(
-        ["A" for _ in range(1, site_i,1)]
+        ["A" for _ in range(1, site_i, 1)]
         + ["*="]
         + ["B" for _ in range(site_i + 1, size, 1)]
     )
 
 
-def apply_UM(A, B):
+def multiply(ma, mb):  # -> mdest
+    mdest = _np.tensordot(ma, mb, (2, 0))
+    return mdest
+
+
+def multiply_with_gate(ma, mb, mtheta):  # -> mdest
+    mdest = _np.tensordot(ma, _np.tensordot(mtheta, mb, (3, 0)), (3, 4))
+
+
+def apply_UM(array_A, array_B):
     pass
 
 
