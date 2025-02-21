@@ -3,7 +3,7 @@
 """A library that provides a golden project"""
 
 # from .utils import iotools
-from .utils.validity import is_valid_sim_dict
+from .utils.iodicts import check_filename_and_extension
 from .general import create_maximal_entangled_state
 from .version import __version__
 
