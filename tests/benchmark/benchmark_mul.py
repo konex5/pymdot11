@@ -6,14 +6,14 @@ import csv
 
 add_header = True
 
-datalist = [(10 * _ ** 2, 10 * _ ** 2) for _ in range(10)]  # N,K
+datalist = [(10 * 2 ** _, 10 * 2 ** _) for _ in range(2, 10)]  # N,K
 
 
 def create_random_matrix(N, M):
     return np.random.random(N * M).reshape(N, M)
 
 
-with open("/tmp/pyfhmdot_benchmark_mul_dgemm.txt", "w") as f:
+with open("/tmp/pyfhmdot_benchmark_mul.txt", "w") as f:
     if add_header:
         f.write("N,time[ms],memory[KiB]\n")
 
