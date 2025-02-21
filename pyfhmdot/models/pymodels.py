@@ -667,22 +667,25 @@ def _mpo_from_operators(id_bloc, on_site, nn_bond_left, nn_bond_right):
         )
     # on_site
     for idx, val in on_site[0].items():
-        blocks[(bl_dimL, idx[0], idx[1], 0)] = 0.5 * val.reshape(
-            tuple([1] + list(val.shape) + [1])
-        )  # appear twice in the bulk
+        if _np.all(val != 0):
+            blocks[(bl_dimL, idx[0], idx[1], 0)] = 0.5 * val.reshape(
+                tuple([1] + list(val.shape) + [1])
+            )  # appear twice in the bulk
 
     # nn_bond
     for i in range(1, bl_dimR, 1):
         for idxb, valb in nn_bond_right[i - 1].items():
-            blocks[(i, idxb[0], idxb[1], 0)] = valb.reshape(
-                tuple([1] + list(valb.shape) + [1])
-            )
+            if _np.all(valb != 0):
+                blocks[(i, idxb[0], idxb[1], 0)] = valb.reshape(
+                    tuple([1] + list(valb.shape) + [1])
+                )
 
     for i in range(1, bl_dimL, 1):
         for idxa, vala in nn_bond_left[i - 1].items():
-            blocks[(bl_dimL, idxa[0], idxa[1], i)] = vala.reshape(
-                tuple([1] + list(vala.shape) + [1])
-            )
+            if _np.all(vala != 0):
+                blocks[(bl_dimL, idxa[0], idxa[1], i)] = vala.reshape(
+                    tuple([1] + list(vala.shape) + [1])
+                )
 
     return blocks
 
@@ -699,14 +702,18 @@ def _mpo_from_operators_left_border(id_bloc, on_site, nn_bond_right):
 
     # on site
     for idx, val in on_site[0].items():
-        blocks[(0, idx[0], idx[1], 0)] = val.reshape(tuple([1] + list(val.shape) + [1]))
+        if _np.all(val != 0):
+            blocks[(0, idx[0], idx[1], 0)] = val.reshape(
+                tuple([1] + list(val.shape) + [1])
+            )
 
     # nn_bond
     for i in range(1, bl_dimR, 1):
         for idxa, vala in nn_bond_right[i - 1].items():
-            blocks[(0, idxa[0], idxa[1], i)] = vala.reshape(
-                tuple([1] + list(vala.shape) + [1])
-            )
+            if _np.all(vala != 0):
+                blocks[(0, idxa[0], idxa[1], i)] = vala.reshape(
+                    tuple([1] + list(vala.shape) + [1])
+                )
 
     return blocks
 
@@ -721,16 +728,18 @@ def _mpo_from_operators_right_border(id_bloc, on_site, nn_bond_left):
 
     # on site
     for idx, val in on_site[0].items():
-        blocks[(bl_dimL, idx[0], idx[1], 0)] = val.reshape(
-            tuple([1] + list(val.shape) + [1])
-        )
+        if _np.all(val != 0):
+            blocks[(bl_dimL, idx[0], idx[1], 0)] = val.reshape(
+                tuple([1] + list(val.shape) + [1])
+            )
 
     # nn_bond
     for i in range(1, bl_dimL, 1):
         for idxb, valb in nn_bond_left[i - 1].items():
-            blocks[(i, idxb[0], idxb[1], 0)] = valb.reshape(
-                tuple([1] + list(valb.shape) + [1])
-            )
+            if _np.all(valb != 0):
+                blocks[(i, idxb[0], idxb[1], 0)] = valb.reshape(
+                    tuple([1] + list(valb.shape) + [1])
+                )
 
     return blocks
 
