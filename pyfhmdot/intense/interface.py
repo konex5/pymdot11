@@ -182,7 +182,7 @@ def measure_mps_mpo_mps(mps_one, mpo, mps_two, position=-1):
 
     tmp_right = {}
     _contract_right_border(tmp_right, mps_one[-1], mpo[-1], mps_two[-1])
-    for l in range(len(mps_one)-2, position, -1):
+    for l in range(len(mps_one) - 2, position, -1):
         tmp = _copy(tmp_right)  # swap
         tmp_right.clear()
         _contract_right(tmp_right, tmp, mps_one[l], mpo[l], mps_two[l])

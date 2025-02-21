@@ -174,9 +174,9 @@ def select_lowest_blocs(
     _ = sorted(set(eigenvalues.values()))
     min_val = _[0]
     max_val = _[-1]
-    #print("sum of eigenvalues is :", _np.sum(list(eigenvalues.values())))
+    # print("sum of eigenvalues is :", _np.sum(list(eigenvalues.values())))
     for key in list(eigenvalues.keys()):
-        if not abs(eigenvalues[key] - min_val) <= abs(max_val-min_val)/5:
+        if not abs(eigenvalues[key] - min_val) <= abs(max_val - min_val) / 5:
             eigenvectors.pop(key)
             eigenvalues.pop(key)
     # should keep sectors by Qnum and not by energy -_-'

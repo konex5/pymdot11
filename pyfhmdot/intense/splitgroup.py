@@ -98,12 +98,10 @@ def reshape_and_group(model_name, newblocks, oldblocks, indices):
         if dest_key not in target_constructed:
             totalshape = tuple(
                 [oldshape[i] for i in range(indices[0])]
-                + [splitgroup_mapping(model_name,
-                                      section="2deg")[valuegrouped]]
+                + [splitgroup_mapping(model_name, section="2deg")[valuegrouped]]
                 + [oldshape[i] for i in range(indices[1] + 1, len(it))]
             )
-            newblocks[dest_key] = _np.ndarray(
-                (totalshape), oldblocks[it].dtype)
+            newblocks[dest_key] = _np.ndarray((totalshape), oldblocks[it].dtype)
             newblocks[dest_key].fill(0)
             target_constructed.append(dest_key)
 
@@ -115,8 +113,7 @@ def reshape_and_group(model_name, newblocks, oldblocks, indices):
         newsliced = tuple(
             [slice(0, oldshape[i]) for i in range(indices[0])]
             + [mapping[2][idmap]]
-            + [slice(0, oldshape[i])
-               for i in range(indices[1] + 1, len(oldshape))]
+            + [slice(0, oldshape[i]) for i in range(indices[1] + 1, len(oldshape))]
         )
 
         newblocks[dest_key][newsliced] = oldblocks[it].reshape(newshape)
@@ -137,8 +134,7 @@ def reshape_and_split(model_name, newblocks, oldblocks, index):
             oldshape = oldblocks[it].shape
             newshape = tuple(
                 [oldshape[i] for i in range(index)]
-                + [int(_np.sqrt(oldshape[index])),
-                   int(_np.sqrt(oldshape[index]))]
+                + [int(_np.sqrt(oldshape[index])), int(_np.sqrt(oldshape[index]))]
                 + [oldshape[i] for i in range(index + 1, len(it))]
             )
             newblocks[dest_key] = oldblocks[it].reshape(newshape)
@@ -155,8 +151,7 @@ def reshape_and_split(model_name, newblocks, oldblocks, index):
                 newsliced = tuple(
                     [slice(0, oldshape[i]) for i in range(index)]
                     + [mapping[2][idmap]]
-                    + [slice(0, oldshape[i])
-                       for i in range(index + 1, len(oldshape))]
+                    + [slice(0, oldshape[i]) for i in range(index + 1, len(oldshape))]
                 )
                 tmp = oldblocks[it][newsliced]
 
@@ -213,13 +208,13 @@ def split_dmps(model_name, dst_mp, dmp):
     reshape_and_split(model_name, dst_mp, dmp, 1)
 
 
-def group_mpos(model_name,dst_mp,mpos):
+def group_mpos(model_name, dst_mp, mpos):
     # mpos
     #    2| |4
     # 0 -|___|- 5
     #    1| |3
     tmp = {}
-    permute_blocs(tmp,mpos,[(0,1,2,3,4,5),(0,1,4,2,4,5)])
+    permute_blocs(tmp, mpos, [(0, 1, 2, 3, 4, 5), (0, 1, 4, 2, 4, 5)])
     # mpos
     #    3| |4
     # 0 -|___|- 5
@@ -230,7 +225,6 @@ def group_mpos(model_name,dst_mp,mpos):
     #    2||
     # 0 -|___|- 3
     #    1||
-    
 
 
 def group_all(model_name, dmps):

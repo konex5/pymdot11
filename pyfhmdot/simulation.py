@@ -12,7 +12,12 @@ from pyfhmdot.intense.contract import (
 )
 from pyfhmdot.intense.mul_mp import multiply_mp, permute_blocs
 from pyfhmdot.routine.eig_routine import smallest_eigenvectors_from_scipy
-from pyfhmdot.routine.interface import apply_eigenvalues, minimize_theta, select_lowest_blocs, theta_to_mm
+from pyfhmdot.routine.interface import (
+    apply_eigenvalues,
+    minimize_theta,
+    select_lowest_blocs,
+    theta_to_mm,
+)
 
 
 def sweep(size, *, from_site=None, to_site=None):
@@ -491,7 +496,7 @@ def idmrg_minimize_two_sites(
     contract_left_right_mpo_mpo_permute(
         env_bloc, bloc_left, ham_mpo_left, ham_mpo_right, bloc_right
     )
-    a=1
+    a = 1
     for key in list(env_bloc.keys()):
         shape = env_bloc[key].shape
         # if not (
