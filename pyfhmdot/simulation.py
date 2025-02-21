@@ -1,6 +1,7 @@
+"""simulation.py"""
+
 from pyfhmdot.algorithm import apply_mm_at, apply_gate_on_mm_at
 from copy import deepcopy as _copy
-from logging import warning as _warning
 from pyfhmdot.conservation import conserve_qnum
 from pyfhmdot.initialize import finalize_idmrg_even_size
 
@@ -15,7 +16,6 @@ from pyfhmdot.intense.contract import (
 from pyfhmdot.routine.interface import (
     apply_eigenvalues,
     minimize_theta,
-    select_lowest_blocs,
     theta_to_mm,
 )
 

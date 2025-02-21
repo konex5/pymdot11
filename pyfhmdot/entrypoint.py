@@ -1,3 +1,5 @@
+"""entrypoint.py"""
+
 from pyfhmdot.initialize import (
     create_infinite_hamiltonian as _create_infinite_hamiltonian,
     initialize_idmrg_even_size as _initialize_idmrg_even_size,
@@ -163,7 +165,7 @@ def dynamical_dmps(dmps, dggate, sim_dict):
         chi_max=sim_dict["chi_max"],
         normalize=sim_dict["normalize"],
         eps=sim_dict["eps_truncation"],
-        strategy=2, # sum on left, sum on right
+        strategy=2,  # sum on left, sum on right
         start_left=sim_dict["start_left"],
         start_odd_bonds=sim_dict["start_odd_bonds"],
     )
@@ -174,7 +176,6 @@ def dynamical_dmps(dmps, dggate, sim_dict):
 
 
 def time_evolve_double(dmps, dggate, ddmrg_dict):
-    # while
     dynamical_dmps(dmps, dggate, ddmrg_dict)
 
 
