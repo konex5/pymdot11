@@ -19,7 +19,7 @@ def infinite_to_finite_ground_state(
     dst_imps, model_name, parameters, idmrg_dict, *, size, conserve_total
 ):
     """
-    conserve is minimal at 0 and maximal at size by increment of 1.
+    conserve_total is minimal at 0 and maximal at size by increment of 1.
     """
     dst_imps_left = []
     dst_imps_right = []
@@ -97,11 +97,10 @@ def variational_ground_state(mps, ham, zdmrg_dict):
     )
     # initialize
     left_right = _initialize_left_right(mps, ham, 2)
-    left_right_var = _initialize_left_right_variance(mps, ham, 2)
     # warmup
     _dmrg_warmup(mps, ham, left_right, zdmrg_dict, start_left=True)  # nb_warmup
     # initialize
-    # left_right_var = initialize_left_right_variance(mps, ham, 2)
+    left_right_var = _initialize_left_right_variance(mps, ham, 2)
     # converge
     _dmrg_sweeps(mps, ham, left_right, left_right_var, zdmrg_dict, start_left=True)
 
@@ -164,6 +163,7 @@ def dynamical_dmps(dmps, dggate, sim_dict):
         chi_max=sim_dict["chi_max"],
         normalize=sim_dict["normalize"],
         eps=sim_dict["eps_truncation"],
+        strategy=2, # sum on left, sum on right
         start_left=sim_dict["start_left"],
         start_odd_bonds=sim_dict["start_odd_bonds"],
     )
