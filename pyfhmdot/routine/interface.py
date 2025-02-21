@@ -21,7 +21,8 @@ from pyfhmdot.routine.indices import (
 from pyfhmdot.routine.mul_routine import (
     mul_mm_blocs_new,
     mul_mm_blocs_snd,
-    mul_theta_with_gate,
+    mul_theta_with_gate_new,
+    mul_theta_with_gate_snd,
     mul_usv_nondeg,
     mul_usv_deg,
 )
@@ -75,12 +76,13 @@ def mm_to_theta_with_gate(
     ))
     mul_mm_blocs_new(tmp_blocs, lhs_blocs, rhs_blocs, tmp_indices_new)
     mul_mm_blocs_snd(tmp_blocs, lhs_blocs, rhs_blocs, tmp_indices_snd)
-    dst_indices = indices_dst_theta_with_gate(
+    dst_indices_new,dst_indices_snd = split_degenerate_indices(indices_dst_theta_with_gate(
         theta_indices=tmp_blocs.keys(),
         gate_indices=gate_blocs.keys(),
         conserve_left_right=conserve_left_right_after,
-    )
-    mul_theta_with_gate(dst_blocs, tmp_blocs, gate_blocs, dst_indices)
+    ))
+    mul_theta_with_gate_new(dst_blocs, tmp_blocs, gate_blocs, dst_indices_new)
+    mul_theta_with_gate_snd(dst_blocs, tmp_blocs, gate_blocs, dst_indices_snd)
 
 
 def theta_to_mm(

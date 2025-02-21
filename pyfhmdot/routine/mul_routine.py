@@ -34,27 +34,31 @@ def mul_mm_blocs_snd(
             axes=(2, 0),
         )
 
-def mul_theta_with_gate(
+def mul_theta_with_gate_new(
     new_blocks: _Dict[tuple, _np.ndarray],
     old_blocks1: _Dict[tuple, _np.ndarray],
     old_blocks2: _Dict[tuple, _np.ndarray],
     buildtarget: _List[_Tuple[tuple, tuple, tuple]],
 ) -> None:
-    list_isnew = list_degenerate_indices([_[0] for _ in buildtarget])
-    for new, it in zip(list_isnew, buildtarget):
-        target, it1, it2 = it[0], it[1], it[2]
-        if new:
-            new_blocks[target] = _np.tensordot(
-                old_blocks1[it1],
-                old_blocks2[it2],
-                axes=([1, 2], [0, 3]),
-            ).transpose(0, 2, 3, 1)
-        else:
-            new_blocks[target] += _np.tensordot(
-                old_blocks1[it1],
-                old_blocks2[it2],
-                axes=([1, 2], [0, 3]),
-            ).transpose(0, 2, 3, 1)
+    for target, it1, it2 in buildtarget:
+        new_blocks[target] = _np.tensordot(
+            old_blocks1[it1],
+            old_blocks2[it2],
+            axes=([1, 2], [0, 3]),
+        ).transpose(0, 2, 3, 1)
+
+def mul_theta_with_gate_snd(
+    new_blocks: _Dict[tuple, _np.ndarray],
+    old_blocks1: _Dict[tuple, _np.ndarray],
+    old_blocks2: _Dict[tuple, _np.ndarray],
+    buildtarget: _List[_Tuple[tuple, tuple, tuple]],
+) -> None:
+    for target, it1, it2 in buildtarget:
+        new_blocks[target] += _np.tensordot(
+            old_blocks1[it1],
+            old_blocks2[it2],
+            axes=([1, 2], [0, 3]),
+        ).transpose(0, 2, 3, 1)
 
 
 def mul_usv_nondeg(
