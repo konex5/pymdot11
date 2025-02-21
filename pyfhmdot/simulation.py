@@ -5,17 +5,12 @@ from copy import deepcopy as _copy
 from pyfhmdot.conservation import conserve_qnum
 from pyfhmdot.initialize import finalize_idmrg_even_size
 
-from pyfhmdot.intense.contract import (
-    contract_left_bloc_mps,
-    contract_left_right_mpo_mpo_permute,
-    contract_mps_mpo_mps_left_border,
-    contract_mps_mpo_mps_right_border,
-    contract_right_bloc_mps,
-    filter_left_right,
-)
 from pyfhmdot.routine.eig_routine import minimize_theta_with_scipy as minimize_theta
 from pyfhmdot.routine.eig_routine import apply_eigenvalues
 from pyfhmdot.routine.interface import theta_to_mm
+from pyfhmdot.routine.minimize import minimize_and_move as _minimize_and_move
+
+from pyfhmdot.dmrg_contraction import create_env_blocs, update_left, update_right
 
 
 def sweep(size, *, from_site=None, to_site=None):
@@ -472,11 +467,8 @@ def dmrg_minimize_two_sites(
         size - position, size=size, qnum_conserved=conserve_total, d=d
     )
 
-    # contract and permute
-    env_bloc = {}
-    contract_left_right_mpo_mpo_permute(
-        env_bloc, bloc_left, ham_mpo_left, ham_mpo_right, bloc_right
-    )
+    env_bloc = create_env_blocs(bloc_left, ham_mpo_left, ham_mpo_right, bloc_right)
+
     for key in list(env_bloc.keys()):
         shape = env_bloc[key].shape
         if (
@@ -520,27 +512,6 @@ def dmrg_minimize_two_sites(
         -1,
         sim_dict["eps_truncation"],
     )
-
-
-def update_left(mps, ham, left, is_border=False):
-    new_bloc_left = {}
-    if is_border:
-        contract_mps_mpo_mps_left_border(new_bloc_left, mps, ham, mps)
-    else:
-        contract_left_bloc_mps(new_bloc_left, left, mps, ham, mps)
-    filter_left_right(new_bloc_left)
-
-    return new_bloc_left
-
-
-def update_right(mps, ham, right, is_border=False):
-    new_bloc_right = {}
-    if is_border:
-        contract_mps_mpo_mps_right_border(new_bloc_right, mps, ham, mps)
-    else:
-        contract_right_bloc_mps(new_bloc_right, right, mps, ham, mps)
-    filter_left_right(new_bloc_right)
-    return new_bloc_right
 
 
 def idmrg_even(
@@ -660,7 +631,6 @@ def dmrg_sweep(
     start_left=True,
     driver="lanczos",
 ):
-    from pyfhmdot.routine.minimize import minimize_and_move as minimize_lanczos_and_move
 
     size = len(mps)
 
@@ -670,7 +640,7 @@ def dmrg_sweep(
         if start_left:
             for l in range(1, size - 2, 1):
                 print_double(size, l, "MM")
-                minimize_lanczos_and_move(
+                _minimize_and_move(
                     l,
                     mps,
                     ham,
@@ -688,7 +658,7 @@ def dmrg_sweep(
         else:
             for l in range(size - 3, 0, -1):
                 print_double(size, l, "MM")
-                minimize_lanczos_and_move(
+                _minimize_and_move(
                     l,
                     mps,
                     ham,

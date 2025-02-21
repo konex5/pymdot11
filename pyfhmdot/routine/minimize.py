@@ -6,7 +6,7 @@ from pyfhmdot.routine.interface import mm_to_theta_no_gate, theta_to_mm
 from pyfhmdot.algorithm import apply_mm_at
 from numpy import all as _all
 
-from pyfhmdot.simulation import update_left, update_right
+from pyfhmdot.dmrg_contraction import update_left, update_right
 
 
 def minimize_on_mm(env_blocs, th_blocs, max_iteration, tolerance, *, driver):
