@@ -15,7 +15,11 @@ from pyfhmdot.utils.general import (
     load_model_info_size,
     load_mps,
 )
-from pyfhmdot.utils.iotools import check_filename_and_extension_h5, check_filename_and_extension_to_create_h5, create_h5
+from pyfhmdot.utils.iotools import (
+    check_filename_and_extension_h5,
+    check_filename_and_extension_to_create_h5,
+    create_h5,
+)
 
 from pyfhmdot.intense.interface import measure_dmps, measure_dmps_dmps, measure_mps_mps
 
@@ -51,14 +55,13 @@ if __name__ == "__main__":
         "-o", "--output", type=str, action="store", help="output path", required=True
     )
 
-
     arguments = parser.parse_args()
 
     if not check_filename_and_extension_h5(arguments.ket):
         sys.exit(
             f"cli_combine_operator.py: error: the hamiltonian path {arguments.ket} is not a valid path."
         )
-    
+
     if not check_filename_and_extension_to_create_h5(arguments.output):
         sys.exit(
             f"cli_create_maximal_entangled_state.py: error: the output dirpath {os.path.dirname(arguments.output)} is not a valid directory path."
@@ -69,45 +72,48 @@ if __name__ == "__main__":
         sys.exit(
             f"cli_combine_operator.py: error: the position {arguments.position} can not be greater than {size}."
         )
-    elif arguments.position<1:
+    elif arguments.position < 1:
         sys.exit(
             f"cli_combine_operator.py: error: the position {arguments.position} can not be smaller than 1."
         )
-    
+
     model_name = load_model_info_model_name(arguments.ket)
-    head,_,tail = model_name.split("_")
-    op_head,_,op_tail = arguments.name.split("_")
-    
+    head, _, tail = model_name.split("_")
+    op_head, _, op_tail = arguments.name.split("_")
+
     if op_head != head and op_tail != tail:
         sys.exit(
             f"cli_combine_operator.py: error: the operator name {arguments.name} has wrong prefix or sufix."
         )
-    
-    operator = single_operator(arguments.name,1.)
+
+    operator = single_operator(arguments.name, 1.0)
     ket_dmps = load_mps(arguments.ket, size, folder="QMP")
 
     if len(list(ket_dmps[0].values())[0].shape) == 4:
         new_mp = {}
-        multiply_mp(new_mp,operator,ket_dmps[arguments.position-1],[1],[2]) 
+        multiply_mp(new_mp, operator, ket_dmps[arguments.position - 1], [1], [2])
         #    0|
         #  1-|_|-3
         #    2|
         new_dst = {}
-        permute_blocs(new_dst, new_mp,[(0,1,2,3),(2,0,1,3)])
+        permute_blocs(new_dst, new_mp, [(0, 1, 2, 3), (2, 0, 1, 3)])
 
-        ket_dmps[arguments.position-1].clear()
-        ket_dmps[arguments.position-1] = new_dst
+        ket_dmps[arguments.position - 1].clear()
+        ket_dmps[arguments.position - 1] = new_dst
 
     create_h5(arguments.output)
     add_model_info(arguments.output, {"size": size, model_name: 0})
     add_state_info(
         arguments.output,
-        {"size": size, "dw_total": 0, "chi_middle": 1, "dbeta": 0, "time": 0, arguments.name: arguments.position},
+        {
+            "size": size,
+            "dw_total": 0,
+            "chi_middle": 1,
+            "dbeta": 0,
+            "time": 0,
+            arguments.name: arguments.position,
+        },
     )
     add_mps(arguments.output, ket_dmps, folder="QMP")
 
     print("Operator was applied on state. Results created successfully.")
-
-
-    
-    

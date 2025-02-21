@@ -88,7 +88,7 @@ def theta_to_mm(
     normalize: bool,
     is_um: _Optional[bool],
     direction_right: int,
-    eps: float = 10 ** -8,
+    eps: float = 10**-8,
 ) -> None:
 
     keys = list(theta_blocs.keys())

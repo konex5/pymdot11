@@ -462,7 +462,7 @@ def idmrg_minimize_two_sites(
         env_bloc, bloc_left, ham_mpo_left, ham_mpo_right, bloc_right
     )
     for key in list(env_bloc.keys()):
-        shape=env_bloc[key].shape
+        shape = env_bloc[key].shape
         # if not (
         #     key[0] == key[4]
         #     and key[1] == key[5]
@@ -471,14 +471,15 @@ def idmrg_minimize_two_sites(
         # ):
         #     env_bloc.pop(key)
         if not (
-            shape[0]*shape[1]*shape[2]*shape[3] == shape[4]*shape[5]*shape[6]*shape[7]
-        ): 
-        #or not (
-        #     key[0] == key[4]
-        #     and key[1] == key[5]
-        #     and key[2] == key[6]
-        #     and key[3] == key[7]
-        #)
+            shape[0] * shape[1] * shape[2] * shape[3]
+            == shape[4] * shape[5] * shape[6] * shape[7]
+        ):
+            # or not (
+            #     key[0] == key[4]
+            #     and key[1] == key[5]
+            #     and key[2] == key[6]
+            #     and key[3] == key[7]
+            # )
             env_bloc.pop(key)
     # minimize energy
     eigenvalues = {}
@@ -500,7 +501,6 @@ def idmrg_minimize_two_sites(
         -1,
         sim_dict["eps_truncation"],
     )
-    
 
 
 def idmrg_even(
@@ -528,10 +528,14 @@ def idmrg_even(
         #
         new_bloc_left = {}
         new_bloc_right = {}
-        contract_right_bloc_mps(new_bloc_right, bloc_right, tmp_imps_right, ham_mpo[1], tmp_imps_right)
-        contract_left_bloc_mps(new_bloc_left, bloc_left, tmp_imps_left, ham_mpo[0], tmp_imps_left)
+        contract_right_bloc_mps(
+            new_bloc_right, bloc_right, tmp_imps_right, ham_mpo[1], tmp_imps_right
+        )
+        contract_left_bloc_mps(
+            new_bloc_left, bloc_left, tmp_imps_left, ham_mpo[0], tmp_imps_left
+        )
         bloc_left.clear()
-        bloc_right.clear()        
+        bloc_right.clear()
         bloc_left, bloc_right = new_bloc_left, new_bloc_right
         for key in list(bloc_left.keys()):
             if key[0] != key[2]:
