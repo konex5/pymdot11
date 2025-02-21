@@ -2,7 +2,7 @@ import tracemalloc
 import time
 import numpy as np
 
-from pyfhmdot.algorithm import apply_mm_at
+from pyfhmdot.algorithm import apply_mm
 
 add_header = True
 
@@ -33,9 +33,9 @@ with open("/tmp/pyfhmdot_benchmark_apply_no_gate.txt", "w") as f:
         tracemalloc.start()
         time_start = time.time()
         #
-        apply_mm_at(
-            mp,
-            1,
+        mp[0], mp[1] = apply_mm(
+            mp[0],
+            mp[1],
             {"dw_one_serie": 0},
             N,
             True,
