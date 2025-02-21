@@ -35,15 +35,13 @@ if __name__ == "__main__":
             f"cli_create_maximal_entangled_state.py: error: the output dirpath {os.path.dirname(arguments.output)} is not a valid directory path."
         )
 
-    # coefsite, mpo, info, sim_TDMRG = create_maximal_entangled_state(size=size,qname='sh_id_no')
+    # coefsite, dmps, info, sim_TDMRG = create_maximal_entangled_state(size=size,qname='sh_id_no')
 
     """
-    modeldict, output = getArgs_create_maximal_entangled_state(argvals)
-
-    manybody.models.quantum_name = modeldict["quantum_name"]
+    model_dict = get_model(arguments.hamiltonian)
 
     coefsite, mpo, info, sim_TDMRG = main_create_maximal_entangled_state(
-        modeldict["qnmodel"], modeldict["L"]
+        model_dict["qn"],model_dict["spin_length"], model_dict["size"]
     )
 
     hdf5_create_mpo(output, mpo, coefsite, modeldict, info, sim_TDMRG, "TDMRG")
