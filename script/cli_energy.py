@@ -41,9 +41,7 @@ if __name__ == "__main__":
         required=True,
     )
 
-    arguments = parser.parse_args(
-        "-b /tmp/2B_00.0000.h5 -k /tmp/2B_00.0000.h5 -H /tmp/hamiltonian.h5".split(" ")
-    )
+    arguments = parser.parse_args()
 
     if not check_filename_and_extension_h5(arguments.bra):
         sys.exit(
