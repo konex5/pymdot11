@@ -1,5 +1,5 @@
 from pyfhmdot.routine import mpsQ_svd_th2mV, mpsQ_svd_th2Um
-from pyfhmdot.contract import (
+from pyfhmdot.routine import (
     multiply_blocs_no_gate_applied,
     multiply_blocs_with_gate_applied,
 )
