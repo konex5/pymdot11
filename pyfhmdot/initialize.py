@@ -1,10 +1,8 @@
 from copy import deepcopy as _copy
-from locale import normalize
 from numpy import sqrt as _sqrt
 from numpy import iscomplex as _iscomplex
 from numpy import imag as _imag
-
-import sys
+from sys import exit as _exit
 
 from pyfhmdot.models.pymodels import suzu_trotter_obc_exp
 from pyfhmdot.models.pymodels import hamiltonian_obc
@@ -30,7 +28,6 @@ from pyfhmdot.routine.eig_routine import smallest_eigenvectors_from_scipy
 from pyfhmdot.routine.interface import (
     apply_eigenvalues,
     minimize_theta,
-    select_lowest_blocs,
     theta_to_mm,
 )
 
@@ -125,61 +122,9 @@ def create_maximal_entangled_state(size, model_name, in_group=False):
                 (0, 1, 1, 0): tmp_blocs[(1, 1)].reshape(1, 1, 1, 1),
             }
         else:
-            sys.exit(f"The maximal entangled state does not exist for {operator_name}.")
+            _exit(f"The maximal entangled state does not exist for {operator_name}.")
         dmps.append(new_blocs)
     return coef, dmps
-
-
-def create_id_mp(model_name, position, is_left):
-    from numpy import eye
-    from numpy import array
-
-    head, _, tail = model_name.split("_")
-
-    operator_name = head + "_id_" + tail
-    coef = 1 / _sqrt(2)
-    if operator_name == "sh_id_no":
-        if is_left:
-            new_blocs = {
-                (0, 0, 0): coef
-                * eye(2**position).reshape(2 ** (position - 1), 2, 2**position),
-            }
-        else:
-            new_blocs = {
-                (0, 0, 0): coef
-                * eye(2**position).reshape(2**position, 2, 2 ** (position - 1)),
-            }
-    elif operator_name == "sh_id_u1":
-        if is_left and position == 1:
-            new_blocs = {
-                (0, 0, 0): array([coef * 1.0]).reshape(1, 1, 1),
-                (0, 1, 1): array([coef * 1.0]).reshape(1, 1, 1),
-            }
-        elif not is_left and position == 1:
-            new_blocs = {
-                (0, 0, 0): array([coef * 1.0]).reshape(1, 1, 1),
-                (1, 1, 0): array([coef * 1.0]).reshape(1, 1, 1),
-            }
-        elif is_left and position == 2:
-            new_blocs = {
-                (0, 0, 0): array([coef * 1.0]).reshape(1, 1, 1),
-                (0, 1, 1): array([coef * 1.0]).reshape(1, 1, 1),
-                (1, 0, 1): array([coef * 1.0]).reshape(1, 1, 1),
-                (1, 1, 2): array([coef * 1.0]).reshape(1, 1, 1),
-            }
-        elif not is_left and position == 2:
-            new_blocs = {
-                (0, 0, 0): array([coef * 1.0]).reshape(1, 1, 1),
-                (1, 1, 0): array([coef * 1.0]).reshape(1, 1, 1),
-                (1, 0, 1): array([coef * 1.0]).reshape(1, 1, 1),
-                (2, 1, 1): array([coef * 1.0]).reshape(1, 1, 1),
-            }
-        else:
-            sys.exit(f"The identity mp is usefull for borders only.")
-    else:
-        sys.exit(f"The identity mp does not exist for {operator_name}.")
-
-    return coef, new_blocs
 
 
 def initialize_idmrg_odd_size(
@@ -236,8 +181,7 @@ def initialize_idmrg_odd_size(
         "eps_truncation": 1e-20,
     }
     # minimize energy
-    eigenvalues = {}
-    eigenvectors = {}
+    eigenvalues, eigenvectors = {}, {}
     for keys in env_bloc.keys():
         mat = env_bloc[keys]
         new_shape = (
@@ -265,7 +209,6 @@ def initialize_idmrg_odd_size(
         if not (key[1] in allowed_sector and key[2] in allowed_sector and key[3]):
             eigenvectors.pop(key)
             eigenvalues.pop(key)
-    # select_lowest_blocs(eigenvalues, eigenvectors)
     apply_eigenvalues(eigenvalues, eigenvectors)
 
     # TODO!
@@ -342,12 +285,9 @@ def initialize_idmrg_even_size(
         "normalize": True,
     }
     # minimize energy
-    eigenvalues = {}
-    eigenvectors = {}
+    eigenvalues, eigenvectors = {}, {}
     minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
-
-    # select_lowest_blocs(eigenvalues, eigenvectors)
-    # apply_eigenvalues(eigenvalues, eigenvectors)
+    apply_eigenvalues(eigenvalues, eigenvectors)
 
     theta_to_mm(
         eigenvectors,
@@ -419,19 +359,8 @@ def finalize_idmrg_even_size(
             env_bloc.pop(key)  # non physical blocs
 
     # minimize energy
-    eigenvalues = {}
-    eigenvectors = {}
+    eigenvalues, eigenvectors = {}, {}
     minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
-
-    # for key in list(eigenvectors.keys()):
-    #     if not (
-    #         key[1] in allowed_sector and key[2] in allowed_sector and key[1] == key[2]
-    #     ):
-    #         eigenvectors.pop(key)
-    #         eigenvalues.pop(key)
-    #         _warning("eigenvectors removed a posteriori.")
-    # select_lowest_blocs(eigenvalues, eigenvectors)
-    # select_quantum_sector(eigenvalues, eigenvectors)
     apply_eigenvalues(eigenvalues, eigenvectors)
 
     theta_to_mm(
