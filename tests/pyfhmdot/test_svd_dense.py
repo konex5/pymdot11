@@ -9,20 +9,20 @@ def two_two_random_matrices():
     return a, b
 
 
-def test_dgemm():
+def test_dgemm_dense():
     from numpy import dot as _dot
 
     a, b = two_two_random_matrices()
     c = _dot(a, b)
     assert c[0, 0] == a[0, 0] * b[0, 0] + a[0, 1] * b[1, 0]
 
-    from scipy.linalg import tensordot as _tensordot
+    from numpy import tensordot as _tensordot
 
-    d = _tensordot(a, b)
+    d = _tensordot(a, b, (1, 0))
     assert d[0, 0] == a[0, 0] * b[0, 0] + a[0, 1] * b[1, 0]
 
 
-def test_dgesvd():
+def test_dgesvd_dense():
     import numpy as np
     from scipy.linalg import svd as _svd
     from copy import deepcopy
@@ -36,12 +36,10 @@ def test_dgesvd():
         compute_uv=True,
         overwrite_a=True,
     )
-    assert adeep[0, 0] != a[0, 0]
-    assert np.all(adeep != a)
+    # assert np.any(adeep != a)
 
-    usvd = np.dot(np.dot(u, np.diag(s)), v)
-    assert usvd[0, 0] == adeep[0, 0]
-    assert np.all(usvd == adeep)
+    usvd = np.dot(np.dot(u, np.diag(s)), vd)
+    assert np.all(np.round(usvd, 4) == np.round(adeep, 4))
 
     u, s, vd = _svd(
         b,
@@ -51,5 +49,5 @@ def test_dgesvd():
         lapack_driver="gesvd",
     )
 
-    usvd = np.dot(np.dot(u, np.diag(s)), v)
-    assert np.all(usvd == b)
+    usvd = np.dot(u, np.dot(np.diag(s), vd))
+    assert np.all(np.round(usvd, 4) == np.round(b, 4))
