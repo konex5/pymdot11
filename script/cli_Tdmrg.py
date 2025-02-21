@@ -9,6 +9,7 @@ from pyfhmdot.utils.general import (
     add_model_bdmrg_simulation,
     add_model_info,
     add_mps,
+    add_state_info,
     load_model_bdmrg_simulation,
     load_model_info_model_name,
     load_model_info_size,
@@ -82,8 +83,12 @@ if __name__ == "__main__":
         lowering_temperature(dmps, ggate, bdmrg_simulation_parameters)
         dbeta += bdmrg_simulation_parameters["dtau"]
         save += 1
-        bdmrg_simulation_parameters["start_odd_bonds"] = not bdmrg_simulation_parameters["start_odd_bonds"]
-        bdmrg_simulation_parameters["start_left"] = not bdmrg_simulation_parameters["start_left"]
+        bdmrg_simulation_parameters[
+            "start_odd_bonds"
+        ] = not bdmrg_simulation_parameters["start_odd_bonds"]
+        bdmrg_simulation_parameters["start_left"] = not bdmrg_simulation_parameters[
+            "start_left"
+        ]
 
         if bdmrg_simulation_parameters["save_every"] == save:
             output_path = f"{arguments.output}/2B_{dbeta:07.4f}.h5"
@@ -91,4 +96,14 @@ if __name__ == "__main__":
             add_model_info(output_path, {model_name: 0, "size": size})
             add_model_bdmrg_simulation(output_path, bdmrg_simulation_parameters)
             add_mps(output_path, split_all(model_name, dmps), folder="QMP")
+            add_state_info(
+                output_path,
+                {
+                    "size": size,
+                    "dw_total": bdmrg_simulation_parameters["dw_total"],
+                    "chi_max": bdmrg_simulation_parameters["chi_max"],
+                    "dbeta": dbeta,
+                    "time": 0,
+                },
+            )
             save = 0
