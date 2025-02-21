@@ -6,7 +6,9 @@ from typing import List as _List
 from typing import Tuple as _Tuple
 
 
-def split_degenerate_indices(indices: _List[tuple]) -> _List[bool]:
+def split_degenerate_indices(
+    indices: _List[_Tuple[tuple, tuple, tuple]]
+) -> _Tuple[_List[_Tuple[tuple, tuple, tuple]], _List[_Tuple[tuple, tuple, tuple]]]:
     list_deg = []
     list_nondeg = []
     all_theta = [_[0] for _ in indices]
@@ -81,123 +83,6 @@ def indices_dst_theta_with_gate(
                     )
 
     return sorted(set(destination_indices))
-
-
-##########################################################33 older files down there
-
-
-def merge_map_indices_slices_according_to_qnum(qname):
-    basis = {  #
-        "sh-None": {
-            "zero": [(0,)],
-            "qn": [(0,)],
-            "deg": [2],
-            "2qn": [(0,)],
-            "2deg": [4],
-            "map": [[(0, 0)], [0], [slice(0, 4)]],
-        },  # Nothing
-        "sh-U1": {
-            "zero": [(0,)],
-            "qn": [(-1,), (1,)],
-            "deg": [1, 1],
-            "2qn": [(-2,), (0,), (2,)],
-            "2deg": [1, 2, 1],
-            "map": [
-                [(0, 0), (0, 1), (1, 0), (1, 1)],
-                [1, 0, 2, 1],
-                [slice(0, 1), slice(0, 1), slice(0, 1), slice(1, 2)],
-            ],
-        },  # S^z_tot
-        "so-None": {
-            "zero": [(0,)],
-            "qn": [(0,)],
-            "deg": [3],
-            "2qn": [(0,)],
-            "2deg": [9],
-            "map": [[(0, 0)], [0], [slice(0, 9)]],
-        },
-        "so-U1": {
-            "zero": [(0,)],
-            "qn": [(-2,), (0,), (2,)],
-            "deg": [1, 1, 1],
-            "2qn": [(-4,), (-2,), (0,), (+2,), (+4,)],
-            "2deg": [1, 2, 3, 2, 1],
-            "map": [
-                [
-                    (0, 0),
-                    (0, 1),
-                    (0, 2),
-                    (1, 0),
-                    (1, 1),
-                    (1, 2),
-                    (2, 0),
-                    (2, 1),
-                    (2, 2),
-                ],
-                [2, 1, 0, 3, 2, 1, 4, 3, 2],
-                [
-                    slice(0, 1),
-                    slice(0, 1),
-                    slice(0, 1),
-                    slice(0, 1),
-                    slice(1, 2),
-                    slice(1, 2),
-                    slice(0, 1),
-                    slice(1, 2),
-                    slice(2, 3),
-                ],
-            ],
-        },  # S^z_tot
-        "ldsh-None": {
-            "zero": [(0,)],
-            "qn": [(0,)],
-            "deg": [4],
-            "2qn": [(0,)],
-            "2deg": [16],
-            "map": [[(0, 0)], [0], [slice(0, 16)]],
-        },
-        # the one favorising antiferro order is ============================
-        "ldsh-U1comb": {
-            "zero": [(0,)],
-            "qn": [(-2,), (0,), (+2,)],
-            "deg": [1, 2, 1],
-            "2qn": [(-4,), (-2,), (0,), (+2,), (+4,)],
-            "2deg": [1, 4, 6, 4, 1],
-            "map": [
-                [
-                    (0, 0),
-                    (0, 1),
-                    (0, 2),
-                    (1, 0),
-                    (1, 1),
-                    (1, 2),
-                    (2, 0),
-                    (2, 1),
-                    (2, 2),
-                ],
-                [2, 1, 0, 3, 2, 1, 4, 3, 2],
-                [
-                    slice(0, 1),
-                    slice(0, 2),
-                    slice(0, 1),
-                    slice(0, 2),
-                    slice(1, 5),
-                    slice(2, 4),
-                    slice(0, 1),
-                    slice(2, 4),
-                    slice(5, 6),
-                ],
-            ],
-        },
-        "skeleton": {
-            "zero": ["neutral QN"],
-            "qn": ["pure state QN"],
-            "deg": ["int"],
-            "2qn": ["mixed state QN"],
-            "2deg": ["int**2"],
-            "map": [["pair of pure QN"], ["mixed QN"], ["slice"]],
-        },
-    }
 
 
 def internal_qn_sum(lhs: int, rhs: int) -> int:
