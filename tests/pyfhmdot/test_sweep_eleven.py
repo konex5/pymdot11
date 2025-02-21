@@ -23,13 +23,13 @@ def test_eleven_times(
     dmps = make_maximal_entangled_state_u1(L=11)
     mpo = make_single_dummy_dgate()
     ggate = [11 * [mpo], 11 * [mpo], 11 * [mpo], 11 * [mpo]]
-    sweep_eleven_times(
+    sweep_eleven_times_easy(
         dmps,
         ggate,
         {"dw_one_serie": 0, "dw_total": 0},
         30,
         True,
         10 ** -8,
-        start_left=True,
+        start_left=False,
         start_odd_bonds=start_odd_bonds,
     )

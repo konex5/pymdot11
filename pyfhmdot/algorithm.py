@@ -14,7 +14,7 @@ def sweep(size, *, from_site=None, to_site=None):
         for _ in range(from_site, to_site, 1):
             yield _
     else:
-        for _ in range(from_site - 1, to_site - 2, -1):
+        for _ in range(from_site, to_site - 1, -1):
             yield _
 
 
@@ -51,7 +51,7 @@ def apply_mm_at(
     *,
     is_um,
     conserve_left_right_before=False,
-    conserve_direction_left_after=None,
+    direction_right=-1,
 ):
     tmp_blocs = {}
     mm_to_theta_no_gate(
@@ -69,7 +69,7 @@ def apply_mm_at(
         dw_dict=dw_dict,
         chi_max=chi_max,
         normalize=normalize,
-        conserve_direction_left=conserve_direction_left_after,
+        direction_right=direction_right,
         eps=eps,
         is_um=is_um,
     )
@@ -85,8 +85,8 @@ def apply_gate_on_mm_at(
     eps,
     *,
     is_um,
-    conserve_left_right_before=False,
-    conserve_direction_left_after=None,
+    conserve_left_right_after_gate=False,
+    direction_right=-1,
 ):
     tmp_blocs = {}
     mm_to_theta_with_gate(
@@ -95,7 +95,7 @@ def apply_gate_on_mm_at(
         rhs_blocs=mps[position],
         gate_blocs=gate[position - 1],
         conserve_left_right_before=False,
-        conserve_left_right_after=conserve_left_right_before,
+        conserve_left_right_after=conserve_left_right_after_gate,
     )
     mps[position - 1].clear()
     mps[position].clear()
@@ -106,7 +106,7 @@ def apply_gate_on_mm_at(
         dw_dict=dw_dict,
         chi_max=chi_max,
         normalize=normalize,
-        conserve_direction_left=conserve_direction_left_after,
+        direction_right=direction_right,
         eps=eps,
         is_um=is_um,
     )
@@ -151,7 +151,7 @@ def sweep_on_layer(size,layer,start_left):
     else:
         return sweep(size,from_site=size-2, to_site=0)
 
-def sweep_eleven_times_easy(
+def sweep_eleven_times(
     mps,
     ggate,
     dw_dict,
@@ -174,6 +174,11 @@ def sweep_eleven_times_easy(
         else:  # [1, 2, 3, 7, 8, 9]:
             gate = ggate[1]
         
+        if start_left:
+            direction_right=1
+        else:
+            direction_right=3
+
         for l in sweep_on_layer(size,layer,start_left):
             if should_apply_gate(l,start_odd_bonds):
                 apply_gate_on_mm_at(
@@ -185,8 +190,8 @@ def sweep_eleven_times_easy(
                     normalize,
                     eps,
                     is_um=start_left,
-                    conserve_left_right_before=False,
-                    conserve_direction_left_after=start_left,
+                    conserve_left_right_after_gate=False,
+                    direction_right=direction_right
                 )
             else:
                 apply_mm_at(
@@ -198,13 +203,16 @@ def sweep_eleven_times_easy(
                     eps,
                     is_um=start_left,
                     conserve_left_right_before=False,
-                    conserve_direction_left_after=start_left,
-                )
+                    direction_right=direction_right
+                    )
+
+        print("dw_one_serie", dw_dict["dw_one_serie"])
+        dw_dict["dw_total"] += dw_dict["dw_one_serie"]
         start_left = not start_left
         start_odd_bonds = not start_odd_bonds
 
 
-def sweep_eleven_times(
+def sweep_eleven_times_hard(
     mps,
     ggate,
     dw_dict,

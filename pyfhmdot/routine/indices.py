@@ -1,3 +1,4 @@
+from logging import warning as _warning
 import numpy as _np
 from typing import Dict as _Dict
 from typing import KeysView as _KeysView
@@ -208,19 +209,34 @@ def internal_qn_sub(lhs: int, rhs: int) -> int:
 
 
 def potential_middle_indices(
-    theta_indices: _List[_Tuple], *, direction_right: _Optional[bool] = None
+    theta_indices: _List[_Tuple], *, direction_right: int = -1
 ):
     middle_indices = []
-    if direction_right or direction_right is None:
+    if direction_right==-1: # take from left sum
         for theta_index in theta_indices:
             middle_indices.append(internal_qn_sum(theta_index[0], theta_index[1]))
-    if not direction_right or direction_right is None:
+            val = internal_qn_sub(theta_index[3], theta_index[2])
+            if val >= 0:
+                middle_indices.append(val)
+            else:
+                _warning("warning,qnum problem could arises with substraction of qnums...")
+    elif direction_right==1: # take from left sum
+        for theta_index in theta_indices:
+            middle_indices.append(internal_qn_sum(theta_index[0], theta_index[1]))
+    elif direction_right==2: # take from right sub 
         for theta_index in theta_indices:
             val = internal_qn_sub(
                 theta_index[3], theta_index[2]
-            )  # note for TDMRG here is a sum according to direction
+            )
             if val >= 0:  # shouldn't occur but let's be carefull
                 middle_indices.append(val)
+            else:
+                _warning("warning,qnum problem could arises with substraction of qnums...")
+    elif direction_right==3: # take from right sum
+        for theta_index in theta_indices:
+            middle_indices.append(internal_qn_sum(theta_index[2], theta_index[3]))
+    
+    
     return sorted(set(middle_indices))
 
 
@@ -228,7 +244,7 @@ def degeneracy_in_theta(
     keys: _List[_Tuple[int, int, int, int]],
     middle: _List[int],
     *,
-    direction_right: _Optional[bool] = None
+    direction_right: int = -1
 ) -> _Tuple[
     _List[_Tuple[int, _Tuple[int, int, int, int]]],
     _List[_Tuple[int, _List[_Tuple[int, int, int, int]]]],
@@ -236,19 +252,19 @@ def degeneracy_in_theta(
     nondeg = []
     degenerate = []
 
-    if direction_right is None:
+    if direction_right==-1: # conserve right and left qnum
         for j in range(len(middle)):
             tmp = []
             for it in keys:
                 if (middle[j] == internal_qn_sum(it[0], it[1])) and (
                     middle[j] == internal_qn_sub(it[3], it[2])
-                ):  # note for TDMRG here is a sum according to direction
+                ):
                     tmp.append(it)
             if len(tmp) > 1:
                 degenerate.append((j, tmp))
             elif len(tmp) == 1:
                 nondeg.append((j, tmp[0]))
-    elif direction_right:
+    elif direction_right==1: # conserve left sum qnum
         for j in range(len(middle)):
             tmp = []
             for it in keys:
@@ -258,13 +274,23 @@ def degeneracy_in_theta(
                 degenerate.append((j, tmp))
             elif len(tmp) == 1:
                 nondeg.append((j, tmp[0]))
-    elif not direction_right:
+    elif direction_right==2: # conserve right sub qnum
         for j in range(len(middle)):
             tmp = []
             for it in keys:
                 if middle[j] == internal_qn_sub(
                     it[3], it[2]
-                ):  # note for TDMRG here is a sum according to direction
+                ):
+                    tmp.append(it)
+            if len(tmp) > 1:
+                degenerate.append((j, tmp))
+            elif len(tmp) == 1:
+                nondeg.append((j, tmp[0]))
+    elif direction_right==3: # conserve right only sum qnum
+        for j in range(len(middle)):
+            tmp = []
+            for it in keys:
+                if middle[j] == internal_qn_sum(it[3], it[2]):  # note for TDMRG here is a sum according to direction
                     tmp.append(it)
             if len(tmp) > 1:
                 degenerate.append((j, tmp))

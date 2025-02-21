@@ -86,12 +86,12 @@ def theta_to_mm(
     chi_max: int,
     normalize: bool,
     is_um: bool,
-    conserve_direction_left: _Optional[bool] = None,
+    direction_right: int,
     eps: float = 10 ** -8,
 ) -> None:
 
     keys = list(theta_blocs.keys())
-    middle = potential_middle_indices(keys, direction_right=conserve_direction_left)
+    middle = potential_middle_indices(keys, direction_right=direction_right)
 
     # # froebenius norm !
     # norm_before = 0.
@@ -101,7 +101,7 @@ def theta_to_mm(
     # print('norm_before=',norm_before)
 
     nondeg, deg = degeneracy_in_theta(
-        keys, middle, direction_right=conserve_direction_left
+        keys, middle, direction_right=direction_right
     )
 
     subnewsize_deg: _List[_List] = []
