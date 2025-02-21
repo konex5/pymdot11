@@ -319,11 +319,12 @@ def contract_mps_mpo_mps_left_border(dst, mps_down, mpo, mps_up):
     # mps_down
     #    1|
     # 0 -|_|-2
-    multiply_mp(tmp, mps_up, mpo_left, [1], [1])
+    multiply_mp(tmp, mps_down, mpo_left, [1], [1])
     # tmp
-    # 0 -| |-1
-    #    | |-3
     #     |2
+    #    | |-3
+    # 0 -|_|-1
+    
     multiply_mp(dst, tmp, mps_down, [0, 2], [0, 1])
     # dst
     #    | |-2
@@ -363,7 +364,7 @@ def contract_left_bloc_mps(dst, left_bloc, mps_down, mpo, mps_up):
     #    |___|-3
     tmp_tmp = {}
     multiply_mp(tmp_tmp, tmp, mpo, [0, 2], [0, 1])
-    # tmp
+    # tmp_tmp
     # 0 -| ||2
     #    |   |-3
     #    |___|-1
@@ -386,7 +387,7 @@ def contract_right_bloc_mps(dst, right_bloc, mps_down, mpo, mps_up):
     #  2-|___|
     tmp_tmp = {}
     multiply_mp(tmp_tmp, tmp, mpo, [0, 3], [3, 1])
-    # tmp
+    # tmp_tmp
     #     3| |-0
     #  2-|   |
     #  1-|___|
