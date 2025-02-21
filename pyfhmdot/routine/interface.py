@@ -37,6 +37,23 @@ def mm_to_theta_no_gate(
     mul_mm_blocs(dst_blocs, lhs_blocs, rhs_blocs, dest_indices)
 
 
+def mm_to_theta_with_gate_to_delete_at_some_point(
+    dst_blocs: _Dict[tuple, _np.ndarray],
+    lhs_blocs: _Dict[tuple, _np.ndarray],
+    rhs_blocs: _Dict[tuple, _np.ndarray],
+    gate_blocs: _Dict[tuple, _np.ndarray],
+    *,
+    conserve_left_right_before: bool = False,
+    conserve_left_right_after: bool = False
+) -> None:
+    from pyfhmdot.intense.mul_mp import multiply_mp
+
+    tmp_blocs: _Dict[tuple, _np.ndarray] = {}
+
+    multiply_mp(tmp_blocs, lhs_blocs, gate_blocs, [1], [2])
+    multiply_mp(dst_blocs, tmp_blocs, rhs_blocs, [1, 4], [0, 1])
+
+
 def mm_to_theta_with_gate(
     dst_blocs: _Dict[tuple, _np.ndarray],
     lhs_blocs: _Dict[tuple, _np.ndarray],
