@@ -893,23 +893,19 @@ def initialize_left_right(mps, ham):
     contract_mps_mpo_mps_right_border(tmp_dst, mps[-1], ham[-1], mps[-1])
     right_blocs.append(_copy(tmp_dst))
     tmp_dst.clear()
-    
-    for l in range(1,len(mps)-1):
+
+    for l in range(1, len(mps) - 1):
         tmp_dst = {}
-        contract_left_bloc_mps(
-            tmp_dst, left_blocs[-1], mps[l], ham[l], mps[l]
-        )
+        contract_left_bloc_mps(tmp_dst, left_blocs[-1], mps[l], ham[l], mps[l])
         left_blocs.append(_copy(tmp_dst))
         tmp_dst.clear()
-        
-    for l in range(len(mps)-1,1,-1):
+
+    for l in range(len(mps) - 1, 1, -1):
         tmp_dst = {}
-        contract_right_bloc_mps(
-            tmp_dst, right_blocs[-1], mps[l], ham[l], mps[l]
-        )
+        contract_right_bloc_mps(tmp_dst, right_blocs[-1], mps[l], ham[l], mps[l])
         right_blocs.append(_copy(tmp_dst))
         tmp_dst.clear()
-    
+
     return left_blocs, right_blocs[::-1]
 
 
@@ -923,26 +919,26 @@ def initialize_left_right_variance(mps, ham):
     contract_mps_mpo_mpo_mps_right_border(tmp_dst, mps[-1], ham[-1], ham[-1], mps[-1])
     right_blocs.append(_copy(tmp_dst))
     tmp_dst.clear()
-    
-    for l in range(1,len(mps)-1):
+
+    for l in range(1, len(mps) - 1):
         tmp_dst = {}
         contract_left_bloc_mps_mpo(
             tmp_dst, left_blocs[-1], mps[l], ham[l], ham[l], mps[l]
         )
         left_blocs.append(_copy(tmp_dst))
         tmp_dst.clear()
-        
-    for l in range(len(mps)-1,1,-1):
+
+    for l in range(len(mps) - 1, 1, -1):
         tmp_dst = {}
         contract_right_bloc_mps_mpo(
             tmp_dst, right_blocs[-1], mps[l], ham[l], ham[l], mps[l]
         )
         right_blocs.append(_copy(tmp_dst))
         tmp_dst.clear()
-    
+
     return left_blocs, right_blocs[::-1]
-            
+
 
 def dmrg(mps, ham, sim_dict):
-    
+
     pass

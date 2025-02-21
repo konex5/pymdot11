@@ -9,6 +9,28 @@ from pyfhmdot.models.pymodels import hamiltonian_obc
 from pyfhmdot.models.pyoperators import single_operator
 
 
+from pyfhmdot.intense.contract import (
+    contract_left_bloc_mps,
+    contract_left_bloc_mps_mpo,
+    contract_left_right_mpo_mpo_permute,
+    contract_mps_mpo_mpo_mps_left_border,
+    contract_mps_mpo_mpo_mps_right_border,
+    contract_mps_mpo_mps_left_border,
+    contract_mps_mpo_mps_right_border,
+    contract_right_bloc_mps,
+    contract_right_bloc_mps_mpo,
+)
+
+from pyfhmdot.intense.mul_mp import multiply_mp
+from pyfhmdot.routine.eig_routine import smallest_eigenvectors_from_scipy
+from pyfhmdot.routine.interface import (
+    apply_eigenvalues,
+    minimize_theta,
+    select_lowest_blocs,
+    theta_to_mm,
+)
+
+
 def create_infinite_hamiltonian(model_name, parameters):
     """
     qnmodel='sh_xxz-hz_no' or 'ru_ldxxz-hz_u1'
@@ -155,3 +177,325 @@ def create_id_mp(model_name, position, is_left):
 
     return coef, new_blocs
 
+
+def initialize_idmrg_odd_size(
+    dst_left_bloc,
+    imps_left,
+    dst_right_bloc,
+    imps_right,
+    imps_middle,
+    ham_left,
+    ham_right,
+    ham_middle,
+    *,
+    position,
+    size,
+    conserve_total,
+    d,
+):
+    tmp_tmp_env_blocs = {}
+    multiply_mp(tmp_tmp_env_blocs, ham_left, ham_middle, [3], [0])
+    # tmp_tmp_env_blocs
+    #    2| |4
+    # 0 -|___|- 5
+    #    1| |3
+    tmp_env_blocs = {}
+    multiply_mp(tmp_env_blocs, tmp_tmp_env_blocs, ham_right, [5], [0])
+    # tmp_env_blocs
+    #    2| |4 |6
+    # 0 -|_____ _|- 7
+    #    1| |3 |5
+    env_bloc = {}
+    for key in tmp_env_blocs.keys():
+        new_key = (0, key[1], key[3], key[5], 0, 0, key[2], key[4], key[6], 0)
+        tmp_shape = tmp_env_blocs[key].shape
+        new_shape = (
+            1,
+            tmp_shape[1],
+            tmp_shape[3],
+            tmp_shape[5],
+            1,
+            1,
+            tmp_shape[2],
+            tmp_shape[4],
+            tmp_shape[5],
+            1,
+        )
+        env_bloc[new_key] = (
+            tmp_env_blocs[key].transpose([0, 1, 3, 5, 2, 4, 6, 7]).reshape(new_shape)
+        )
+
+    sim_dict = {
+        "dw_one_serie": 0,
+        "dw_total": 0,
+        "chi_max": 10,
+        "eps_truncation": 1e-20,
+    }
+    # minimize energy
+    eigenvalues = {}
+    eigenvectors = {}
+    for keys in env_bloc.keys():
+        mat = env_bloc[keys]
+        new_shape = (
+            mat.shape[0] * mat.shape[1] * mat.shape[2] * mat.shape[3] * mat.shape[4],
+            mat.shape[5] * mat.shape[6] * mat.shape[7] * mat.shape[8] * mat.shape[9],
+        )
+        E, vec = smallest_eigenvectors_from_scipy(mat.reshape(new_shape))
+        eigenvalues[(keys[0], keys[1], keys[2], keys[3], keys[4])] = E[0]
+        eigenvectors[(keys[0], keys[1], keys[2], keys[3], keys[4])] = vec.reshape(
+            (mat.shape[0], mat.shape[1], mat.shape[2], mat.shape[3], mat.shape[4])
+        )
+
+    # select_quantum_sector
+    diff = min(size - conserve_total, conserve_total)
+    if position < diff or position > size - diff:
+        allowed_sector = list(range(d))  # all
+    elif conserve_total <= size // 2:
+        allowed_sector = list(range(d - 1))  # inc
+    elif size - conserve_total <= size // 2:
+        allowed_sector = list(range(1, d))  # dec
+    else:
+        allowed_sector = []  # should never occur
+
+    for key in list(eigenvectors.keys()):
+        if not (key[1] in allowed_sector and key[2] in allowed_sector and key[3]):
+            eigenvectors.pop(key)
+            eigenvalues.pop(key)
+    # select_lowest_blocs(eigenvalues, eigenvectors)
+    # apply_eigenvalues(eigenvalues, eigenvectors)
+
+    # TODO!
+    theta_to_mm(
+        eigenvectors,
+        imps_middle,
+        imps_right,
+        sim_dict,
+        sim_dict["chi_max"],
+        True,
+        None,
+        1,
+        sim_dict["eps_truncation"],
+    )
+
+    contract_mps_mpo_mps_left_border(dst_left_bloc, imps_left, ham_left, imps_left)
+    contract_mps_mpo_mps_right_border(dst_right_bloc, imps_right, ham_right, imps_right)
+
+
+def initialize_idmrg_even_size(
+    dst_left_bloc,
+    imps_left,
+    dst_right_bloc,
+    imps_right,
+    ham_left,
+    ham_right,
+    *,
+    position,
+    size,
+    conserve_total,
+    d,
+):
+    tmp_env_blocs = {}
+    multiply_mp(tmp_env_blocs, ham_left, ham_right, [3], [0])
+    # tmp_env_blocs
+    #    2| |4
+    # 0 -|___|- 5
+    #    1| |3
+    env_bloc = {}
+    for key in tmp_env_blocs.keys():
+        new_key = (0, key[1], key[3], 0, 0, key[2], key[4], 0)
+        tmp_shape = tmp_env_blocs[key].shape
+        new_shape = (1, tmp_shape[1], tmp_shape[3], 1, 1, tmp_shape[2], tmp_shape[4], 1)
+        env_bloc[new_key] = (
+            tmp_env_blocs[key].transpose([0, 1, 3, 2, 4, 5]).reshape(new_shape)
+        )
+
+    sim_dict = {
+        "dw_one_serie": 0,
+        "dw_total": 0,
+        "chi_max": 10,
+        "eps_truncation": 1e-20,
+    }
+    # minimize energy
+    eigenvalues = {}
+    eigenvectors = {}
+    minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
+
+    # select_quantum_sector
+    diff = min(size - conserve_total, conserve_total)
+    if position < diff or position > size - diff:
+        allowed_sector = list(range(d))  # all
+    elif conserve_total <= size // 2:
+        allowed_sector = list(range(d - 1))  # inc
+    elif size - conserve_total <= size // 2:
+        allowed_sector = list(range(1, d))  # dec
+    else:
+        allowed_sector = []  # should never occur
+
+    for key in list(eigenvectors.keys()):
+        if not (key[1] in allowed_sector and key[2] in allowed_sector):
+            eigenvectors.pop(key)
+            eigenvalues.pop(key)
+    # select_lowest_blocs(eigenvalues, eigenvectors)
+    apply_eigenvalues(eigenvalues, eigenvectors)
+
+    theta_to_mm(
+        eigenvectors,
+        imps_left,
+        {},
+        sim_dict,
+        sim_dict["chi_max"],
+        True,
+        True,
+        1,
+        sim_dict["eps_truncation"],
+    )
+    theta_to_mm(
+        eigenvectors,
+        {},
+        imps_right,
+        sim_dict,
+        sim_dict["chi_max"],
+        True,
+        False,
+        3,
+        sim_dict["eps_truncation"],
+    )
+
+    contract_mps_mpo_mps_left_border(dst_left_bloc, imps_left, ham_left, imps_left)
+    contract_mps_mpo_mps_right_border(dst_right_bloc, imps_right, ham_right, imps_right)
+
+
+def finalize_idmrg_even_size(
+    dst_left,
+    dst_right,
+    bloc_left,
+    bloc_right,
+    ham_mpo_left,
+    ham_mpo_right,
+    sim_dict,
+    *,
+    position,
+    size,
+    conserve_total,
+    d,
+):
+    # select_quantum_sector
+    diff = min(size - conserve_total, conserve_total)
+    if position < diff or position > size - diff:
+        allowed_sector = list(range(d))  # all
+    elif conserve_total <= size // 2:
+        allowed_sector = list(range(d - 1))  # inc
+    elif size - conserve_total <= size // 2:
+        allowed_sector = list(range(1, d))  # dec
+    else:
+        allowed_sector = []  # should never occur
+
+    # contract and permute
+    env_bloc = {}
+    contract_left_right_mpo_mpo_permute(
+        env_bloc, bloc_left, ham_mpo_left, ham_mpo_right, bloc_right
+    )
+    for key in list(env_bloc.keys()):
+        shape = env_bloc[key].shape
+        if not (
+            shape[0] * shape[1] * shape[2] * shape[3]
+            == shape[4] * shape[5] * shape[6] * shape[7]
+        ):
+            env_bloc.pop(key)  # non physical blocs
+        elif (
+            not (key[1] in allowed_sector)
+            or not (key[2] in allowed_sector)
+            or not (key[5] in allowed_sector)
+            or not (key[6] in allowed_sector)
+        ):
+            env_bloc.pop(key)  # quantum conserved is used here
+        elif not (
+            key[0] + key[1] - key[2] - key[3] == 0
+            and key[4] + key[5] - key[6] - key[7] == 0
+        ):
+            env_bloc.pop(
+                key
+            )  # quantum sum is preserved here (left sum is same as right sum)
+    # minimize energy
+    eigenvalues = {}
+    eigenvectors = {}
+    minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
+
+    # for key in list(eigenvectors.keys()):
+    #     if not (
+    #         key[1] in allowed_sector and key[2] in allowed_sector and key[1] == key[2]
+    #     ):
+    #         eigenvectors.pop(key)
+    #         eigenvalues.pop(key)
+    #         _warning("eigenvectors removed a posteriori.")
+    select_lowest_blocs(eigenvalues, eigenvectors)
+    # select_quantum_sector(eigenvalues, eigenvectors)
+    apply_eigenvalues(eigenvalues, eigenvectors)
+
+    theta_to_mm(
+        eigenvectors,
+        dst_left,
+        dst_right,
+        sim_dict,
+        sim_dict["chi_max"],
+        True,
+        None,
+        -1,
+        sim_dict["eps_truncation"],
+    )
+
+
+def initialize_left_right(mps, ham):
+    left_blocs = []
+    right_blocs = []
+    tmp_dst = {}
+    contract_mps_mpo_mps_left_border(tmp_dst, mps[0], ham[0], mps[0])
+    left_blocs.append(_copy(tmp_dst))
+    tmp_dst.clear()
+    contract_mps_mpo_mps_right_border(tmp_dst, mps[-1], ham[-1], mps[-1])
+    right_blocs.append(_copy(tmp_dst))
+    tmp_dst.clear()
+
+    for l in range(1, len(mps) - 1):
+        tmp_dst = {}
+        contract_left_bloc_mps(tmp_dst, left_blocs[-1], mps[l], ham[l], mps[l])
+        left_blocs.append(_copy(tmp_dst))
+        tmp_dst.clear()
+
+    for l in range(len(mps) - 1, 1, -1):
+        tmp_dst = {}
+        contract_right_bloc_mps(tmp_dst, right_blocs[-1], mps[l], ham[l], mps[l])
+        right_blocs.append(_copy(tmp_dst))
+        tmp_dst.clear()
+
+    return left_blocs, right_blocs[::-1]
+
+
+def initialize_left_right_variance(mps, ham):
+    left_blocs = []
+    right_blocs = []
+    tmp_dst = {}
+    contract_mps_mpo_mpo_mps_left_border(tmp_dst, mps[0], ham[0], ham[0], mps[0])
+    left_blocs.append(_copy(tmp_dst))
+    tmp_dst.clear()
+    contract_mps_mpo_mpo_mps_right_border(tmp_dst, mps[-1], ham[-1], ham[-1], mps[-1])
+    right_blocs.append(_copy(tmp_dst))
+    tmp_dst.clear()
+
+    for l in range(1, len(mps) - 1):
+        tmp_dst = {}
+        contract_left_bloc_mps_mpo(
+            tmp_dst, left_blocs[-1], mps[l], ham[l], ham[l], mps[l]
+        )
+        left_blocs.append(_copy(tmp_dst))
+        tmp_dst.clear()
+
+    for l in range(len(mps) - 1, 1, -1):
+        tmp_dst = {}
+        contract_right_bloc_mps_mpo(
+            tmp_dst, right_blocs[-1], mps[l], ham[l], ham[l], mps[l]
+        )
+        right_blocs.append(_copy(tmp_dst))
+        tmp_dst.clear()
+
+    return left_blocs, right_blocs[::-1]
