@@ -35,7 +35,8 @@ def test_prepare_targets_two_mps_without_gate(lhs_indices, rhs_indices):
 
 def test_prepare_targets_two_mps_without_gate_splited(lhs_indices, rhs_indices):
     from pyfhmdot.routine.indices import (
-        indices_dst_theta_no_gate,split_degenerate_indices
+        indices_dst_theta_no_gate,
+        split_degenerate_indices,
     )
 
     destination_indices = indices_dst_theta_no_gate(
@@ -68,10 +69,6 @@ def test_prepare_targets_two_mps_without_gate_splited(lhs_indices, rhs_indices):
     )
     assert len(destination_indices) == 5
     """
-
-
-
-
 
 
 def test_prepare_targets_two_mps_without_gate(lhs_indices, rhs_indices, gate_indices):
