@@ -39,7 +39,6 @@ def test_hamiltonian_obc():
     dst.clear()
 
     ham = hamiltonian_obc("sh_xy_u1", {"Jxy": 200}, 3)
-    # assert ham[1][(0,0,1,1)][0,0,0,0] == 20
 
     tmp = {}
     multiply_mp(tmp, ham[0], ham[1], [3], [0])
