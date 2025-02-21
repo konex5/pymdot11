@@ -1,6 +1,6 @@
 def conserve_qnum_list(*, size, qnum_conserved, d):
     """
-    qnum_min < qnum_conserved < qnum_max
+    0 = qnum_min < qnum_conserved < qnum_max
     """
     inc = d - 1
 

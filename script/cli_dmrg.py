@@ -45,9 +45,7 @@ if __name__ == "__main__":
         "-o", "--output", type=str, action="store", help="output path", required=True
     )
 
-    arguments = parser.parse_args(
-        "-i /tmp/2B_inf.h5 -H /tmp/hamiltonian.h5 -o /tmp/2B_inf_01.h5".split(" ")
-    )
+    arguments = parser.parse_args()
 
     if not check_filename_and_extension_h5(arguments.hamiltonian):
         sys.exit(

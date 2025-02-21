@@ -5,7 +5,7 @@ size = 10
 [parameters]
 Jxy = 0.25
 Jz = 0.5
-hz = 1.5
+hz = 0
 
 [idmrg_simulation]
 chi_max=30
