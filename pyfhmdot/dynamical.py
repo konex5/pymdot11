@@ -18,7 +18,7 @@ def dynamical_dmps(dmps, ggate, sim_dict):
     info_dict["chi_middle_chain"]
     """
 
-    dw_dict = {"dw_one_serie": 0}
+    dw_dict = {"dw_one_serie": 0, "dw_total": sim_dict["dw_total"]}
     _sweep_eleven_times(
         dmps,
         ggate,
@@ -30,7 +30,7 @@ def dynamical_dmps(dmps, ggate, sim_dict):
         start_odd_bonds=sim_dict["start_odd_bonds"],
     )
     sim_dict["dw_one_serie"] = dw_dict["dw_one_serie"]
-    sim_dict["dw_total"] += _sum(dw_dict["dw_one_serie"])
+    sim_dict["dw_total"] += _sum(dw_dict["dw_total"])
     print("discarded weight in one step :", sim_dict["dw_one_serie"])
     print("discarded weight accumulate  :", sim_dict["dw_total"])
 

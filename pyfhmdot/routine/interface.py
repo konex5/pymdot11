@@ -105,6 +105,7 @@ def theta_to_mm(
 
     dw_dict["dw_one_serie"] += dw
     # simdict['dw_max'] = max(dw,simdict['dw_max'])
+
     cut_nondeg = [cut[i] for i in range(len(nondeg))]
     cut_deg = [cut[i] for i in range(len(nondeg), len(nondeg) + len(deg))]
     mul_usv_deg(

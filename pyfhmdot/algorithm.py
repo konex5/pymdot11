@@ -430,3 +430,4 @@ def sweep_eleven_times(
         start_left = not start_left
         start_odd_bonds = not start_odd_bonds
         print("dw_one_serie", dw_dict["dw_one_serie"])
+        dw_dict["dw_total"] += dw_dict["dw_one_serie"]
