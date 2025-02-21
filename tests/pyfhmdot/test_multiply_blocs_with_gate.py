@@ -1,4 +1,3 @@
-from tests.pyfhmdot.conftest import lhs_chi_shapes
 import pytest
 
 from pyfhmdot.contract import (

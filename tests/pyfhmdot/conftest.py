@@ -59,7 +59,8 @@ def rhs_chi_shapes():
     ]
 
 
-def theta_indices():
+@pytest.fixture
+def gate_indices():
     return [
         (0, 0, 0, 0),
         (0, 0, 1, 1),
@@ -68,11 +69,6 @@ def theta_indices():
         (0, 1, 1, 0),
         (1, 0, 1, 0),
     ]
-
-
-@pytest.fixture
-def gate_indices():
-    return theta_indices()
 
 
 @pytest.fixture
