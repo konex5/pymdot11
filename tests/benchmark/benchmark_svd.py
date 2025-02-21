@@ -1,4 +1,4 @@
-from scipy.linalg import svd 
+from scipy.linalg import svd
 
 import csv
 
