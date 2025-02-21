@@ -65,7 +65,7 @@ def mul_usv_nondeg(
     *,
     is_um: _Optional[bool] = False,
 ) -> None:
-    for i in range(len(nondeg)):  # reversed, and passed by pop.
+    for _ in range(len(nondeg)):  # reversed, and passed by pop.
         Dsi = cut.pop()
         if Dsi > 0:
             dims = nondeg_dims.pop()
@@ -77,15 +77,15 @@ def mul_usv_nondeg(
                     dims[0], dims[1], Dsi
                 )
                 # M
-                mat_right = _np.dot(diag_sqrt, array_V[i][:Dsi, :]).reshape(
+                mat_right = _np.dot(diag_sqrt, array_V.pop()[:Dsi, :]).reshape(
                     Dsi, dims[2], dims[3]
                 )
             elif is_um:
                 # U
-                mat_left = array_U[i][:, :Dsi].reshape(dims[0], dims[1], Dsi)
+                mat_left = array_U.pop()[:, :Dsi].reshape(dims[0], dims[1], Dsi)
                 # M
                 mat_right = _np.dot(
-                    _np.diag(array_S[i][:Dsi]), array_V[i][:Dsi, :]
+                    _np.diag(array_S.pop()[:Dsi]), array_V.pop()[:Dsi, :]
                 ).reshape(Dsi, dims[2], dims[3])
             else:
                 # M
@@ -121,7 +121,7 @@ def mul_usv_deg(
     *,
     is_um: _Optional[bool] = False,
 ) -> None:
-    for i in range(len(deg)):  # reversed, and pop each value.
+    for _ in range(len(deg)):  # reversed, and pop each value.
         Dsi = cut.pop()
         if Dsi > 0:
             if is_um is None:
