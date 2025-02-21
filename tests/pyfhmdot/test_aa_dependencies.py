@@ -11,7 +11,7 @@ def test_automation_import():
     assert automation()
 
 
-@pytest.mark.skip(msg="module mdot not ready yet")
+@pytest.mark.skip("module mdot not ready yet")
 def test_mdot():
     import mdot_operators
 
@@ -40,7 +40,7 @@ def test_scipy():
     assert True
 
 
-@pytest.mark.skip(msg="matplotlib is needed for visualizing benchmarks")
+@pytest.mark.skip("matplotlib is needed for visualizing benchmarks")
 def test_matplotlib():
     import matplotlib.pyplot
 

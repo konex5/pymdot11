@@ -2,10 +2,10 @@ import pytest
 
 
 def test_fhmdot_operators():
-    from automation import is_fmdot_available
+    from automation import is_mdot_available
 
-    if is_fmdot_available():
-        from fhm_operators import single_operator_real, single_operator_cplx
+    if is_mdot_available():
+        from mdot_operators import single_operator_real, single_operator_cplx
         from pyfhmdot.models.pymodels import single_operator
         from numpy import all
 
