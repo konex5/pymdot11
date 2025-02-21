@@ -12,10 +12,15 @@ def random_matrices(n, m):
 def test_dgemm_dense_pool():
     from numpy import dot as _dot
 
-    matpool = []
-    matpool.append(((0, 0), random_matrices(2, 2)))
-    matpool.append(((1, 1), random_matrices(3, 3)))
-    matpool.append(((0, 2), random_matrices(4, 4)))
+    matpool1 = []
+    matpool1.append(((0, 0), random_matrices(2, 4)))
+    matpool1.append(((1, 1), random_matrices(3, 6)))
+    matpool1.append(((0, 2), random_matrices(4, 8)))
+
+    matpool2 = []
+    matpool2.append(((0, 2), random_matrices(4, 5)))
+    matpool2.append(((1, 1), random_matrices(6, 2)))
+    matpool2.append(((2, 3), random_matrices(8, 3)))
 
     from numpy import tensordot as _tensordot
 

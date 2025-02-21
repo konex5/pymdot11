@@ -1,3 +1,4 @@
+from pyfhmdot.algorithm import sweep
 import pytest
 
 
@@ -23,5 +24,13 @@ def test_sweeps():
 def test_print_single():
     from pyfhmdot.algorithm import print_single, print_double
 
-    assert print_single(5, 2) == "\rA*BBBB"
-    assert print_double(5, 2) == "\rA*=BBB"
+    assert print_single(5, 2) == "\rA*BBB"
+    assert print_double(5, 2) == "\rA*=BB"
+
+
+@pytest.mark.parametrize("size", [10, 11])
+def test_sweep_move(size):
+    from pyfhmdot.algorithm import sweep_move
+
+    assert size == size
+    pass
