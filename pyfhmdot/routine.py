@@ -250,7 +250,7 @@ def _mult_deg_UM(
 ############################################################
 
 
-def mpsQ_svd_th2Um(thetaQ, mpsL, mpsR, simdict):
+def mpsQ_svd_th2Um(thetaQ, mpsL, mpsR, simdict, **kwargs):
 
     keys = list(thetaQ.keys())
     middle = potential_middle_indices(keys, direction_right=True)
@@ -312,7 +312,7 @@ def mpsQ_svd_th2Um(thetaQ, mpsL, mpsR, simdict):
     )
 
 
-def mpsQ_svd_th2mV(thetaQ, mpsL, mpsR, simdict):
+def mpsQ_svd_th2mV(thetaQ, mpsL, mpsR, simdict, **kwargs):
 
     keys = list(thetaQ.keys())
     middle = potential_middle_indices(keys, direction_right=False)

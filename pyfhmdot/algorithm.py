@@ -79,6 +79,7 @@ def apply_gate_UM(lhs_blocs, rhs_blocs, gate_blocs, **kwargs):
         tmp_blocs,
         lhs_blocs,
         rhs_blocs,
+        gate_blocs,
         conserve_left_right=kwargs["conserve_left_right"],
     )
 
@@ -89,6 +90,7 @@ def apply_gate_MV(lhs_blocs, rhs_blocs, gate_blocs, **kwargs):
         tmp_blocs,
         lhs_blocs,
         rhs_blocs,
+        gate_blocs,
         conserve_left_right=kwargs["conserve_left_right"],
     )
 
@@ -125,14 +127,11 @@ def sweep_and_apply(
                 apply_gate_UM(
                     kwargs["mps"][site_i - 1],
                     kwargs["mps"][site_i],
-                    kwargs["theta"][site_i],
+                    gate_blocs=kwargs["gate"][site_i],
+                    **kwargs
                 )
             else:
-                apply_UM(
-                    kwargs["mps"][site_i - 1],
-                    kwargs["mps"][site_i],
-                    conserve_left_right=kwargs["conserve_left_right"],
-                )
+                apply_UM(kwargs["mps"][site_i - 1], kwargs["mps"][site_i], **kwargs)
             should_apply_gate = not should_apply_gate
     else:
         for site_i in sweep(size, from_site=start_position, to_site=end_position):
@@ -140,14 +139,11 @@ def sweep_and_apply(
                 apply_gate_MV(
                     kwargs["mps"][site_i - 1],
                     kwargs["mps"][site_i],
-                    kwargs["theta"][site_i],
+                    gate_blocs=kwargs["gate"][site_i],
+                    **kwargs
                 )
             else:
-                apply_MV(
-                    kwargs["mps"][site_i - 1],
-                    kwargs["mps"][site_i],
-                    conserve_left_right=kwargs["conserve_left_right"],
-                )
+                apply_MV(kwargs["mps"][site_i - 1], kwargs["mps"][site_i], **kwargs)
             should_apply_gate = not should_apply_gate
 
 
