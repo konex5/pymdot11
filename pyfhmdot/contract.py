@@ -1,12 +1,27 @@
 import numpy as _np
 
 
-def prepare_index_target_no_gate(lhs_indices, rhs_indices):
+def prepare_index_target_no_gate(
+    lhs_indices, rhs_indices, left_conservation=False, right_conservation=False
+):
     target_key12 = []
     for it1 in lhs_indices:
         for it2 in rhs_indices:
-            if it1[2] == it2[0]:
+            if not left_conservation:
+                keep_it_left = True
+            elif left_conservation and it1[0] + it1[1] == it1[2]:  # simple qnum
+                keep_it_left = True
+            else:
+                keep_it_left = False
+            if not right_conservation:
+                keep_it_right = True
+            elif right_conservation and it2[0] == it2[1] + it2[2]:  # simple qnum
+                keep_it_right = True
+            else:
+                keep_it_right = False
+            if it1[2] == it2[0] and keep_it_left and keep_it_right:
                 target_key12.append(((it1[0], it1[1], it2[1], it2[2]), it1, it2))
+
     if len(target_key12) == 0:
         raise ("No targeted indices possible for contraction")
     target_key12_zipped = list(zip(*sorted(target_key12)))
