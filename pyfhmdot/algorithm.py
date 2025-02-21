@@ -123,7 +123,7 @@ def sweep_move(size, *, start_position, end_position, apply_UM, apply_MV, **kwar
 def should_go_left(size, layer, position, start_left):
     if position <= 2:
         return True
-    elif position >= size-1:
+    elif position >= size - 1:
         return False
     elif (layer % 2 == 0) == start_left:
         return True
@@ -133,6 +133,31 @@ def should_go_left(size, layer, position, start_left):
 
 def should_apply_gate(size, layer, position, start_left, start_odd_bonds):
     is_even = size % 2 == 0
+    is_currently_start_left = (layer % 2 == 0) == start_left
+    is_currently_applying_left = (position % 2 == 1) == start_odd_bonds
+    if is_even:
+        if is_currently_start_left:
+            return is_currently_applying_left
+        else:
+            return not is_currently_applying_left
+    else:
+        if not is_currently_start_left:
+            return is_currently_applying_left
+        else:
+            return not is_currently_applying_left
+
+
+def sweep_eleven_times_easy(
+    size,
+    mps,
+    ggate,
+    dw_dict,
+    chi_max,
+    normalize,
+    eps,
+    start_left=True,
+    start_odd_bonds=True,
+):
     pass
 
 
