@@ -2,7 +2,6 @@ import numpy as _np
 
 
 def prepare_index_target_no_gate(lhs_indices, rhs_indices):
-    # not sure it will work...
     target_key12 = []
     for it1 in lhs_indices:
         for it2 in rhs_indices:
@@ -12,7 +11,6 @@ def prepare_index_target_no_gate(lhs_indices, rhs_indices):
         raise ("No targeted indices possible for contraction")
     target_key12_zipped = list(zip(*sorted(target_key12)))
     tmp = []
-    is_degenerate = None
     for l in range(len(target_key12_zipped[0])):
         if target_key12_zipped[0].index(target_key12_zipped[0][l]) == l:
             is_degenerate = True
@@ -26,11 +24,16 @@ def prepare_index_target_no_gate(lhs_indices, rhs_indices):
                 target_key12_zipped[2][l],
             )
         )
+        # something is missing, is it left or is it right moving or both? Currently no qnum.. :-()
     return tmp
 
 
 def prepare_index_target_with_gate(lhs_indices, rhs_indices, th_indices):
-    index_target_tmp = prepare_index_target_no_gate(lhs_indices, rhs_indices)
+    # not sure it will work...
+    index_target_no_gate = prepare_index_target_no_gate(lhs_indices, rhs_indices)
+    # with the gate, one will need to add qnums?
+    # maybe not
+
     pass
 
 
