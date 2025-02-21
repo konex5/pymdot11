@@ -320,7 +320,7 @@ def contract_mps_mpo_mps_left_border(dst, mps_down, mpo, mps_up):
     #     |2
     #    | |-3
     # 0 -|_|-1
-    multiply_mp(dst, tmp, mps_down, [0, 2], [0, 1])
+    multiply_mp(dst, tmp, mps_up, [0, 2], [0, 1])
     # dst
     #    | |-2
     #    | |-1
@@ -388,6 +388,122 @@ def contract_right_bloc_mps(dst, right_bloc, mps_down, mpo, mps_up):
     #  1-|___|
     multiply_mp(dst, tmp_tmp, mps_up, [0, 3], [2, 1])
     # dst
+    # 2 -| |
+    # 1 -| |
+    # 0 -|_|
+
+
+def contract_mps_mpo_mpo_mps_left_border(dst, mps_down, mpo_one, mpo_two, mps_up):
+    # mps_down
+    #    1|
+    # 0 -|_|-2
+    tmp = {}
+    multiply_mp(tmp, mps_down, mpo_one, [1], [0])
+    # tmp
+    #     |3
+    # 2 -| |-4
+    # 0 -|_|-1
+    tmp_tmp = {}
+    multiply_mp(tmp_tmp, tmp, mpo_two, [2,3], [0,1])
+    # tmp_tmp
+    #     |3
+    #    | |-4
+    #    | |-2
+    # 0 -|_|-1
+    multiply_mp(dst, tmp_tmp, mps_up, [0, 3], [0, 1])
+    # dst
+    #    | |-3
+    #    | |-2
+    #    | |-1
+    #    |_|-0
+
+
+def contract_mps_mpo_mpo_mps_right_border(dst, mps_down, mpo_one, mpo_two, mps_up):
+    # mps_down
+    #    1|
+    # 0 -|_|-2
+    tmp = {}
+    multiply_mp(tmp, mps_down, mpo_one, [1], [1])
+    # tmp
+    #    3|
+    # 2 -| |-4
+    # 0 -| |-1
+    tmp_tmp = {}
+    multiply_mp(tmp_tmp, tmp, mpo_two, [3,4], [1,3])
+    # tmp_tmp
+    #    4|
+    # 3 -| |
+    # 2 -| |
+    # 0 -| |-1
+    multiply_mp(dst, tmp_tmp, mps_up, [1, 4], [2, 1])
+    # dst
+    # 3 -| |
+    # 2 -| |
+    # 1 -| |
+    # 0 -|_|
+
+
+def contract_left_bloc_mps_mpo(dst, left_bloc, mps_down, mpo_one, mpo_two, mps_up):
+    tmp = {}
+    # mps_down
+    #    1|
+    # 0 -|_|-2
+    multiply_mp(tmp, left_bloc, mps_down, [0], [0])
+    # tmp
+    # 2 -| |
+    # 1 -| |
+    # 0 -| ||3
+    #    |___|-4
+    tmp_tmp = {}
+    multiply_mp(tmp_tmp, tmp, mpo_one, [0, 3], [0, 1])
+    # tmp_tmp
+    # 1 -| |
+    # 0 -| ||3
+    #    |   |-4
+    #    |___|-2
+    tmp_tmp_tmp = {}
+    multiply_mp(tmp_tmp_tmp, tmp_tmp, mpo_two, [0, 3], [0, 1])
+    # tmp_tmp_tmp
+    # 0 -| ||3
+    #    |   |-4
+    #    |   |-2
+    #    |___|-1
+    multiply_mp(dst, tmp_tmp_tmp, mps_up, [0, 3], [0, 1])
+    # dst
+    #    | |- 3
+    #    | |- 2
+    #    | |- 1
+    #    |_|- 0
+
+
+def contract_right_bloc_mps_mpo(dst, right_bloc, mps_down, mpo_one, mpo_two, mps_up):
+    tmp = {}
+    # mps_down
+    #    1|
+    # 0 -|_|-2
+    multiply_mp(tmp, right_bloc, mps_down, [0], [2])
+    # tmp
+    #      | |-2
+    #      | |-1
+    #    4|| |-0
+    #  3-|___|
+    tmp_tmp = {}
+    multiply_mp(tmp_tmp, tmp, mpo_one, [0, 4], [3, 1])
+    # tmp_tmp
+    #      | |-1
+    #     4| |-0
+    #  3-|   |
+    #  2-|___|
+    tmp_tmp_tmp = {}
+    multiply_mp(tmp_tmp_tmp, tmp_tmp, mpo_two, [0, 3], [0, 1])
+    # tmp_tmp_tmp
+    #    4|| |-0
+    #  3-|   |
+    #  2-|   |
+    #  1-|___|
+    multiply_mp(dst, tmp_tmp_tmp, mps_up, [0, 4], [2, 1])
+    # dst
+    # 3 -| |
     # 2 -| |
     # 1 -| |
     # 0 -|_|
