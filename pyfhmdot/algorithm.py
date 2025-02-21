@@ -212,7 +212,7 @@ def sweep_eleven_times(
                 conserve_left_right_before=False,
                 conserve_direction_left_after=False,
             )
-            print_double(size, size, sym="*B")
+            print_double(size, size - 1, sym="*B")
     # without the above, quantum numbers are not taken into account
 
     for layer in range(11):
