@@ -680,7 +680,7 @@ def dmrg_sweep_lanczos(
     size = len(mps)
 
     for layer in range(nb_sweeps):
-        print(f"dmrg sweep {layer+1}/{nb_sweeps}")
+        print(f"dmrg sweep warmup {layer+1}/{nb_sweeps}")
 
         if start_left:
             for l in range(1, size - 2, 1):

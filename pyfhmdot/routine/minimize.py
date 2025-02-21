@@ -48,9 +48,6 @@ def minimize_lanczos_and_move(
         rhs_blocs=mps[l+1],
         conserve_left_right=False,
     )
-    for key in list(th_blocs.keys()):
-        if _all(th_blocs[key] == 0):
-            th_blocs.pop(key)
     valid_keys = []
     for key in list(env_blocs.keys()):
         fst_key = (key[0], key[1], key[2], key[3])
