@@ -4,7 +4,7 @@ _real_t = "float64"
 _cplx_t = "complex128"
 
 
-def single_operator(name, coef):  # -> one bloc
+def single_operator(name, coef=1):  # -> one bloc
 
     operators = {
         # spin half
