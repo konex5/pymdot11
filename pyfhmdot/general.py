@@ -188,7 +188,7 @@ def create_maximal_entangled_state(size, model_name):
             new_blocs = {
                 (0, 0, 0, 0): tmp_blocs[(0, 0)].reshape(1, 2, 2, 1),
             }
-        elif operator_name == "sh_id_no":
+        elif operator_name == "sh_id_u1":
             new_blocs = {
                 (0, 0, 0, 0): tmp_blocs[(0, 0)].reshape(1, 1, 1, 1),
                 (0, 1, 1, 0): tmp_blocs[(1, 1)].reshape(1, 1, 1, 1),

@@ -6,7 +6,7 @@ import sys
 import os
 
 from pyfhmdot.utils.iotools import (
-    check_filename_and_extension_h5,
+    check_filename_and_extension_to_create_h5,
     create_h5,
     add_single_mp,
 )
@@ -39,7 +39,7 @@ if __name__ == "__main__":
         sys.exit(
             f"cli_create_hamiltonian.py: error: the input path {arguments.input} is not a valid path."
         )
-    if not check_filename_and_extension_h5(arguments.output):
+    if not check_filename_and_extension_to_create_h5(arguments.output):
         sys.exit(
             f"cli_create_hamiltonian.py: error: the output dirpath {os.path.dirname(arguments.output)} is not a valid directory path."
         )

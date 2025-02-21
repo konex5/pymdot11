@@ -4,6 +4,12 @@ import os
 
 def check_filename_and_extension_h5(filename: str) -> bool:
     ext = os.path.splitext(filename)[-1]
+    valid_file = os.path.exists(filename) and (ext in [".h5"])
+    return valid_file
+
+
+def check_filename_and_extension_to_create_h5(filename: str) -> bool:
+    ext = os.path.splitext(filename)[-1]
     valid_file = os.path.exists(os.path.dirname(filename)) and (ext in [".h5"])
     return valid_file
 
