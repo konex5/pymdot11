@@ -1,7 +1,7 @@
-from pyfhmdot.routine import theta_to_mv, theta_to_um
 from pyfhmdot.routine import (
     mm_to_theta_no_gate,
     mm_to_theta_with_gate,
+    theta_to_mm,
 )
 
 
@@ -47,61 +47,73 @@ def multiply_with_gate(ma, mb, mtheta):  # -> mdest
     return mdest """
 
 
-def apply_um_at(mps,position, dw_dict, chi_max, normalize, eps, *, conserve_left_right_before=False, conserve_direction_left_after=None):
+def apply_mm_at(
+    mps,
+    position,
+    dw_dict,
+    chi_max,
+    normalize,
+    eps,
+    *,
+    is_um,
+    conserve_left_right_before=False,
+    conserve_direction_left_after=None
+):
     tmp_blocs = {}
     mm_to_theta_no_gate(
         dst_blocs=tmp_blocs,
-        lhs_blocs=mps[position-1],
+        lhs_blocs=mps[position - 1],
         rhs_blocs=mps[position],
         conserve_left_right=conserve_left_right_before,
     )
-    mps[position-1].clear()
+    mps[position - 1].clear()
     mps[position].clear()
-    theta_to_um(theta_blocs=tmp_blocs, lhs_blocs=mps[position-1], rhs_blocs=mps[position],
-    dw_dict=dw_dict,
-    chi_max=chi_max,
-    normalize=normalize,
-    conserve_direction_left=conserve_direction_left_after,
-    eps=eps)
+    theta_to_mm(
+        theta_blocs=tmp_blocs,
+        lhs_blocs=mps[position - 1],
+        rhs_blocs=mps[position],
+        dw_dict=dw_dict,
+        chi_max=chi_max,
+        normalize=normalize,
+        conserve_direction_left=conserve_direction_left_after,
+        eps=eps,
+        is_um=is_um,
+    )
 
 
-def apply_mv_at(mps,position, dw_dict, chi_max, normalize, eps, *, conserve_left_right_before=False, conserve_direction_left_after=None):
+def apply_gate_on_mm_at(
+    mps,
+    gate,
+    position,
+    dw_dict,
+    chi_max,
+    normalize,
+    eps,
+    *,
+    is_um,
+    conserve_left_right_before=False,
+    conserve_direction_left_after=None
+):
     tmp_blocs = {}
-    mm_to_theta_no_gate(
+    mm_to_theta_with_gate(
         dst_blocs=tmp_blocs,
-        lhs_blocs=mps[position-1],
+        lhs_blocs=mps[position - 1],
         rhs_blocs=mps[position],
+        gate_blocs=gate[position - 1],
         conserve_left_right=conserve_left_right_before,
     )
-    mps[position-1].clear()
+    mps[position - 1].clear()
     mps[position].clear()
-    theta_to_mv(theta_blocs=tmp_blocs, lhs_blocs=mps[position-1], rhs_blocs=mps[position],
-    dw_dict=dw_dict,
-    chi_max=chi_max,
-    normalize=normalize,
-    conserve_direction_left=conserve_direction_left_after,
-    eps=eps)
-
-
-def apply_gate_UM(lhs_blocs, rhs_blocs, gate_blocs, **kwargs):
-    tmp_blocs = {}
-    mm_to_theta_with_gate(
-        tmp_blocs,
-        lhs_blocs,
-        rhs_blocs,
-        gate_blocs,
-        conserve_left_right=kwargs["conserve_left_right"],
-    )
-
-
-def apply_gate_MV(lhs_blocs, rhs_blocs, gate_blocs, **kwargs):
-    tmp_blocs = {}
-    mm_to_theta_with_gate(
-        tmp_blocs,
-        lhs_blocs,
-        rhs_blocs,
-        gate_blocs,
-        conserve_left_right=kwargs["conserve_left_right"],
+    theta_to_mm(
+        theta_blocs=tmp_blocs,
+        lhs_blocs=mps[position - 1],
+        rhs_blocs=mps[position],
+        dw_dict=dw_dict,
+        chi_max=chi_max,
+        normalize=normalize,
+        conserve_direction_left=conserve_direction_left_after,
+        eps=eps,
+        is_um=is_um,
     )
 
 

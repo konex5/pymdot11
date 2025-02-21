@@ -60,15 +60,16 @@ def mm_to_theta_with_gate(
     mul_theta_with_gate(dst_blocs, tmp_blocs, gate_blocs, dst_indices)
 
 
-def theta_to_um(
+def theta_to_mm(
     theta_blocs: _Dict[tuple, _np.ndarray],
     lhs_blocs: _Dict[tuple, _np.ndarray],
     rhs_blocs: _Dict[tuple, _np.ndarray],
     dw_dict: dict,
-    chi_max:int,
+    chi_max: int,
     normalize: bool,
-    conserve_direction_left: _Optional[bool]=None,
-    eps:float=10**-8
+    conserve_direction_left: _Optional[bool] = None,
+    eps: float = 10 ** -8,
+    is_um=bool,
 ) -> None:
 
     keys = list(theta_blocs.keys())
@@ -81,7 +82,9 @@ def theta_to_um(
     # norm_before = _np.sqrt(norm_before)
     # print('norm_before=',norm_before)
 
-    nondeg, deg = degeneracy_in_theta(keys, middle, direction_right=conserve_direction_left)
+    nondeg, deg = degeneracy_in_theta(
+        keys, middle, direction_right=conserve_direction_left
+    )
 
     subnewsize_deg = []
     slices_degenerate_blocs(theta_blocs, deg, subnewsize_deg)
@@ -93,7 +96,7 @@ def theta_to_um(
 
     svd_nondeg(theta_blocs, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V)
     svd_deg(theta_blocs, deg, subnewsize_deg, array_of_U, array_of_S, array_of_V)
-    
+
     cut, dw = truncation_strategy(array_of_S, eps, chi_max)
 
     if normalize:
@@ -112,7 +115,7 @@ def theta_to_um(
         subnewsize_deg,
         lhs_blocs,
         rhs_blocs,
-        is_um=True,
+        is_um=is_um,
     )
     mul_usv_nondeg(
         array_of_U,
@@ -123,77 +126,5 @@ def theta_to_um(
         nondeg_dims,
         lhs_blocs,
         rhs_blocs,
-        is_um=True,
-    )
-
-
-def theta_to_mv(
-    theta_blocs: _Dict[tuple, _np.ndarray],
-    lhs_blocs: _Dict[tuple, _np.ndarray],
-    rhs_blocs: _Dict[tuple, _np.ndarray],
-    dw_dict: dict,
-    chi_max:int,
-    normalize: bool,
-    conserve_direction_left: _Optional[bool]=None,
-    eps:float=10**-8
-) -> None:
-
-    keys = list(theta_blocs.keys())
-    middle = potential_middle_indices(keys, direction_right=conserve_direction_left)
-
-    # # froebenius norm
-    # norm_before = 0.
-    # for _ in theta_blocs._blocks.itervalues():
-    #     norm_before += _np.linalg.norm(_)**2
-    # norm_before = _np.sqrt(norm_before)
-    # print('norm_before=',norm_before)
-
-    nondeg, deg = degeneracy_in_theta(keys, middle, direction_right=conserve_direction_left)
-
-    subnewsize_deg = []
-    slices_degenerate_blocs(theta_blocs, deg, subnewsize_deg)
-    nondeg_dims = [theta_blocs[_[1]].shape for _ in nondeg]
-
-    array_of_U = []
-    array_of_S = []
-    array_of_V = []
-
-    svd_nondeg(theta_blocs, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V)
-    svd_deg(theta_blocs, deg, subnewsize_deg, array_of_U, array_of_S, array_of_V)
-
-    cut, dw = truncation_strategy(
-        array_of_S,
-        eps,
-        chi_max,
-    )
-
-    if normalize:
-        normalize_the_array(array_of_S, cut)
-
-    dw_dict["dw_one_serie"] += dw
-
-    cut_nondeg = [cut[i] for i in range(len(nondeg))]
-    cut_deg = [cut[i] for i in range(len(nondeg), len(nondeg) + len(deg))]
-
-    mul_usv_deg(
-        array_of_U,
-        array_of_S,
-        cut_deg,
-        array_of_V,
-        deg,
-        subnewsize_deg,
-        lhs_blocs,
-        rhs_blocs,
-        is_um=False,
-    )
-    mul_usv_nondeg(
-        array_of_U,
-        array_of_S,
-        cut_nondeg,
-        array_of_V,
-        nondeg,
-        nondeg_dims,
-        lhs_blocs,
-        rhs_blocs,
-        is_um=False,
+        is_um=is_um,
     )
