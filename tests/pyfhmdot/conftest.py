@@ -31,15 +31,36 @@ def make_single_dense_mps():
 def make_single_dense_mpo():
     import numpy as np
 
-    def _make_single_dense_mpo(chi=1, d=2, isreal=True):
+    def _make_single_dense_mpo(chiL=1, d=2, chiR=1, isreal=True):
         if isreal:
-            mpo = np.random.random.rand(chi * d * d * chi, dtype="float64")
+            mpo = np.random.random(chiL * d * d * chiR)
         else:
-            mpo = np.random.random.rand(chi * d * d * chi, dtype="complex128")
-        mpo_out = mpo.reshape(chi, d, d, chi) / np.sum(mpo ** 2)
+            mpo = (
+                np.random.random(chiL * d * d * chiR)
+                + np.random.random(chiL * d * d * chiR) * 1j
+            )
+        mpo_out = mpo.reshape(chiL, d, d, chiR) / np.sum(mpo ** 2)
         return {(0, 0, 0, 0): mpo_out}
 
     return _make_single_dense_mpo
+
+
+@pytest.fixture
+def make_single_dense_gate():
+    import numpy as np
+
+    def _make_single_dense_gate(d=2, isreal=True):
+        if isreal:
+            gate = np.random.random(d * d * d * d)
+        else:
+            gate = (
+                np.random.random(d * d * d * d)
+                + np.random.random(d * d * d * d) * 1j
+            )
+        gate_out = gate.reshape(d, d, d, d) / np.sum(gate ** 2)
+        return {(0, 0, 0, 0): gate_out}
+
+    return _make_single_dense_gate
 
 
 def mps(make_mps):
