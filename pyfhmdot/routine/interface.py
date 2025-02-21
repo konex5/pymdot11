@@ -166,6 +166,7 @@ def minimize_theta(
             (mat.shape[0], mat.shape[1], mat.shape[2], mat.shape[3])
         )
 
+
 def select_lowest_blocs(
     eigenvalues: _Dict[tuple, float], eigenvectors: _Dict[tuple, _np.ndarray]
 ):
@@ -180,6 +181,7 @@ def select_lowest_blocs(
     #         eigenvalues.pop(key)
     # should keep sectors by Qnum and not by energy -_-'
     pass
+
 
 def apply_eigenvalues(
     eigenvalues: _Dict[tuple, float], eigenvectors: _Dict[tuple, _np.ndarray]

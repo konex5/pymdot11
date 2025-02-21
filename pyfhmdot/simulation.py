@@ -1,6 +1,7 @@
 from pyfhmdot.algorithm import apply_mm_at, apply_gate_on_mm_at
 from copy import deepcopy as _copy
 from logging import warning as _warning
+
 # from logging import makeLogRecord
 
 from pyfhmdot.intense.contract import (
@@ -97,24 +98,24 @@ def sweep_on_layer(size, layer, start_left):
         return sweep(size, from_site=size - 2, to_site=0)
 
 
-def conserve_quantum_sector(model_name,position,size,conserve_total):
-    head=model_name.split("_")[0]
-    if head == 'sh':
-        d=2
-    elif head == 'so':
-        d=3
-    elif head == 'sf':
-        d=4
+def conserve_quantum_sector(model_name, position, size, conserve_total):
+    head = model_name.split("_")[0]
+    if head == "sh":
+        d = 2
+    elif head == "so":
+        d = 3
+    elif head == "sf":
+        d = 4
 
-    diff = size-conserve_total
-    if position < diff or position > size-diff:
-        return list(range(d)) # all
+    diff = size - conserve_total
+    if position < diff or position > size - diff:
+        return list(range(d))  # all
     elif diff > size // 2:
-        return list(range(d-1)) # inc
+        return list(range(d - 1))  # inc
     elif diff <= size // 2:
-        return list(range(1,d)) # dec
+        return list(range(1, d))  # dec
     else:
-        return [] # should never occur
+        return []  # should never occur
 
 
 def sweep_eleven_times_hard(
@@ -457,7 +458,17 @@ def sweep_eleven_times(
 
 
 def initialize_idmrg(
-    dst_left_bloc, imps_left, dst_right_bloc, imps_right, ham_left, ham_right,*, position,size, conserve_total, d
+    dst_left_bloc,
+    imps_left,
+    dst_right_bloc,
+    imps_right,
+    ham_left,
+    ham_right,
+    *,
+    position,
+    size,
+    conserve_total,
+    d,
 ):
     tmp_env_blocs = {}
     multiply_mp(tmp_env_blocs, ham_left, ham_right, [3], [0])
@@ -484,25 +495,24 @@ def initialize_idmrg(
     eigenvalues = {}
     eigenvectors = {}
     minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
-    
+
     # select_quantum_sector
-    diff = min(size-conserve_total,conserve_total)
-    if position < diff or position > size-diff:
-        allowed_sector = list(range(d)) # all
+    diff = min(size - conserve_total, conserve_total)
+    if position < diff or position > size - diff:
+        allowed_sector = list(range(d))  # all
     elif conserve_total <= size // 2:
-        allowed_sector = list(range(d-1)) # inc
-    elif size-conserve_total <= size // 2:
-        allowed_sector = list(range(1,d)) # dec
+        allowed_sector = list(range(d - 1))  # inc
+    elif size - conserve_total <= size // 2:
+        allowed_sector = list(range(1, d))  # dec
     else:
-        allowed_sector = [] # should never occur
-    
+        allowed_sector = []  # should never occur
+
     for key in list(eigenvectors.keys()):
         if not (key[1] in allowed_sector and key[2] in allowed_sector):
             eigenvectors.pop(key)
             eigenvalues.pop(key)
     # select_lowest_blocs(eigenvalues, eigenvectors)
     # apply_eigenvalues(eigenvalues, eigenvectors)
-
 
     theta_to_mm(
         eigenvectors,
@@ -527,7 +537,18 @@ def initialize_idmrg(
 
 
 def idmrg_minimize_two_sites(
-    dst_left, dst_right, bloc_left, bloc_right, ham_mpo_left, ham_mpo_right, sim_dict,*, position,size, conserve_total, d
+    dst_left,
+    dst_right,
+    bloc_left,
+    bloc_right,
+    ham_mpo_left,
+    ham_mpo_right,
+    sim_dict,
+    *,
+    position,
+    size,
+    conserve_total,
+    d,
 ):
     # contract and permute
     env_bloc = {}
@@ -546,25 +567,27 @@ def idmrg_minimize_two_sites(
     eigenvalues = {}
     eigenvectors = {}
     minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
-    
+
     # select_quantum_sector
-    diff = min(size-conserve_total,conserve_total)
-    if position < diff or position > size-diff:
-        allowed_sector = list(range(d)) # all
+    diff = min(size - conserve_total, conserve_total)
+    if position < diff or position > size - diff:
+        allowed_sector = list(range(d))  # all
     elif conserve_total <= size // 2:
-        allowed_sector = list(range(d-1)) # inc
-    elif size-conserve_total <= size // 2:
-        allowed_sector = list(range(1,d)) # dec
+        allowed_sector = list(range(d - 1))  # inc
+    elif size - conserve_total <= size // 2:
+        allowed_sector = list(range(1, d))  # dec
     else:
-        allowed_sector = [] # should never occur
-    
+        allowed_sector = []  # should never occur
+
     for key in list(eigenvectors.keys()):
-        if not (key[1] in allowed_sector and key[2] in allowed_sector and key[1]==key[2]):
+        if not (
+            key[1] in allowed_sector and key[2] in allowed_sector and key[1] == key[2]
+        ):
             eigenvectors.pop(key)
             eigenvalues.pop(key)
     select_lowest_blocs(eigenvalues, eigenvectors)
-    #select_quantum_sector(eigenvalues, eigenvectors)
-    #apply_eigenvalues(eigenvalues, eigenvectors)
+    # select_quantum_sector(eigenvalues, eigenvectors)
+    # apply_eigenvalues(eigenvalues, eigenvectors)
 
     theta_to_mm(
         eigenvectors,
@@ -590,7 +613,7 @@ def idmrg_even(
     iterations,
     size,
     conserve_total,
-    d
+    d,
 ):
     for _ in range(iterations):
         tmp_imps_left = {}
@@ -605,7 +628,9 @@ def idmrg_even(
             ham_mpo[1],
             idmrg_dict,
             position=iterations,
-            size=size, conserve_total=conserve_total, d=d
+            size=size,
+            conserve_total=conserve_total,
+            d=d,
         )
         #
         new_bloc_left = {}
