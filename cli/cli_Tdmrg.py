@@ -69,8 +69,6 @@ if __name__ == "__main__":
     for i, tmp in enumerate(tmp_dmps):
         _ = {}
         group_dmps(model_name, _, tmp)
-        if i == size - 1:
-            _ = change_right_index(_, 2 * size)
         dmps.append(_)
 
     ggate = []

@@ -36,6 +36,7 @@ if __name__ == "__main__":
     # )
 
     arguments = parser.parse_args()
+    # arguments = parser.parse_args(["-b", "/tmp/2B_00.0000.h5", "-k", "/tmp/2B_00.0250_00.0125.h5"])
 
     if not check_filename_and_extension_h5(arguments.bra):
         sys.exit(
@@ -47,7 +48,7 @@ if __name__ == "__main__":
         )
 
     size = load_model_info_size(arguments.bra)
-    if size == load_model_info_size(arguments.ket):
+    if size != load_model_info_size(arguments.ket):
         sys.exit(
             f"cli_mbracket.py: error: bra and ket have different sizes."
         )
@@ -56,7 +57,7 @@ if __name__ == "__main__":
     ket_dmps = load_mps(arguments.ket, size, folder="QMP")
 
     if len(list(bra_dmps[0].values())[0].shape) == 4 and len(list(ket_dmps[0].values())[0].shape) == 4:
-        bra_norm = measure_dmps(bra_dmps)
+        bra_norm = measure_dmps(bra_dmps,position=1)
         print(f"{bra_norm}")        
         ket_norm = measure_dmps(ket_dmps)
         print(f"{ket_norm}")
