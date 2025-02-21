@@ -21,6 +21,8 @@ conserve_total = 10
 dw_one_step = 0
 dw_total = 0
 eps_truncation = 1e-8
+nb_sweeps = 3
+nb_warmup = 6
 normalize = 1
 
 [Tdmrg_simulation]
