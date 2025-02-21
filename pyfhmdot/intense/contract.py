@@ -326,13 +326,13 @@ def contract_mps_mpo_mps_left_border(dst, mps_down, mpo, mps_up):
 
 
 def contract_mps_mpo_mps_right_border(dst, mps_down, mpo, mps_up):
-    mpo_left = {}
-    fuse_mp(mpo_left, mpo, 2)
+    mpo_right = {}
+    rm_border_mpo(mpo_right, mpo, is_left=False)
     tmp = {}
     # mps_down
     #    1|
     # 0 -|_|-2
-    multiply_mp(tmp, mps_down, mpo_left, [1], [1])
+    multiply_mp(tmp, mps_down, mpo_right, [1], [1])
     # tmp
     #    3|
     # 2 -| |
