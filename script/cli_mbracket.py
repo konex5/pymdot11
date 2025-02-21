@@ -57,15 +57,16 @@ if __name__ == "__main__":
 
     if len(list(bra_dmps[0].values())[0].shape) == 4 and len(list(ket_dmps[0].values())[0].shape) == 4:
         bra_norm = measure_dmps(bra_dmps)
-        print(f"{bra_norm}")        
+        print(f"Tr(rho_bra)={bra_norm}")        
         ket_norm = measure_dmps(ket_dmps)
-        print(f"{ket_norm}")
+        print(f"Tr(rho_ket)={ket_norm}")
         bra_dnorm = measure_dmps_dmps(bra_dmps,bra_dmps)
-        print(f"{bra_dnorm}")
+        print(f"<<rho_bra|rho_bra>>={bra_dnorm}")
         ket_dnorm = measure_dmps_dmps(ket_dmps,ket_dmps)
-        print(f"{ket_dnorm}")
-        braket_norm = measure_dmps_dmps(bra_dmps,ket_dmps)
-
+        print(f"<<rho_ket|rho_ket>>={ket_dnorm}")
+        braket_dnorm = measure_dmps_dmps(bra_dmps,ket_dmps)
+        print(f"<<rho_bra|rho_ket>>={braket_dnorm}")
+        
     if len(list(bra_dmps[0].values())[0].shape) == 3 and len(list(ket_dmps[0].values())[0].shape) == 3:
         # bra_norm = measure_mps_mps(bra_dmps,bra_dmps)
         # print(f"{bra_norm}")        
