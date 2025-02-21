@@ -11,7 +11,7 @@ from pyfhmdot.utils.general import (
 )
 from pyfhmdot.utils.iotools import check_filename_and_extension_h5
 
-from pyfhmdot.intense.interface import measure_dmps_mpo_dmps, measure_dmps_mpo_mpo_dmps
+from pyfhmdot.intense.interface import measure_dmps_mpo_dmps, measure_dmps_mpo_mpo_dmps, measure_mps_mpo_mpo_mps, measure_mps_mpo_mps
 
 
 if __name__ == "__main__":
@@ -68,8 +68,22 @@ if __name__ == "__main__":
     bra_dmps = load_mps(arguments.bra, size, folder="QMP")
     ham_mpo = load_mps(arguments.hamiltonian, size, folder="MPO")
 
-    energy = measure_dmps_mpo_dmps(ket_dmps, ham_mpo, bra_dmps)
-    print(f"<bra|H|ket>= {energy}")
-    hsquare = measure_dmps_mpo_mpo_dmps(ket_dmps, ham_mpo, ham_mpo, bra_dmps)
-    print(f"<bra|H^2|ket>= {hsquare}")
-    print(f"<bra|(H-E)^2|ket>= {hsquare-energy**2}")
+    if (
+        len(list(bra_dmps[0].values())[0].shape) == 4
+        and len(list(ket_dmps[0].values())[0].shape) == 4
+    ):
+        energy = measure_dmps_mpo_dmps(ket_dmps, ham_mpo, bra_dmps)
+        print(f"<bra|H|ket>= {energy}")
+        hsquare = measure_dmps_mpo_mpo_dmps(ket_dmps, ham_mpo, ham_mpo, bra_dmps)
+        print(f"<bra|H^2|ket>= {hsquare}")
+        print(f"<bra|(H-E)^2|ket>= {hsquare-energy**2}")
+    if (
+        len(list(bra_dmps[0].values())[0].shape) == 3
+        and len(list(ket_dmps[0].values())[0].shape) == 3
+    ):
+        energy = measure_mps_mpo_mps(ket_dmps, ham_mpo, bra_dmps)
+        print(f"<bra|H|ket>= {energy}")
+        hsquare = measure_mps_mpo_mpo_mps(ket_dmps, ham_mpo, ham_mpo, bra_dmps)
+        print(f"<bra|H^2|ket>= {hsquare}")
+        print(f"<bra|(H-E)^2|ket>= {hsquare-energy**2}")
+    
