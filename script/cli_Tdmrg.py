@@ -83,9 +83,9 @@ if __name__ == "__main__":
         lowering_temperature(dmps, ggate, bdmrg_simulation_parameters)
         dbeta += bdmrg_simulation_parameters["dtau"]
         save += 1
-        bdmrg_simulation_parameters[
-            "start_odd_bonds"
-        ] = not bdmrg_simulation_parameters["start_odd_bonds"]
+        bdmrg_simulation_parameters["start_odd_bonds"] = (
+            not bdmrg_simulation_parameters["start_odd_bonds"]
+        )
         bdmrg_simulation_parameters["start_left"] = not bdmrg_simulation_parameters[
             "start_left"
         ]

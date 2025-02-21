@@ -103,12 +103,12 @@ def mul_usv_nondeg(
                 # V
                 mat_right = array_V.pop()[:Dsi, :].reshape(Dsi, dims[2], dims[3])
 
-            dst_lhs_blocs[
-                (tmp_nondeg[1][0], tmp_nondeg[1][1], tmp_nondeg[0])
-            ] = mat_left
-            dst_rhs_blocs[
-                (tmp_nondeg[0], tmp_nondeg[1][2], tmp_nondeg[1][3])
-            ] = mat_right
+            dst_lhs_blocs[(tmp_nondeg[1][0], tmp_nondeg[1][1], tmp_nondeg[0])] = (
+                mat_left
+            )
+            dst_rhs_blocs[(tmp_nondeg[0], tmp_nondeg[1][2], tmp_nondeg[1][3])] = (
+                mat_right
+            )
         else:
             array_U.pop()
             array_V.pop()

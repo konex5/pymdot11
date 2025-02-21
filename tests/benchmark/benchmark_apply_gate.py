@@ -6,7 +6,7 @@ from pyfhmdot.algorithm import apply_gate_on_mm
 
 add_header = True
 
-datalist = [2 ** _ for _ in range(2, 11)]  # N
+datalist = [2**_ for _ in range(2, 11)]  # N
 
 
 def create_random_matrix(chi, d):
@@ -54,7 +54,7 @@ with open("/tmp/pyfhmdot_benchmark_apply_gate.txt", "w") as f:
             {"dw_one_serie": 0},
             N,
             True,
-            10 ** -62,
+            10**-62,
             is_um=None,
             conserve_left_right_after_gate=False,
             direction_right=-1,
@@ -68,7 +68,7 @@ with open("/tmp/pyfhmdot_benchmark_apply_gate.txt", "w") as f:
         print("%s other: %.1f KiB" % (len(top_stats[3:]), size / 1024))
         total = sum(stat.size for stat in top_stats)
         print("Total allocated size: %.1f KiB" % (total / 1024))
-        elapsed_time = time_end * 10 ** -4  # ms
+        elapsed_time = time_end * 10**-4  # ms
         memory = total
         f.write(f"{N},{elapsed_time},{memory}\n")
         #

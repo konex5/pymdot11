@@ -83,7 +83,7 @@ def make_single_dense_mps():
                 np.random.random(chiL * d * chiR)
                 + np.random.random(chiL * d * chiR) * 1j
             )
-        mps_out = mps.reshape(chiL, d, chiR) / np.sum(mps ** 2)
+        mps_out = mps.reshape(chiL, d, chiR) / np.sum(mps**2)
         return {(0, 0, 0): mps_out}
 
     return _make_single_dense_mps
@@ -101,7 +101,7 @@ def make_single_blocs_mps():
                 np.random.random(chiL * d * chiR)
                 + np.random.random(chiL * d * chiR) * 1j
             )
-        mps_out = mps.reshape(chiL, d, chiR) / np.sum(mps ** 2)
+        mps_out = mps.reshape(chiL, d, chiR) / np.sum(mps**2)
 
         return mps_out
 
@@ -128,7 +128,7 @@ def make_single_dense_mpo():
                 np.random.random(chiL * d * d * chiR)
                 + np.random.random(chiL * d * d * chiR) * 1j
             )
-        mpo_out = mpo.reshape(chiL, d, d, chiR) / np.sum(mpo ** 2)
+        mpo_out = mpo.reshape(chiL, d, d, chiR) / np.sum(mpo**2)
         return {(0, 0, 0, 0): mpo_out}
 
     return _make_single_dense_mpo
@@ -145,7 +145,7 @@ def make_single_dense_gate():
             gate = (
                 np.random.random(d * d * d * d) + np.random.random(d * d * d * d) * 1j
             )
-        gate_out = gate.reshape(d, d, d, d) / np.sum(gate ** 2)
+        gate_out = gate.reshape(d, d, d, d) / np.sum(gate**2)
         return {(0, 0, 0, 0): gate_out}
 
     return _make_single_dense_gate
@@ -162,7 +162,7 @@ def make_single_blocs_gate():
             gate = (
                 np.random.random(d * d * d * d) + np.random.random(d * d * d * d) * 1j
             )
-        gate_out = gate.reshape(d, d, d, d) / np.sum(gate ** 2)
+        gate_out = gate.reshape(d, d, d, d) / np.sum(gate**2)
         return gate_out
 
     def _make_single_blocs_gate(gate_indices, d=1, isreal=True):

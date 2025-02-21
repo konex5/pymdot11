@@ -169,9 +169,9 @@ def group_four_dgate(model_name, dst_dgate, dgate):
     # # [('s',(l+1)),('s',(l+2)),('W',(l+1)),('W',(l+2)),('W',-(l+1)),('W',-(l+2)),('s',-(l+1)),('s',-(l+2))])
     tmp_four = {}
     for key, values in dgate.items():
-        tmp_four[
-            (key[4], key[0], key[6], key[2], key[7], key[3], key[5], key[1])
-        ] = values.transpose(4, 0, 6, 2, 7, 3, 5, 1)
+        tmp_four[(key[4], key[0], key[6], key[2], key[7], key[3], key[5], key[1])] = (
+            values.transpose(4, 0, 6, 2, 7, 3, 5, 1)
+        )
     tmp_fou = {}
     reshape_and_group(model_name, tmp_fou, tmp_four, [0, 1])
     tmp_fo = {}

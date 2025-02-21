@@ -84,9 +84,9 @@ if __name__ == "__main__":
         time_evolve_double(dmps, ggate, tdmrg_simulation_parameters)
         time += tdmrg_simulation_parameters["dtau"]
         save += 1
-        tdmrg_simulation_parameters[
-            "start_odd_bonds"
-        ] = not tdmrg_simulation_parameters["start_odd_bonds"]
+        tdmrg_simulation_parameters["start_odd_bonds"] = (
+            not tdmrg_simulation_parameters["start_odd_bonds"]
+        )
         tdmrg_simulation_parameters["start_left"] = not tdmrg_simulation_parameters[
             "start_left"
         ]
