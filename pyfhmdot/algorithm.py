@@ -10,7 +10,7 @@ def indices_and_discarded_weights(
 ):
     """
     epsilon = || forall bloc s_bloc ||_2^2
-    :param: list_of_array, array of singular values 
+    :param: list_of_array, array of singular values
     :param: eps_truncation_error > sum_{i>chi_max_tot} s_all,i^2
     :param: chi_max = max chi of bloc
 
@@ -121,3 +121,31 @@ def _svd_deg(thetaQ, deg, subnewsize, array_of_U, array_of_S, array_of_V):
         array_of_V.append(V)
         # del U, S, V
     pass
+
+
+def sweep(size, *, from_site=None, to_site=None):
+    if from_site is None:
+        from_site = 1
+    if to_site is None:
+        to_site = size
+    if from_site < to_site:  # go right
+        for _ in range(from_site, to_site, 1):
+            yield _
+    else:
+        for _ in range(from_site - 1, to_site - 2, -1):
+            yield _
+
+
+def print_single(size, site_i):
+    return "\r" + "".join(
+        ["A" for _ in range(site_i)]
+        + ["="]
+        + ["B" for _ in range(site_i, size, 1, end="")]
+    )
+
+def print_double(size, site_i):
+    return "\r" + "".join(
+        ["A" for _ in range(site_i-1)]
+        + ["*="]
+        + ["B" for _ in range(site_i, size, 1, end="")]
+    )
