@@ -13,6 +13,8 @@ assert hostPlatform.isx86_64;
 
 let
   pythonEnv = python3.withPackages (ps: with ps; [
+    numpy
+    scipy
     #------------#
     # pydevtools #
     #------------#
