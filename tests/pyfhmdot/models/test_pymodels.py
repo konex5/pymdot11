@@ -79,10 +79,14 @@ def test_gate_exp():
     model_name = "sh_xxz-hz_u1"
     parameters = {"Jxy": 7, "Jz": -5, "hz": 3}
 
-    a = suzu_trotter_obc_exp(-0.01, model_name, parameters, 10, is_dgate=False,in_group=False)
+    a = suzu_trotter_obc_exp(
+        -0.01, model_name, parameters, 10, is_dgate=False, in_group=False
+    )
     model_name = "sh_xxz-hz_no"
     parameters = {"Jxy": 7, "Jz": -5, "hz": 3}
-    b = suzu_trotter_obc_exp(-0.01, model_name, parameters, 10, is_dgate=False,in_group=False)
+    b = suzu_trotter_obc_exp(
+        -0.01, model_name, parameters, 10, is_dgate=False, in_group=False
+    )
 
     for i in range(len(b)):
         assert b[i][(0, 0, 0, 0)][0, 0, 0, 0] == a[i][(0, 0, 0, 0)][0, 0, 0, 0]

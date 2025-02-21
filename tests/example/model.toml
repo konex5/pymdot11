@@ -4,8 +4,8 @@ size = 10
 
 [parameters]
 Jxy = 1.0
-Jz = 1.2
-hz = 5.0
+Jz = 2.0
+hz = 3.0
 
 [Tdmrg_simulation]
 dtau = 0.0125
