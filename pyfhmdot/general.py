@@ -1,4 +1,5 @@
 from numpy import sqrt as _sqrt
+import sys
 
 
 def translate_qn_name(qn_num):
@@ -41,6 +42,7 @@ def get_details_zdmrg():
         "chi_max": 600,
         "nb_warmup_sweep": 6,
         "nb_sweep": 6,
+        "store_state": 2,
     }
 
 
@@ -55,6 +57,10 @@ def get_details_tdmrg():
     }
 
 
+def create_hamiltonian(size, spin_name, qn_name, model_name, parameters, **kwargs):
+    pass
+
+
 def create_maximal_entangled_state(size, spin_name, qn_name, **kwargs):
     from pyfhmdot.pyoperators import single_operator
 
@@ -64,9 +70,16 @@ def create_maximal_entangled_state(size, spin_name, qn_name, **kwargs):
     for l in range(size):
         coef.append(1 / _sqrt(2))
         tmp_blocs = single_operator(operator_name, 1 / _sqrt(2))
-        new_blocs = {
-            (0, 0, 0, 0): tmp_blocs[(0, 0)].reshape(1, 1, 1, 1),
-            (0, 1, 1, 0): tmp_blocs[(1, 1)].reshape(1, 1, 1, 1),
-        }
+        if operator_name == "sh_id_no":
+            new_blocs = {
+                (0, 0, 0, 0): tmp_blocs[(0, 0)].reshape(1, 2, 2, 1),
+            }
+        elif operator_name == "sh_id_no":
+            new_blocs = {
+                (0, 0, 0, 0): tmp_blocs[(0, 0)].reshape(1, 1, 1, 1),
+                (0, 1, 1, 0): tmp_blocs[(1, 1)].reshape(1, 1, 1, 1),
+            }
+        else:
+            sys.exit(f"The maximal entangled state does not exist for {operator_name}")
         dmps.append(new_blocs)
     return coef, dmps
