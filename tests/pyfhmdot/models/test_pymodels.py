@@ -1,3 +1,4 @@
+from asyncio.proactor_events import _ProactorBaseWritePipeTransport
 import pytest
 
 
@@ -34,3 +35,9 @@ def test_operators_from_hamiltonian():
         "sh_xxz_hz_no", {"Jxy": 5.0, "Jz": 3.0, "hz": -0.5}
     )
     assert nn_bond[0][0][(0, 0)][0, 1] == np.sqrt(2.5)
+
+def test_hamiltonian_obc():
+    from pyfhmdot.models.pymodels import hamiltonian_obc
+
+    mpo = hamiltonian_obc("sh_xxz-hz_u1",{"Jxy":7,"Jz":-5,"hz":3},size=10)
+    pass
