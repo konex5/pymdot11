@@ -355,7 +355,7 @@ def initialize_idmrg_even_size(
         sim_dict["chi_max"],
         True,
         True,
-        -3,
+        1,
         sim_dict["eps_truncation"],
     )
     theta_to_mm(
@@ -366,7 +366,7 @@ def initialize_idmrg_even_size(
         sim_dict["chi_max"],
         True,
         False,
-        2,
+        -1,
         sim_dict["eps_truncation"],
     )
 
@@ -440,7 +440,7 @@ def finalize_idmrg_even_size(
         sim_dict["chi_max"],
         True,
         None,
-        1,
+        0,
         sim_dict["eps_truncation"],
     )
 

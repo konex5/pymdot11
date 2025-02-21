@@ -214,7 +214,7 @@ def sweep_eleven_times(
                 eps,
                 is_um=True,
                 conserve_left_right_before=False,
-                direction_right=1,
+                direction_right=2,
             )
             print_double(size, 1, sym="A*")
     else:
@@ -228,7 +228,7 @@ def sweep_eleven_times(
                 eps,
                 is_um=False,
                 conserve_left_right_before=False,
-                direction_right=3,
+                direction_right=-2,
             )
             print_double(size, size - 1, sym="*B")
     # without the above, quantum numbers are not taken into account
@@ -245,9 +245,9 @@ def sweep_eleven_times(
             gate = ggate[1]
 
         if start_left:
-            direction_right = 1
+            direction_right = 2
         else:
-            direction_right = 3
+            direction_right = -2
 
         # logic of the loop: always apply gate first
         if start_left and start_odd_bonds:
@@ -290,7 +290,7 @@ def sweep_eleven_times(
                     eps,
                     is_um=False,
                     conserve_left_right_after_gate=False,
-                    direction_right=3,
+                    direction_right=-2,
                 )
             else:
                 print_double(size, size - 2, "A=")
@@ -304,7 +304,7 @@ def sweep_eleven_times(
                     eps,
                     is_um=True,
                     conserve_left_right_after_gate=False,
-                    direction_right=1,
+                    direction_right=2,
                 )
 
         elif not start_left and not start_odd_bonds:
@@ -347,7 +347,7 @@ def sweep_eleven_times(
                 eps,
                 is_um=False,
                 conserve_left_right_after_gate=False,
-                direction_right=3,
+                direction_right=-2,
             )
 
         elif start_left and not start_odd_bonds:
@@ -390,7 +390,7 @@ def sweep_eleven_times(
                     eps,
                     is_um=True,
                     conserve_left_right_after_gate=False,
-                    direction_right=1,
+                    direction_right=2,
                 )
             else:
                 print_double(size, size - 1, "=B")
@@ -404,7 +404,7 @@ def sweep_eleven_times(
                     eps,
                     is_um=False,
                     conserve_left_right_after_gate=False,
-                    direction_right=3,
+                    direction_right=-2,
                 )
 
         elif not start_left and start_odd_bonds:
@@ -447,7 +447,7 @@ def sweep_eleven_times(
                 eps,
                 is_um=True,
                 conserve_left_right_after_gate=False,
-                direction_right=1,
+                direction_right=2,
             )
 
         start_left = not start_left
@@ -522,7 +522,7 @@ def dmrg_minimize_two_sites(
         sim_dict["chi_max"],
         True,
         True,
-        -3,
+        1,
         sim_dict["eps_truncation"],
     )
     theta_to_mm(
@@ -533,7 +533,7 @@ def dmrg_minimize_two_sites(
         sim_dict["chi_max"],
         True,
         False,
-        2,
+        -1,
         sim_dict["eps_truncation"],
     )
 
@@ -626,9 +626,9 @@ def compress_mps(
     size = len(mps)
     for _ in range(2):
         if start_left:
-            direction_right = 2
+            direction_right = 1
         else:
-            direction_right = -3
+            direction_right = -1
 
         if start_left:
             for l in range(1, size, 1):
@@ -743,7 +743,7 @@ def dmrg_sweep_lanczos(
                     tolerance,
                     chi_max,
                     eps,
-                    direction_right=2,
+                    direction_right=-1,
                     is_um=False,
                 )
                 left_right[l - 1] = update_right(
