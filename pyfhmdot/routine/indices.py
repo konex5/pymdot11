@@ -97,7 +97,7 @@ def potential_middle_indices(
     theta_indices: _List[_Tuple], *, direction_right: int = -1
 ):
     middle_indices = []
-    if direction_right == 0:  # take from left sum
+    if direction_right == 0:  # take from left or right
         for theta_index in theta_indices:
             middle_indices.append(internal_qn_sum(theta_index[0], theta_index[1]))
             middle_indices.append(internal_qn_sub(theta_index[3], theta_index[2]))

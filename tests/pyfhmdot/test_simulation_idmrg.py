@@ -1,5 +1,5 @@
-from locale import normalize
 import pytest
+from automation import is_mdot_available
 
 
 # @pytest.mark.skip
@@ -26,20 +26,20 @@ def test_idmrg_all():
     from pyfhmdot.initialize import create_hamiltonian
 
     ham = create_hamiltonian("sh_xxz-hz_u1", {"Jxy": 1, "Jz": 1, "hz": 0}, len(imps))
-
-    variational_ground_state(
-        imps,
-        ham,
-        {
-            "dw_one_serie": 0,
-            "nb_sweeps_warmup": 8,
-            "nb_sweeps": 5,
-            "chi_max_warmup": 30,
-            "chi_max": 60,
-            "normalize": False,
-            "eps_truncation": 10**-8,
-            "max_iteration": 30,
-            "tolerance": 10**-5,
-        },
-    )
+    if is_mdot_available():
+        variational_ground_state(
+            imps,
+            ham,
+            {
+                "dw_one_serie": 0,
+                "nb_sweeps_warmup": 8,
+                "nb_sweeps": 5,
+                "chi_max_warmup": 30,
+                "chi_max": 60,
+                "normalize": False,
+                "eps_truncation": 10**-8,
+                "max_iteration": 30,
+                "tolerance": 10**-5,
+            },
+        )
     pass

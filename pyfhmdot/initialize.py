@@ -26,7 +26,6 @@ from pyfhmdot.intense.contract import (
 )
 
 from pyfhmdot.intense.mul_mp import multiply_mp
-from pyfhmdot.routine.eig_routine import smallest_eigenvectors_from_scipy
 from pyfhmdot.routine.interface import (
     apply_eigenvalues,
     minimize_theta,
@@ -190,7 +189,7 @@ def initialize_idmrg_odd_size(
             mat.shape[0] * mat.shape[1] * mat.shape[2] * mat.shape[3] * mat.shape[4],
             mat.shape[5] * mat.shape[6] * mat.shape[7] * mat.shape[8] * mat.shape[9],
         )
-        E, vec = smallest_eigenvectors_from_scipy(mat.reshape(new_shape))
+        # E, vec = smallest_eigenvectors_from_scipy(mat.reshape(new_shape))
         eigenvalues[(keys[0], keys[1], keys[2], keys[3], keys[4])] = E[0]
         eigenvectors[(keys[0], keys[1], keys[2], keys[3], keys[4])] = vec.reshape(
             (mat.shape[0], mat.shape[1], mat.shape[2], mat.shape[3], mat.shape[4])

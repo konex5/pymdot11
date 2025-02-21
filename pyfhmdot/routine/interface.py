@@ -2,7 +2,7 @@ import numpy as _np
 from typing import Dict as _Dict
 from typing import List as _List
 from typing import Optional as _Optional
-from pyfhmdot.routine.eig_routine import smallest_eigenvectors_from_scipy
+
 
 from pyfhmdot.routine.svd_routine import (
     normalize_the_array,
@@ -26,6 +26,7 @@ from pyfhmdot.routine.mul_routine import (
     mul_usv_nondeg,
     mul_usv_deg,
 )
+from pyfhmdot.routine.eig_routine import minimize_theta_with_scipy as minimize_theta
 
 
 def mm_to_theta_no_gate(
@@ -153,41 +154,6 @@ def theta_to_mm(
         rhs_blocs,
         is_um=is_um,
     )
-
-
-def minimize_theta(
-    env_blocs: _Dict[tuple, _np.ndarray],
-    eigenvalues: _Dict[tuple, float],
-    eigenvectors: _Dict[tuple, _np.ndarray],
-    chi_max: int,
-) -> None:
-    for keys in env_blocs.keys():
-        mat = env_blocs[keys][:chi_max, :, :, :chi_max, :chi_max, :, :, :chi_max]
-        new_shape = (
-            mat.shape[0] * mat.shape[1] * mat.shape[2] * mat.shape[3],
-            mat.shape[4] * mat.shape[5] * mat.shape[6] * mat.shape[7],
-        )
-        E, vec = smallest_eigenvectors_from_scipy(mat.reshape(new_shape))
-        eigenvalues[(keys[0], keys[1], keys[2], keys[3])] = E[0]
-        eigenvectors[(keys[0], keys[1], keys[2], keys[3])] = vec.reshape(
-            (mat.shape[0], mat.shape[1], mat.shape[2], mat.shape[3])
-        )
-
-
-def select_lowest_blocs(
-    eigenvalues: _Dict[tuple, float], eigenvectors: _Dict[tuple, _np.ndarray]
-):
-    # remove non minimal blocs
-    _ = sorted(set(eigenvalues.values()))
-    min_val = _[0]
-    max_val = _[-1]
-    print("sum of eigenvalues is :", _np.sum(list(eigenvalues.values())))
-    # for key in list(eigenvalues.keys()):
-    #     if not abs(eigenvalues[key] - min_val) <= abs(max_val - min_val) / 10:
-    #         eigenvectors.pop(key)
-    #         eigenvalues.pop(key)
-    # should keep sectors by Qnum and not by energy -_-'
-    pass
 
 
 def apply_eigenvalues(
