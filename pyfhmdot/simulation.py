@@ -680,6 +680,7 @@ def dmrg_sweep_lanczos(
                     conserve_left_right_before=False,
                     direction_right=direction_right,
                 )
+                left[l] = update_left(mps[l], ham[l], left[l-1])
         else:
             for l in range(size - 2, 2, -1):
                 print_double(size, l, "*B")
@@ -695,6 +696,8 @@ def dmrg_sweep_lanczos(
                     conserve_left_right_before=False,
                     direction_right=direction_right,
                 )
+                right[l] = update_right(mps[l], ham[l], right[l+1])
+
 
         start_left = not start_left
         print("dw_one_serie", dw_dict["dw_one_serie"])
