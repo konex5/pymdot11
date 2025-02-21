@@ -5,7 +5,11 @@ from numpy import sqrt as _sqrt
 from numpy import iscomplex as _iscomplex
 from numpy import imag as _imag
 from sys import exit as _exit
-from pyfhmdot.dmrg_contraction import create_env_blocs
+from pyfhmdot.dmrg_contraction import (
+    create_env_blocs,
+    create_three_sites_env_blocs,
+    create_two_sites_env_blocs,
+)
 
 from pyfhmdot.models.pymodels import suzu_trotter_obc_exp
 from pyfhmdot.models.pymodels import hamiltonian_obc
@@ -25,8 +29,6 @@ from pyfhmdot.intense.contract import (
     contract_right_bloc_mps_mpo,
     filter_left_right,
 )
-
-from pyfhmdot.intense.mul_mp import multiply_mp
 
 from pyfhmdot.routine.eig_routine import minimize_theta_with_scipy as minimize_theta
 from pyfhmdot.routine.eig_routine import apply_eigenvalues
@@ -136,45 +138,17 @@ def initialize_idmrg_odd_size(
     imps_right,
     imps_middle,
     ham_left,
-    ham_right,
     ham_middle,
+    ham_right,
     *,
     position,
     size,
     conserve_total,
     d,
 ):
-    tmp_tmp_env_blocs = {}
-    multiply_mp(tmp_tmp_env_blocs, ham_left, ham_middle, [3], [0])
-    # tmp_tmp_env_blocs
-    #    2| |4
-    # 0 -|___|- 5
-    #    1| |3
-    tmp_env_blocs = {}
-    multiply_mp(tmp_env_blocs, tmp_tmp_env_blocs, ham_right, [5], [0])
-    # tmp_env_blocs
-    #    2| |4 |6
-    # 0 -|_____ _|- 7
-    #    1| |3 |5
-    env_bloc = {}
-    for key in tmp_env_blocs.keys():
-        new_key = (0, key[1], key[3], key[5], 0, 0, key[2], key[4], key[6], 0)
-        tmp_shape = tmp_env_blocs[key].shape
-        new_shape = (
-            1,
-            tmp_shape[1],
-            tmp_shape[3],
-            tmp_shape[5],
-            1,
-            1,
-            tmp_shape[2],
-            tmp_shape[4],
-            tmp_shape[5],
-            1,
-        )
-        env_bloc[new_key] = (
-            tmp_env_blocs[key].transpose([0, 1, 3, 5, 2, 4, 6, 7]).reshape(new_shape)
-        )
+    env_bloc = create_three_sites_env_blocs(
+        ham_left, ham_middle, ham_right, conserve_total
+    )
 
     sim_dict = {
         "dw_one_serie": 0,
@@ -243,20 +217,7 @@ def initialize_idmrg_even_size(
     conserve_total,
     d,
 ):
-    tmp_env_blocs = {}
-    multiply_mp(tmp_env_blocs, ham_left, ham_right, [3], [0])
-    # tmp_env_blocs
-    #    2| |4
-    # 0 -|___|- 5
-    #    1| |3
-    env_bloc = {}
-    for key in tmp_env_blocs.keys():
-        new_key = (0, key[1], key[3], conserve_total, 0, key[2], key[4], conserve_total)
-        tmp_shape = tmp_env_blocs[key].shape
-        new_shape = (1, tmp_shape[1], tmp_shape[3], 1, 1, tmp_shape[2], tmp_shape[4], 1)
-        env_bloc[new_key] = (
-            tmp_env_blocs[key].transpose([0, 1, 3, 2, 4, 5]).reshape(new_shape)
-        )
+    env_bloc = create_two_sites_env_blocs(ham_left, ham_right, conserve_total)
 
     allowed_sector_left = conserve_qnum(
         1, size=size, qnum_conserved=conserve_total, d=d
