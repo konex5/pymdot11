@@ -1,5 +1,30 @@
 import pytest
 
+@pytest.mark.skip
+def test_should_apply():
+    from pyfhmdot.algorithm import should_apply_gate
+    
+    # odd size
+    assert should_apply_gate(position=0,start_odd_bonds=True)
+    assert not should_apply_gate(position=1,start_odd_bonds=True)
+    assert should_apply_gate(position=2,start_odd_bonds=True)
+    assert not should_apply_gate(position=3,start_odd_bonds=True)
+    
+    assert not should_apply_gate(position=0,start_odd_bonds=False)
+    assert should_apply_gate(position=1,start_odd_bonds=False)
+    assert not should_apply_gate(position=2,start_odd_bonds=False)
+    assert should_apply_gate(position=3,start_odd_bonds=False)
+    
+
+    # even size
+    assert should_apply_gate(position=0,start_odd_bonds=True)
+    assert not should_apply_gate(position=1,start_odd_bonds=True)
+    assert should_apply_gate(position=2,start_odd_bonds=True)
+    
+    assert not should_apply_gate(position=0,start_odd_bonds=False)
+    assert should_apply_gate(position=1,start_odd_bonds=False)
+    assert not should_apply_gate(position=2,start_odd_bonds=False)
+    
 
 @pytest.mark.skip
 def test_sweep_and_apply(make_maximal_entangled_state_u1):
