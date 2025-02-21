@@ -225,13 +225,7 @@ def potential_middle_indices(
     elif direction_right == -1:  # take from left sum
         for theta_index in theta_indices:
             middle_indices.append(internal_qn_sum(theta_index[0], theta_index[1]))
-            val = internal_qn_sum(theta_index[3], theta_index[2])
-            if val >= 0:
-                middle_indices.append(val)
-            else:
-                _warning(
-                    "warning,qnum problem could arises with substraction of qnums..."
-                )
+            middle_indices.append(internal_qn_sum(theta_index[3], theta_index[2]))
     elif direction_right == 1:  # take from left sum
         for theta_index in theta_indices:
             middle_indices.append(internal_qn_sum(theta_index[0], theta_index[1]))
