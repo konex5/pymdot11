@@ -1,5 +1,7 @@
 from pyfhmdot.create import create_infinite_hamiltonian as _create_infinite_hamiltonian
 from pyfhmdot.simulation import (
+    initialize_left_right,
+    initialize_left_right_variance,
     sweep_eleven_times as _sweep_eleven_times,
     initialize_idmrg_even_size as _initialize_idmrg_even_size,
     initialize_idmrg_odd_size as _initialize_idmrg_odd_size,
@@ -78,7 +80,10 @@ def infinite_to_finite_ground_state(
         dst_imps.append(dst_imps_right[len(dst_imps_right) - 1 - i])
 
 
-def variational_ground_state(mps, mpo, zdmrg_dict):
+def variational_ground_state(mps, ham, zdmrg_dict):
+    # initialize
+    left_blocs, right_blocs = initialize_left_right(mps, ham)
+    left_var, right_var = initialize_left_right_variance(mps, ham)
     # warmup
     for i in range(zdmrg_dict["nb_warmup"]):
         chi_max = max(zdmrg_dict["chi_max"] // 4, 1)

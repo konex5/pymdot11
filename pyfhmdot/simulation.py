@@ -4,10 +4,14 @@ from logging import warning as _warning
 
 from pyfhmdot.intense.contract import (
     contract_left_bloc_mps,
+    contract_left_bloc_mps_mpo,
     contract_left_right_mpo_mpo_permute,
+    contract_mps_mpo_mpo_mps_left_border,
+    contract_mps_mpo_mpo_mps_right_border,
     contract_mps_mpo_mps_left_border,
     contract_mps_mpo_mps_right_border,
     contract_right_bloc_mps,
+    contract_right_bloc_mps_mpo,
 )
 from pyfhmdot.intense.mul_mp import multiply_mp
 from pyfhmdot.routine.eig_routine import smallest_eigenvectors_from_scipy
@@ -877,3 +881,68 @@ def idmrg_even(
 
     dst_imps_left.append(_copy(tmp_imps_left))
     dst_imps_right.append(_copy(tmp_imps_right))
+
+
+def initialize_left_right(mps, ham):
+    left_blocs = []
+    right_blocs = []
+    tmp_dst = {}
+    contract_mps_mpo_mps_left_border(tmp_dst, mps[0], ham[0], mps[0])
+    left_blocs.append(_copy(tmp_dst))
+    tmp_dst.clear()
+    contract_mps_mpo_mps_right_border(tmp_dst, mps[-1], ham[-1], mps[-1])
+    right_blocs.append(_copy(tmp_dst))
+    tmp_dst.clear()
+    
+    for l in range(1,len(mps)-1):
+        tmp_dst = {}
+        contract_left_bloc_mps(
+            tmp_dst, left_blocs[-1], mps[l], ham[l], mps[l]
+        )
+        left_blocs.append(_copy(tmp_dst))
+        tmp_dst.clear()
+        
+    for l in range(len(mps)-1,1,-1):
+        tmp_dst = {}
+        contract_right_bloc_mps(
+            tmp_dst, right_blocs[-1], mps[l], ham[l], mps[l]
+        )
+        right_blocs.append(_copy(tmp_dst))
+        tmp_dst.clear()
+    
+    return left_blocs, right_blocs[::-1]
+
+
+def initialize_left_right_variance(mps, ham):
+    left_blocs = []
+    right_blocs = []
+    tmp_dst = {}
+    contract_mps_mpo_mpo_mps_left_border(tmp_dst, mps[0], ham[0], ham[0], mps[0])
+    left_blocs.append(_copy(tmp_dst))
+    tmp_dst.clear()
+    contract_mps_mpo_mpo_mps_right_border(tmp_dst, mps[-1], ham[-1], ham[-1], mps[-1])
+    right_blocs.append(_copy(tmp_dst))
+    tmp_dst.clear()
+    
+    for l in range(1,len(mps)-1):
+        tmp_dst = {}
+        contract_left_bloc_mps_mpo(
+            tmp_dst, left_blocs[-1], mps[l], ham[l], ham[l], mps[l]
+        )
+        left_blocs.append(_copy(tmp_dst))
+        tmp_dst.clear()
+        
+    for l in range(len(mps)-1,1,-1):
+        tmp_dst = {}
+        contract_right_bloc_mps_mpo(
+            tmp_dst, right_blocs[-1], mps[l], ham[l], ham[l], mps[l]
+        )
+        right_blocs.append(_copy(tmp_dst))
+        tmp_dst.clear()
+    
+    return left_blocs, right_blocs[::-1]
+            
+
+def dmrg(mps, ham, sim_dict):
+    
+    pass
