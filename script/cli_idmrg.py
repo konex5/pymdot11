@@ -51,7 +51,6 @@ if __name__ == "__main__":
     model_name = load_model_info_model_name(arguments.hamiltonian)
     parameters = load_model_parameters(arguments.hamiltonian)
     idmrg_simulation_parameters = load_model_idmrg_simulation(arguments.hamiltonian)
-    idmrg_simulation_parameters["dw_one_serie"] = 0
     imps = []
     infinite_to_finite_ground_state(
         imps,

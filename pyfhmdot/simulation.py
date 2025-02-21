@@ -615,7 +615,7 @@ def initialize_idmrg_even_size(
             eigenvectors.pop(key)
             eigenvalues.pop(key)
     # select_lowest_blocs(eigenvalues, eigenvectors)
-    # apply_eigenvalues(eigenvalues, eigenvectors)
+    apply_eigenvalues(eigenvalues, eigenvectors)
 
     theta_to_mm(
         eigenvectors,
@@ -688,7 +688,7 @@ def idmrg_minimize_two_sites(
     #         _warning("eigenvectors removed a posteriori.")
     select_lowest_blocs(eigenvalues, eigenvectors)
     # select_quantum_sector(eigenvalues, eigenvectors)
-    #apply_eigenvalues(eigenvalues, eigenvectors)
+    apply_eigenvalues(eigenvalues, eigenvectors)
 
     theta_to_mm(
         eigenvectors,

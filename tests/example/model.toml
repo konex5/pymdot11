@@ -10,7 +10,7 @@ hz = 3.0
 [idmrg_simulation]
 chi_max = 30
 conserve_total = 10
-dw_one_step = 0
+dw_one_serie = 0
 dw_total = 0
 eps_truncation = 1e-8
 normalize = 1
