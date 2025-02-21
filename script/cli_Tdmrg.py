@@ -45,7 +45,7 @@ if __name__ == "__main__":
         "-o", "--output", type=str, action="store", help="output path", required=True
     )
 
-    arguments = parser.parse_args()
+    arguments = parser.parse_args(["-G", "/tmp/hamiltonian_gates.h5","-M", "/tmp/2B_00.0000.h5", "-o", "/tmp/"])
 
     if not check_filename_and_extension_h5(arguments.gates):
         sys.exit(

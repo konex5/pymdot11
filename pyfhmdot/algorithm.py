@@ -153,7 +153,7 @@ def sweep_on_layer(size, layer, start_left):
         return sweep(size, from_site=size - 2, to_site=0)
 
 
-def sweep_eleven_times(
+def sweep_eleven_times_hard(
     mps,
     ggate,
     dw_dict,
@@ -214,7 +214,7 @@ def sweep_eleven_times(
         start_odd_bonds = not start_odd_bonds
 
 
-def sweep_eleven_times_hard(
+def sweep_eleven_times(
     mps,
     ggate,
     dw_dict,
@@ -237,7 +237,7 @@ def sweep_eleven_times_hard(
             right_border = size - 2
         else:
             right_border = size - 3
-
+    
     # this is to ensure the first steps without gate
     if start_left:
         if not start_odd_bonds:
@@ -250,7 +250,7 @@ def sweep_eleven_times_hard(
                 eps,
                 is_um=True,
                 conserve_left_right_before=False,
-                conserve_direction_left_after=True,
+                direction_right=1,
             )
             print_double(size, 1, sym="A*")
     else:
@@ -264,7 +264,7 @@ def sweep_eleven_times_hard(
                 eps,
                 is_um=False,
                 conserve_left_right_before=False,
-                conserve_direction_left_after=False,
+                direction_right=3,
             )
             print_double(size, size - 1, sym="*B")
     # without the above, quantum numbers are not taken into account
@@ -280,6 +280,11 @@ def sweep_eleven_times_hard(
         else:  # [1, 2, 3, 7, 8, 9]:
             gate = ggate[1]
 
+        if start_left:
+            direction_right = 1
+        else:
+            direction_right = 3
+        
         # logic of the loop: always apply gate first
         if start_left and start_odd_bonds:
             for l in range(1, size - 2, 2):
@@ -293,8 +298,8 @@ def sweep_eleven_times_hard(
                     normalize,
                     eps,
                     is_um=True,
-                    conserve_left_right_before=False,
-                    conserve_direction_left_after=True,
+                    conserve_left_right_after_gate=False,
+                    direction_right=direction_right,
                 )
                 print_double(size, l + 1, "A*")
                 apply_mm_at(
@@ -306,7 +311,7 @@ def sweep_eleven_times_hard(
                     eps,
                     is_um=True,
                     conserve_left_right_before=False,
-                    conserve_direction_left_after=True,
+                    direction_right=direction_right,
                 )
 
             if is_even:
@@ -320,8 +325,8 @@ def sweep_eleven_times_hard(
                     normalize,
                     eps,
                     is_um=False,
-                    conserve_left_right_before=False,
-                    conserve_direction_left_after=False,
+                    conserve_left_right_after_gate=False,
+                    direction_right=3,
                 )
             else:
                 print_double(size, size - 2, "A=")
@@ -334,8 +339,8 @@ def sweep_eleven_times_hard(
                     normalize,
                     eps,
                     is_um=True,
-                    conserve_left_right_before=False,
-                    conserve_direction_left_after=True,
+                    conserve_left_right_after_gate=False,
+                    direction_right=1,
                 )
 
         elif not start_left and not start_odd_bonds:
@@ -350,8 +355,8 @@ def sweep_eleven_times_hard(
                     normalize,
                     eps,
                     is_um=False,
-                    conserve_left_right_before=False,
-                    conserve_direction_left_after=False,
+                    conserve_left_right_after_gate=False,
+                    direction_right=direction_right,
                 )
                 print_double(size, l, "*B")
                 apply_mm_at(
@@ -363,7 +368,7 @@ def sweep_eleven_times_hard(
                     eps,
                     is_um=False,
                     conserve_left_right_before=False,
-                    conserve_direction_left_after=False,
+                    direction_right=direction_right,
                 )
 
             # left border
@@ -377,8 +382,8 @@ def sweep_eleven_times_hard(
                 normalize,
                 eps,
                 is_um=False,
-                conserve_left_right_before=False,
-                conserve_direction_left_after=False,
+                conserve_left_right_after_gate=False,
+                direction_right=3,
             )
 
         elif start_left and not start_odd_bonds:
@@ -393,8 +398,8 @@ def sweep_eleven_times_hard(
                     normalize,
                     eps,
                     is_um=True,
-                    conserve_left_right_before=False,
-                    conserve_direction_left_after=True,
+                    conserve_left_right_after_gate=False,
+                    direction_right=direction_right
                 )
                 print_double(size, l + 1, "A*")
                 apply_mm_at(
@@ -406,7 +411,7 @@ def sweep_eleven_times_hard(
                     eps,
                     is_um=True,
                     conserve_left_right_before=False,
-                    conserve_direction_left_after=True,
+                    direction_right=direction_right
                 )
 
             if is_even:
@@ -420,8 +425,8 @@ def sweep_eleven_times_hard(
                     normalize,
                     eps,
                     is_um=True,
-                    conserve_left_right_before=False,
-                    conserve_direction_left_after=True,
+                    conserve_left_right_after_gate=False,
+                    direction_right=1,
                 )
             else:
                 print_double(size, size - 1, "=B")
@@ -435,7 +440,7 @@ def sweep_eleven_times_hard(
                     eps,
                     is_um=False,
                     conserve_left_right_before=False,
-                    conserve_direction_left_after=False,
+                    direction_right=3
                 )
 
         elif not start_left and start_odd_bonds:
@@ -450,8 +455,8 @@ def sweep_eleven_times_hard(
                     normalize,
                     eps,
                     is_um=False,
-                    conserve_left_right_before=False,
-                    conserve_direction_left_after=False,
+                    conserve_left_right_after_gate=False,
+                    direction_right=direction_right
                 )
                 print_double(size, l, "*B")
                 apply_mm_at(
@@ -463,7 +468,7 @@ def sweep_eleven_times_hard(
                     eps,
                     is_um=False,
                     conserve_left_right_before=False,
-                    conserve_direction_left_after=False,
+                    direction_right=direction_right
                 )
 
             # left border
@@ -477,8 +482,8 @@ def sweep_eleven_times_hard(
                 normalize,
                 eps,
                 is_um=True,
-                conserve_left_right_before=False,
-                conserve_direction_left_after=True,
+                conserve_left_right_after_gate=False,
+                direction_right=1
             )
 
         start_left = not start_left
