@@ -1,10 +1,10 @@
 import numpy as _np
 from scipy.linalg import svd as _svd
-from typing import Array
+from typing import List
 
 
 def indices_and_discarded_weights(
-    list_of_array: Array[float],
+    list_of_array: List[float],
     eps_truncation_error: float = 10 ** -32,
     chi_max: int = 600,
 ):
@@ -143,9 +143,46 @@ def print_single(size, site_i):
         + ["B" for _ in range(site_i, size, 1, end="")]
     )
 
+
 def print_double(size, site_i):
     return "\r" + "".join(
-        ["A" for _ in range(site_i-1)]
+        ["A" for _ in range(site_i - 1)]
         + ["*="]
         + ["B" for _ in range(site_i, size, 1, end="")]
     )
+
+
+def sweep_eleven_times(
+    size, *, start_position, end_position, apply_function, start_odd_bonds=True
+):
+    number_site_even = size % 2 == 0
+    if start_position is None:
+        start_position = 1
+    if end_position is None:
+        end_position = size
+
+    if start_position < size / 2:
+        start_position = 1
+        right_direction = True
+    else:
+        start_position = size
+        right_direction = False
+
+    if (right_direction and start_odd_bonds) or (
+        not right_direction and not start_odd_bonds
+    ):
+        if number_site_even:
+            Rborder = L - 3
+        else:
+            Rborder = L - 2
+    elif (right_direction and not start_odd_bonds) or (
+        not right_direction and start_odd_bonds
+    ):
+        if number_site_even:
+            Rborder = L - 2
+        else:
+            Rborder = L - 3
+
+
+def apply_eleven_theta_layers(mps, *, gates):
+    pass
