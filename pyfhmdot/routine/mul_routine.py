@@ -73,13 +73,13 @@ def mul_usv_nondeg(
             if is_um is None:
                 diag_sqrt = _np.diag(_np.sqrt(array_S.pop()[:Dsi]))
                 # M
-                mat_left = _np.dot(
-                    array_U.pop()[:, :Dsi], diag_sqrt
-                ).reshape(dims[0], dims[1], Dsi)
+                mat_left = _np.dot(array_U.pop()[:, :Dsi], diag_sqrt).reshape(
+                    dims[0], dims[1], Dsi
+                )
                 # M
-                mat_right = _np.dot(
-                    diag_sqrt, array_V[i][:Dsi, :]
-                ).reshape(Dsi, dims[2], dims[3])
+                mat_right = _np.dot(diag_sqrt, array_V[i][:Dsi, :]).reshape(
+                    Dsi, dims[2], dims[3]
+                )
             elif is_um:
                 # U
                 mat_left = array_U[i][:, :Dsi].reshape(dims[0], dims[1], Dsi)
@@ -127,12 +127,9 @@ def mul_usv_deg(
             if is_um is None:
                 diag_sqrt = _np.diag(_np.sqrt(array_S.pop()[:Dsi]))
                 # M
-                mat_left = _np.dot(
-                    array_U.pop()[:, :Dsi], diag_sqrt
-                )
+                mat_left = _np.dot(array_U.pop()[:, :Dsi], diag_sqrt)
                 # M
-                mat_right = _np.dot(
-                    diag_sqrt, array_V.pop()[:Dsi, :])
+                mat_right = _np.dot(diag_sqrt, array_V.pop()[:Dsi, :])
             elif is_um:
                 # U
                 mat_left = array_U.pop()  # [:,:Dsi]

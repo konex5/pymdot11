@@ -1,37 +1,43 @@
-from pyfhmdot.intense.mul_mp import multiply_mp, fuse_mp, permute_blocs, rm_border_mpo, trace_mp
+from pyfhmdot.intense.mul_mp import (
+    multiply_mp,
+    fuse_mp,
+    permute_blocs,
+    rm_border_mpo,
+    trace_mp,
+)
 
 
-def contract_left_right_mpo_mpo_permute(dst,left_bloc,right_bloc,mpo_one,mpo_two):
+def contract_left_right_mpo_mpo_permute(dst, left_bloc, right_bloc, mpo_one, mpo_two):
     # mpo
     #    2|
     # 0 -|_|-3
     #    1|
     mpos = {}
-    multiply_mp(mpos,mpo_one,mpo_two,[3],[0])
+    multiply_mp(mpos, mpo_one, mpo_two, [3], [0])
     # mpos
     #    2| |4
     # 0 -|___|- 5
     #    1| |3
     tmp = {}
-    multiply_mp(tmp,left_bloc,mpos,[1],[0])
+    multiply_mp(tmp, left_bloc, mpos, [1], [0])
     mpos.clear()
     # tmp
     # 1   | |_|3, 5|_
     #     |  _  __  _|- 6
     # 0   |_| |2, 4|
     tmp_tmp = {}
-    multiply_mp(tmp_tmp,tmp,right_bloc,[6],[1])
+    multiply_mp(tmp_tmp, tmp, right_bloc, [6], [1])
     tmp.clear()
     # tmp_tmp
     # 1   | |_|3, 5|_| |   7
     #     |  _  __  _| |
     # 0   |_| |2, 4| | |   6
-    permute_blocs(dst,tmp_tmp,[(0,1,2,3,4,5,6,7),(1,3,5,7,0,2,4,6)])
+    permute_blocs(dst, tmp_tmp, [(0, 1, 2, 3, 4, 5, 6, 7), (1, 3, 5, 7, 0, 2, 4, 6)])
     # dst
     # 4   | |_|5, 6|_| |   7
     #     |  _  __  _| |
     # 0   |_| |1, 2| | |   3
-    
+
 
 def contract_dmps_left_border(dst, dmps):
     # dmps

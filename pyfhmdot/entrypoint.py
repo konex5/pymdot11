@@ -25,9 +25,9 @@ def infinite_to_finite_ground_state(
         bloc_right,
         ham_mpo,
         idmrg_dict,
-        iterations=(size-len(dst_imps_left)-1) // 2,
+        iterations=(size - len(dst_imps_left) - 1) // 2,
     )
-    
+
     dst_imps = dst_imps_left + [_ for _ in dst_imps_left]
 
 
