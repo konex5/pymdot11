@@ -45,7 +45,7 @@ def test_multiply_blocs_sparse_with_gate_real(
             "dw_total": 0,
             "dw_one_serie": 0,
         },
-        direction_right=1,
+        direction_right=2,
         is_um=True,
     )
     assert len(dest_mps_left.keys()) == 3
@@ -66,7 +66,7 @@ def test_multiply_blocs_sparse_with_gate_real(
             "dw_total": 0,
             "dw_one_serie": 0,
         },
-        direction_right=2,
+        direction_right=-1,
         is_um=False,
     )
     assert len(dest_mps_left.keys()) == 5

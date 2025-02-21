@@ -1,7 +1,7 @@
 import pytest
 
 
-def test_contract_left():
+def contract_left():
     from pyfhmdot.models.pymodels import hamiltonian_obc
     from pyfhmdot.intense.contract import (
         contract_dmps_mpo_dmps_left_border,
@@ -25,7 +25,7 @@ def test_contract_left():
     return new_dst
 
 
-def test_contract_right():
+def contract_right():
     from pyfhmdot.models.pymodels import hamiltonian_obc
     from pyfhmdot.intense.contract import (
         contract_dmps_mpo_dmps_right_border,
@@ -52,8 +52,8 @@ def test_contract_right():
 def test_contract_middle():
     from pyfhmdot.intense.contract import contract_left_right_bloc
 
-    left = test_contract_left()
-    right = test_contract_right()
+    left = contract_left()
+    right = contract_right()
     dst = {}
     contract_left_right_bloc(dst, left, right)
     assert dst[()][()] == 0.0

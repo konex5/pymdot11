@@ -61,7 +61,7 @@ def test_multiply_blocs_sparse_with_qcons(
     assert dest_blocs[(0, 0, 0, 0)].shape == (1, 1, 1, 2)
 
 
-def test_multiply_blocs_sparse_with_gate_fake(
+def multiply_blocs_sparse_with_gate_fake(
     make_single_blocs_mps,
     make_single_blocs_gate,
     lhs_indices,
@@ -91,7 +91,7 @@ def test_multiply_blocs_sparse_with_gate_fake(
     return dest_blocs
 
 
-def test_multiply_blocs_sparse_with_gate_fake_onedir_qnum(
+def multiply_blocs_sparse_with_gate_fake_onedir_qnum(
     make_single_blocs_mps,
     make_single_blocs_gate,
     lhs_indices,
@@ -121,7 +121,7 @@ def test_multiply_blocs_sparse_with_gate_fake_onedir_qnum(
     return dest_blocs
 
 
-def test_multiply_blocs_sparse_with_gate_fake_with_qcons(
+def multiply_blocs_sparse_with_gate_fake_with_qcons(
     make_single_blocs_mps,
     make_single_blocs_gate,
     lhs_indices,

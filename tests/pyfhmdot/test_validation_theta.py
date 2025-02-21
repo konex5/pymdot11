@@ -159,7 +159,7 @@ def test_validation_theta_step_two_left():
         1e-62,
         is_um=True,
         conserve_left_right_after_gate=False,
-        direction_right=1,
+        direction_right=2,
     )
 
     old_results_mpsL = {
@@ -196,7 +196,7 @@ def test_validation_theta_step_two_left():
         1e-62,
         is_um=True,
         conserve_left_right_before=False,
-        direction_right=1,
+        direction_right=2,
     )
 
     old_next_results_mpsR = {
@@ -255,7 +255,7 @@ def test_validation_theta_step_one_right():
         1e-62,
         is_um=True,
         conserve_left_right_after_gate=False,
-        direction_right=1,
+        direction_right=2,
     )
     # found the problem, the gate is wrong at border in the new code!!
     pass

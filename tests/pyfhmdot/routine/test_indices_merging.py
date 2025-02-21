@@ -1,9 +1,9 @@
 import pytest
 
 from tests.pyfhmdot.routine.test_multiply_blocs_with_gate import (
-    test_multiply_blocs_sparse_with_gate_fake,
-    test_multiply_blocs_sparse_with_gate_fake_onedir_qnum,
-    test_multiply_blocs_sparse_with_gate_fake_with_qcons,
+    multiply_blocs_sparse_with_gate_fake,
+    multiply_blocs_sparse_with_gate_fake_onedir_qnum,
+    multiply_blocs_sparse_with_gate_fake_with_qcons,
 )
 
 
@@ -17,7 +17,7 @@ def theta_blocs_large(
     rhs_chi_shapes,
     gate_indices,
 ):
-    return test_multiply_blocs_sparse_with_gate_fake(
+    return multiply_blocs_sparse_with_gate_fake(
         make_single_blocs_mps,
         make_single_blocs_gate,
         lhs_indices,
@@ -38,7 +38,7 @@ def theta_blocs_average(
     rhs_chi_shapes,
     gate_indices,
 ):
-    return test_multiply_blocs_sparse_with_gate_fake_onedir_qnum(
+    return multiply_blocs_sparse_with_gate_fake_onedir_qnum(
         make_single_blocs_mps,
         make_single_blocs_gate,
         lhs_indices,
@@ -59,7 +59,7 @@ def theta_blocs_small(
     rhs_chi_shapes,
     gate_indices,
 ):
-    return test_multiply_blocs_sparse_with_gate_fake_with_qcons(
+    return multiply_blocs_sparse_with_gate_fake_with_qcons(
         make_single_blocs_mps,
         make_single_blocs_gate,
         lhs_indices,
@@ -228,9 +228,9 @@ def test_check_slices_degenerate_blocs_dimtwo_right(theta_blocs_large):
         potential_middle_indices,
     )
 
-    middle_list = potential_middle_indices(theta_blocs_large.keys(), direction_right=3)
+    middle_list = potential_middle_indices(theta_blocs_large.keys(), direction_right=-2)
     nondeg, degenerate = degeneracy_in_theta(
-        theta_blocs_large.keys(), middle_list, direction_right=3
+        theta_blocs_large.keys(), middle_list, direction_right=-2
     )
     newsubsize = []
     slices_degenerate_blocs(theta_blocs_large, degenerate, newsubsize)
