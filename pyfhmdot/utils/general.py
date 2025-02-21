@@ -88,7 +88,7 @@ def add_model_zdmrg_simulation(filepath, parameters):
         "store_state": 2,
     }
     """
-    pass
+    add_dictionary(filepath, parameters, folder="INFO_SIM_ZDMRG")
 
 
 def add_model_tdmrg_simulation(filepath, parameters):
@@ -168,6 +168,12 @@ def load_model_state(filepath):
 def load_model_idmrg_simulation(filepath):
     d = {}
     load_dictionary(filepath, d, folder="INFO_SIM_IDMRG")
+    return d
+
+
+def load_model_zdmrg_simulation(filepath):
+    d = {}
+    load_dictionary(filepath, d, folder="INFO_SIM_ZDMRG")
     return d
 
 
