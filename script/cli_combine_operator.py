@@ -91,7 +91,7 @@ if __name__ == "__main__":
 
     if len(list(ket_dmps[0].values())[0].shape) == 4:
         new_mp = {}
-        multiply_mp(new_mp, operator, ket_dmps[arguments.position - 1], [1], [2])
+        multiply_mp(new_mp, operator, ket_dmps[arguments.position - 1], [0], [2])
         #    0|
         #  1-|_|-3
         #    2|
