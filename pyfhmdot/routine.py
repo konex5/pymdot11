@@ -324,20 +324,17 @@ def mpsQ_svd_th2mV(thetaQ, mpsL, mpsR, simdict):
     # norm_before = _np.sqrt(norm_before)
     # print('norm_before=',norm_before)
 
-    mpsL = {}
-    mpsR = {}
-
-    nondeg, deg = degeneracy_in_theta(keys, middle, False)
+    nondeg, deg = degeneracy_in_theta(keys, middle, direction_right=False)
 
     subnewsize_deg = []
     slices_degenerate_blocs(thetaQ, deg, subnewsize_deg)
-    nondeg_dims = [thetaQ._blocks[_[1]].shape for _ in nondeg]
+    nondeg_dims = [thetaQ[_[1]].shape for _ in nondeg]
 
     array_of_U = []
     array_of_S = []
     array_of_V = []
 
-    _svd_nondeg(thetaQ._blocks, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V)
+    _svd_nondeg(thetaQ, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V)
     _svd_deg(thetaQ, deg, subnewsize_deg, array_of_U, array_of_S, array_of_V)
 
     eps_truncation_error = simdict["eps_truncation_error"]
@@ -346,8 +343,7 @@ def mpsQ_svd_th2mV(thetaQ, mpsL, mpsR, simdict):
     cut, dw = strategyQ_truncation(
         array_of_S, eps_truncation_error, chi_max, chi_max_total, False
     )
-    # print('dw',dw)
-    # print('SSSSSSSSSSSSSSSSSSSSS')
+
     if simdict["normalize"] == True:
         normalize_the_array(array_of_S, cut)
 
@@ -357,8 +353,6 @@ def mpsQ_svd_th2mV(thetaQ, mpsL, mpsR, simdict):
     cut_nondeg = [cut[i] for i in range(len(nondeg))]
     cut_deg = [cut[i] for i in range(len(nondeg), len(nondeg) + len(deg))]
 
-    # print("cut_nondeg,cut_deg",cut_nondeg,cut_deg)
-
     _mult_deg_MV(
         array_of_U,
         array_of_S,
@@ -366,8 +360,8 @@ def mpsQ_svd_th2mV(thetaQ, mpsL, mpsR, simdict):
         array_of_V,
         deg,
         subnewsize_deg,
-        mpsL._blocks,
-        mpsR._blocks,
+        mpsL,
+        mpsR,
     )
     _mult_nondeg_MV(
         array_of_U,
@@ -376,8 +370,8 @@ def mpsQ_svd_th2mV(thetaQ, mpsL, mpsR, simdict):
         array_of_V,
         nondeg,
         nondeg_dims,
-        mpsL._blocks,
-        mpsR._blocks,
+        mpsL,
+        mpsR,
     )
 
     # return mpsL, mpsR
