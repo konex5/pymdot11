@@ -6,6 +6,9 @@ from pyfhmdot.mul_routine import multiply_arrays, multiply_arrays_and_transpose
 from pyfhmdot.indices import (
     indices_dst_theta_no_gate,
     indices_dst_theta_with_gate,
+    degeneracy_in_theta,
+    potential_middle_indices,
+    slices_degenerate_blocs,
 )
 
 
@@ -20,11 +23,6 @@ from pyfhmdot.svd_routine import (
     mult_deg_UM,
 )
 
-from pyfhmdot.indices import (
-    degeneracy_in_theta,
-    potential_middle_indices,
-    slices_degenerate_blocs,
-)
 
 
 def mm_to_theta_no_gate(
