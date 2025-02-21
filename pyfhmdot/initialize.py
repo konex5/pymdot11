@@ -440,12 +440,12 @@ def finalize_idmrg_even_size(
         sim_dict["chi_max"],
         True,
         None,
-        -3,
+        1,
         sim_dict["eps_truncation"],
     )
 
 
-def initialize_left_right(mps, ham):
+def initialize_left_right(mps, ham, position):
     left_blocs = []
     right_blocs = []
     tmp_dst = {}
@@ -458,21 +458,21 @@ def initialize_left_right(mps, ham):
     right_blocs.append(_copy(tmp_dst))
     tmp_dst.clear()
 
-    for l in range(1, len(mps) - 1):
+    for l in range(1, position - 1):
         tmp_dst = {}
         contract_left_bloc_mps(tmp_dst, left_blocs[-1], mps[l], ham[l], mps[l])
         filter_left_right(tmp_dst)
         left_blocs.append(_copy(tmp_dst))
         tmp_dst.clear()
 
-    for l in range(len(mps) - 1, 1, -1):
+    for l in range(len(mps)-1, position -1, -1):
         tmp_dst = {}
         contract_right_bloc_mps(tmp_dst, right_blocs[-1], mps[l], ham[l], mps[l])
         filter_left_right(tmp_dst)
         right_blocs.append(_copy(tmp_dst))
         tmp_dst.clear()
 
-    return left_blocs, right_blocs[::-1]
+    return left_blocs + right_blocs[::-1]
 
 
 def initialize_left_right_variance(mps, ham):

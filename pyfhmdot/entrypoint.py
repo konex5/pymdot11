@@ -88,10 +88,10 @@ def infinite_to_finite_ground_state(
 
 def variational_ground_state(mps, ham, zdmrg_dict):
     # initialize
-    left, right = initialize_left_right(mps, ham)
+    left_right = initialize_left_right(mps, ham,2)
     # left_var, right_var = initialize_left_right_variance(mps, ham)
     # warmup
-    _dmrg_warmup(mps, ham, left, right, zdmrg_dict, start_left=True)  # nb_warmup
+    _dmrg_warmup(mps, ham, left_right, zdmrg_dict, start_left=True)  # nb_warmup
     # converge
     # _dmrg_sweeps(
     #     mps,

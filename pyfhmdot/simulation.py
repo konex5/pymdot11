@@ -541,7 +541,6 @@ def update_left(mps, ham, left):
 
     contract_left_bloc_mps(new_bloc_left, left, mps, ham, mps)
     filter_left_right(new_bloc_left)
-    left.clear()
 
     return new_bloc_left
 
@@ -550,7 +549,6 @@ def update_right(mps, ham, right):
     new_bloc_right = {}
     contract_right_bloc_mps(new_bloc_right, right, mps, ham, mps)
     filter_left_right(new_bloc_right)
-    right.clear()
     return new_bloc_right
 
 
@@ -613,8 +611,7 @@ def idmrg_even(
 def dmrg_sweep_lanczos(
     mps,
     ham,
-    left,
-    right,
+    left_right,
     dw_dict,
     chi_max,
     normalize,
@@ -667,7 +664,7 @@ def dmrg_sweep_lanczos(
 
         if start_left:
             for l in range(2, size - 2, 1):
-                minimize_lanczos(l, mps, ham, left, right, max_iteration, tolerance)
+                minimize_lanczos(l, mps, ham, left_right, max_iteration, tolerance)
                 apply_mm_at(
                     mps,
                     l,
@@ -679,11 +676,11 @@ def dmrg_sweep_lanczos(
                     conserve_left_right_before=False,
                     direction_right=direction_right,
                 )
-                left[l] = update_left(mps[l], ham[l], left[l - 1])
+                left_right[l] = update_left(mps[l], ham[l], left_right[l - 1])
                 print_double(size, l, "A=")
         else:
             for l in range(size - 2, 2, -1):
-                minimize_lanczos(l, mps, ham, left, right, max_iteration, tolerance)
+                minimize_lanczos(l, mps, ham, left_right, max_iteration, tolerance)
                 apply_mm_at(
                     mps,
                     l,
@@ -695,7 +692,7 @@ def dmrg_sweep_lanczos(
                     conserve_left_right_before=False,
                     direction_right=direction_right,
                 )
-                right[l] = update_right(mps[l], ham[l], right[l + 1])
+                left_right[l] = update_right(mps[l], ham[l], left_right[l + 1])
                 print_double(size, l, "=B")
 
         start_left = not start_left
@@ -703,12 +700,11 @@ def dmrg_sweep_lanczos(
         dw_dict["dw_total"] += dw_dict["dw_one_serie"]
 
 
-def dmrg_warmup(mps, ham, left, right, sim_dict, *, start_left):
+def dmrg_warmup(mps, ham, left_right, sim_dict, *, start_left):
     dmrg_sweep_lanczos(
         mps,
         ham,
-        left,
-        right,
+        left_right,
         sim_dict,
         chi_max=sim_dict["chi_max_warmup"],
         normalize=sim_dict["normalize"],
@@ -720,5 +716,5 @@ def dmrg_warmup(mps, ham, left, right, sim_dict, *, start_left):
     )
 
 
-def dmrg_sweeps(mps, ham, left, right, left_var, right_var, sim_dict, *, chi_max):
+def dmrg_sweeps(mps, ham, left_right, left_var, right_var, sim_dict, *, chi_max):
     pass
