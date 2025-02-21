@@ -19,16 +19,16 @@ clean:
 
 
 pep8:
-	$(PEP8) golden tests
+	$(PEP8) pyfhmdot tests
 
 black:
 	$(BLACK) .
 
 lint:
-	$(PYLINT) golden # --rcfile=setup.cfg
+	$(PYLINT) pyfhmdot # --rcfile=setup.cfg
 
 mypy:
-	$(MYPY) --ignore-missing-imports -p golden
+	$(MYPY) --ignore-missing-imports -p pyfhmdot
 
 test:
 	$(PYTEST) -v
