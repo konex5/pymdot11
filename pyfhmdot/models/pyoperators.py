@@ -301,3 +301,27 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
             return single_operator(left_name, coef), single_operator(right_name, 1.0)
         else:
             return single_operator(left_name, 1.0), single_operator(right_name, coef)
+
+def operator_mpo(name,coef,position,*,size):
+    def with_additional_dimension(op):
+        out = {}
+        for key in op.keys():
+            tmp_shape = op[key].shape
+            out[(0,key[0],key[1],0)] = op[key].reshape(1,tmp_shape[0],tmp_shape[1],1)
+        return out
+
+    head = name.split("_")[0]
+    tail = name.split("_")[-1]
+    
+    id=with_additional_dimension(single_operator(head+"_id_"+tail,1))
+    
+    if "-" in name:
+        tmp_op1,tmp_op2 = two_sites_bond_operator(name,coef,weight_on_left=None)
+        op1 = with_additional_dimension(tmp_op1)
+        op2 = with_additional_dimension(tmp_op2)
+
+        return (position-1)*[id] + [op1] + [op2] + (size-1-position)*[id]
+    else:
+        op = with_additional_dimension(single_operator(name,coef))
+        return (position-1)*[id] + [op] + (size-position)*[id]
+
