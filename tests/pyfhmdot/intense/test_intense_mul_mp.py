@@ -20,11 +20,11 @@ def test_permute_arrays(make_single_dummy_dgate):
 
 
 def test_trace_mpo(make_single_dummy_dgate):
-    from pyfhmdot.intense.mul_mp import trace_mpo
+    from pyfhmdot.intense.mul_mp import trace_mp
 
     theta = make_single_dummy_dgate()
     dst_blocs = {}
-    trace_mpo(dst_blocs, theta, 0, 3)
+    trace_mp(dst_blocs, theta, 0, 3)
     assert dst_blocs[(0, 0)].shape == (1, 1)
 
 
