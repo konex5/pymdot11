@@ -17,7 +17,7 @@ clean:
 	find . -name '*~' -exec rm -f {} \;
 	rm -rf $$(find . -name '__pycache__')
 	rm -rf $$(find . -name '.mypy_cache')
-
+	rm -rf .pytest_cache
 
 pep8:
 	$(PEP8) pyfhmdot tests
