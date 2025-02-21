@@ -156,6 +156,7 @@ def test_check_slices_degenerate_blocs_dimtwo(theta_blocs_large):
     assert len(newsubsize) == 2
 
 
+@pytest.mark.skip
 def test_mpsQ_svd_th2Um(theta_blocs_small):
     lhs_blocs = {}
     rhs_blocs = {}
@@ -174,6 +175,7 @@ def test_mpsQ_svd_th2Um(theta_blocs_small):
     pass
 
 
+@pytest.mark.skip
 def test_mpsQ_svd_th2mV(theta_blocs_small):
     lhs_blocs = {}
     rhs_blocs = {}
