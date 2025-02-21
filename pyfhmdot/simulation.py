@@ -721,6 +721,65 @@ def dmrg_sweep_lanczos(
         start_left = not start_left
 
 
+def dmrg_sweep_jacobi(
+    mps,
+    ham,
+    left_right,
+    chi_max,
+    normalize,
+    eps,
+    max_iteration,
+    tolerance,
+    nb_sweeps,
+    *,
+    start_left=True,
+):
+    from pyfhmdot.routine.minimize import minimize_lanczos_and_move, minimize_lanczos
+
+    size = len(mps)
+
+    for layer in range(nb_sweeps):
+        print(f"dmrg sweep {layer+1}/{nb_sweeps}")
+
+        if start_left:
+            for l in range(1, size - 2, 1):
+                print_double(size, l, "MM")
+                minimize_lanczos_and_move(
+                    l,
+                    mps,
+                    ham,
+                    left_right,
+                    max_iteration,
+                    tolerance,
+                    chi_max,
+                    normalize,
+                    eps,
+                    direction_right=1,
+                    is_um=True,
+                )
+                print_double(size, l, "A=")
+        else:
+            for l in range(size - 3, 0, -1):
+                print_double(size, l, "MM")
+                minimize_lanczos_and_move(
+                    l,
+                    mps,
+                    ham,
+                    left_right,
+                    max_iteration,
+                    tolerance,
+                    chi_max,
+                    normalize,
+                    eps,
+                    direction_right=-1,
+                    is_um=False,
+                )
+                print_double(size, l, "=B")
+
+
+        start_left = not start_left
+
+
 def dmrg_warmup(mps, ham, left_right, sim_dict, *, start_left):
     dmrg_sweep_lanczos(
         mps,
@@ -736,5 +795,17 @@ def dmrg_warmup(mps, ham, left_right, sim_dict, *, start_left):
     )
 
 
-def dmrg_sweeps(mps, ham, left_right, left_var, right_var, sim_dict, *, chi_max):
-    pass
+def dmrg_sweeps(mps, ham, left_right, left_right_var, sim_dict, *, start_left):
+    dmrg_sweep_jacobi(
+        mps,
+        ham,
+        left_right,
+        chi_max=sim_dict["chi_max"],
+        normalize=sim_dict["normalize"],
+        eps=sim_dict["eps_truncation"],
+        max_iteration=sim_dict["max_iteration"],
+        tolerance=sim_dict["tolerance"],
+        nb_sweeps=sim_dict["nb_sweeps"],
+        start_left=start_left,
+    )
+

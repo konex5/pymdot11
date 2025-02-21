@@ -92,20 +92,13 @@ def variational_ground_state(mps, ham, zdmrg_dict):
     compress_mps(mps,zdmrg_dict["chi_max_warmup"], True, zdmrg_dict["eps_truncation"], start_left=True)
     # initialize
     left_right = initialize_left_right(mps, ham, 2)
-    # left_var, right_var = initialize_left_right_variance(mps, ham)
     # warmup
     _dmrg_warmup(mps, ham, left_right, zdmrg_dict, start_left=True)  # nb_warmup
+    # initialize
+    # left_right_var = initialize_left_right_variance(mps, ham, 2)
     # converge
-    # _dmrg_sweeps(
-    #     mps,
-    #     ham,
-    #     left,
-    #     right,
-    #     left_var,
-    #     right_var,
-    #     zdmrg_dict,
-    #     chi_max=zdmrg_dict["chi_max"],
-    # )  # nb_sweeps
+    _dmrg_sweeps(mps, ham, left_right,left_right, zdmrg_dict, start_left=True)
+    
 
 
 def time_evolve_single(mps, ggate, sdmrg_dict):

@@ -73,7 +73,7 @@ def minimize_lanczos_and_move(
         dw_dict={"dw_one_serie": 0},
         chi_max=chi_max,
         normalize=normalize,
-        direction_right=0,
+        direction_right=direction_right,
         eps=eps,
         is_um=is_um,
     )
