@@ -21,7 +21,7 @@ from pyfhmdot.general import (
 )
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="cli, create maximal entangled state")
+    parser = argparse.ArgumentParser(description="cli, create hamiltonian")
     parser.add_argument(
         "-i",
         "--input",

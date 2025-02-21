@@ -6,3 +6,9 @@ size = 10
 Jxy = 1.0
 Jz = 1.2
 hz = 5.0
+
+[Tdmrg_simulation]
+dbeta=0.0125
+
+[tdmrg_simulation]
+dtime=0.025
