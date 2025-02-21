@@ -9,7 +9,13 @@ import toml
 from pyfhmdot.utils.iotools import *
 from pyfhmdot.utils.iodicts import *
 
-from pyfhmdot.general import create_model_info, create_hamiltonian
+from pyfhmdot.general import (
+    add_model_info,
+    add_model_parameters,
+    create_hamiltonian,
+    load_model_info_model_name,
+    load_model_info_size,
+)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="cli, create maximal entangled state")
@@ -26,9 +32,9 @@ if __name__ == "__main__":
     )
     arguments = parser.parse_args()
 
-    if check_filename_and_extension(arguments.input):
+    if not check_filename_and_extension(arguments.input):
         sys.exit(
-            f"cli_create_hamiltonian.py: error: the hamiltonian path {arguments.input} is not a valid path."
+            f"cli_create_hamiltonian.py: error: the input path {arguments.input} is not a valid path."
         )
     if not check_filename_and_extension_h5(arguments.output):
         sys.exit(
@@ -38,15 +44,14 @@ if __name__ == "__main__":
     large_dictionary = read_dictionary(arguments.input)
     info = large_dictionary.pop("model")
     parameters = large_dictionary.pop("parameters")
-    
-    # ham_mpo, ggdgate_db, ggsgate_dt, ggdgate_dt = create_hamiltonian(info["model_name"],parameters,info["size"],info_sim["dbeta"],info_sim["dtime"])
+
     create_h5(arguments.output)
+    add_model_info(arguments.output, info)
+    add_model_parameters(arguments.output, parameters)
+    model_name = load_model_info_model_name(arguments.output)
+    size = load_model_info_size(arguments.output)
+    ham_mpo = create_hamiltonian(model_name, parameters, size)
+    for i, mp in enumerate(ham_mpo):
+        add_single_mp(arguments.output, mp, i, folder="MPO")
 
-    """
-    hdf5_create_mpo(output, mpo, coefsite, modeldict, info, sim_TDMRG, "TDMRG")
-
-    if not os.path.exists(output.split("2B_")[0] + "2B.lock"):
-        addlocker_write_beta(output)
-
-    """
-    print("Maximal entangled state created successfully.")
+    print("Hamiltonian mpo created successfully.")

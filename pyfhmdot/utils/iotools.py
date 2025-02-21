@@ -4,7 +4,7 @@ import os
 
 def check_filename_and_extension_h5(filename: str) -> bool:
     ext = os.path.splitext(filename)[-1]
-    valid_file = os.path.exists(filename) and (ext in [".h5"])
+    valid_file = os.path.exists(os.path.dirname(filename)) and (ext in [".h5"])
     return valid_file
 
 
@@ -24,21 +24,21 @@ def check_instance_mp(filepath):
             raise Exception(" <HDF5> MP is void")
 
 
-def add_dictionary(filepath, folder="INFO", dictionary={}):
+def add_dictionary(filepath, dictionary, *, folder="INFO"):
     with _h5.File(filepath, "r+") as f:
         grp = f.create_group(folder)
         for k, v in dictionary.items():
             grp.create_dataset(k, data=v)
 
 
-def load_dictionary(filepath, dictionary, folder="MODEL"):
+def load_dictionary(filepath, dictionary, *, folder="MODEL"):
     with _h5.File(filepath, "r") as f:
         grp = f[folder]
         for key in grp.keys():
             dictionary[key] = grp[key][()]
 
 
-def add_single_mp(file_path, mp_dictionary, site=0, folder="QMP"):
+def add_single_mp(file_path, mp_dictionary, site=0, *, folder="QMP"):
     with _h5.File(file_path, "r+") as f:
         grp = f.create_group(f"/{folder}/{site:04g}")
         for it, val in mp_dictionary.items():
@@ -50,7 +50,7 @@ def add_single_mp(file_path, mp_dictionary, site=0, folder="QMP"):
             )
 
 
-def load_single_mp(file_path, mp_dictionary, site=0, folder="QMP"):
+def load_single_mp(file_path, mp_dictionary, site=0, *, folder="QMP"):
     mp_dictionary.clear()
     with _h5.File(file_path, "r") as f:
         for m in f[f"/{folder}/{site:04g}"].values():

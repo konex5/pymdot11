@@ -30,15 +30,20 @@ def translate_qn_name(model_name):
     return 4 * qn_num + spin_num
 
 
-def add_model_info(filepath, model_name: str, size):
+def add_model_info(filepath, info):
     """
     {
         "sh_xxz-hz_u1" : 0, # number is a unique identifiers for spin size (sh) and qn (u1)
         "size": 10,
     }
     """
+    size = info.pop("size")
+    for key in info.keys():
+        model_name = key
     add_dictionary(
-        filepath, "INFO", {model_name: translate_qn_name(model_name), "size": size}
+        filepath,
+        {model_name: translate_qn_name(model_name), "size": size},
+        folder="INFO",
     )
 
 
@@ -49,7 +54,7 @@ def add_model_parameters(filepath, parameters):
         "hz": 3.4,
     }
     """
-    add_dictionary(filepath, "INFO_PARAMETERS", parameters)
+    add_dictionary(filepath, parameters, folder="INFO_PARAMETERS")
 
 
 def add_model_simulation(filepath, parameters):
@@ -85,8 +90,19 @@ def add_model_simulation(filepath, parameters):
 #     pass
 
 
-def load_model_info(filepath):
-    return load_dictionary(filepath, "INFO")
+def load_model_info_size(filepath):
+    info = {}
+    load_dictionary(filepath, info, folder="INFO")
+    return info["size"]
+
+
+def load_model_info_model_name(filepath):
+    info = {}
+    load_dictionary(filepath, info, folder="INFO")
+    size = info.pop("size")
+    for key in info.keys():
+        model_name = key
+    return model_name
 
 
 def load_model_parameters(filepath):
@@ -98,11 +114,13 @@ def load_model_simulation(filepath):
     pass
 
 
-def get_hamiltonian(model_name, parameters, size, dbeta, dtime):
+def create_hamiltonian(model_name, parameters, size):
     return hamiltonian_obc(model_name, parameters, size)
 
 
-def get_hamiltonian_gates(model_name, parameters, size, *, dbeta, is_dgate, in_group):
+def create_hamiltonian_gates(
+    model_name, parameters, size, *, dbeta, is_dgate, in_group
+):
     """
     To avoid problems, only the physical direction
     e^-{i dbeta H} or e^{- dbeta H} will be selected.
@@ -157,9 +175,10 @@ def get_hamiltonian_gates(model_name, parameters, size, *, dbeta, is_dgate, in_g
     return dgate_imaginary_time
 
 
-def create_maximal_entangled_state(size, spin_name, qn_name):
+def create_maximal_entangled_state(size, model_name):
+    head, _, tail = model_name.split("_")
 
-    operator_name = translate_spin_name(spin_name) + "_id_" + translate_qn_name(qn_name)
+    operator_name = head + "_id_" + tail
     coef = []
     dmps = []
     for l in range(size):
