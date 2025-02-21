@@ -107,6 +107,16 @@ def indices_dst_mul_mpo(
     return sorted(set(about_indices_to_contract))
 
 
+def list_degenerate_indices(destination_indices: _List[tuple]) -> _List[bool]:
+    list_degenerate = []
+    for l in range(len(destination_indices)):
+        if destination_indices.index(destination_indices[l]) == l:
+            is_degenerate = True
+        else:
+            is_degenerate = False
+        list_degenerate.append(is_degenerate)
+    return list_degenerate
+
 def multiply_mp(
     new_blocks: _Dict[tuple, _np.ndarray],
     old_blocks1: _Dict[tuple, _np.ndarray],
@@ -114,10 +124,6 @@ def multiply_mp(
     index1: int,
     index2: int,
 ) -> None:
-    """
-    This method is used for ED
-    """
-    from pyfhmdot.routine.indices import list_degenerate_indices
 
     buildtarget = indices_dst_mul_mpo(
         old_blocks1.keys(), old_blocks2.keys(), index1, index2

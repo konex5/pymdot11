@@ -4,8 +4,6 @@ from typing import List as _List
 from typing import Tuple as _Tuple
 from typing import Optional as _Optional
 
-from pyfhmdot.routine.indices import list_degenerate_indices
-
 
 def mul_mm_blocs_new(
     new_blocks: _Dict[tuple, _np.ndarray],
