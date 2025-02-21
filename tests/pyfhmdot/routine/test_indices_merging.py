@@ -219,3 +219,23 @@ def test_check_slices_degenerate_blocs_dimtwo(theta_blocs_large):
     assert newsubsize[2][5] == [(0, 0), (1, 3)]
     assert newsubsize[2][6] == [0, 2]
     assert newsubsize[2][7] == [(1, 2), (1, 6)]
+
+
+def test_check_slices_degenerate_blocs_dimtwo_right(theta_blocs_large):
+    from pyfhmdot.routine.indices import (
+        degeneracy_in_theta,
+        slices_degenerate_blocs,
+        potential_middle_indices,
+    )
+
+    middle_list = potential_middle_indices(theta_blocs_large.keys(), direction_right=3)
+    nondeg, degenerate = degeneracy_in_theta(
+        theta_blocs_large.keys(), middle_list, direction_right=3
+    )
+    newsubsize = []
+    slices_degenerate_blocs(theta_blocs_large, degenerate, newsubsize)
+    assert len(newsubsize) == 6
+    assert newsubsize[0][0] == 5
+    assert newsubsize[0][1] == 2
+    assert newsubsize[1][0] == 5
+    assert newsubsize[1][0] == 5
