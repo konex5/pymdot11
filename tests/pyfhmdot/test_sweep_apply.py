@@ -28,3 +28,5 @@ def test_sweep_and_no_apply(make_maximal_entangled_state_u1):
             "dw_one_serie": 0,
         },
     )
+    assert mps[0][(0, 0, 0)][0, 0, 0] == -1
+    assert mps[0][(0, 1, 1)][0, 0, 0] == -1

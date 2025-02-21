@@ -55,8 +55,8 @@ def apply_UM(lhs_blocs, rhs_blocs, **kwargs):
         rhs_blocs,
         conserve_left_right=kwargs["conserve_left_right"],
     )
-    lhs_blocs = {}
-    rhs_blocs = {}
+    lhs_blocs.clear()
+    rhs_blocs.clear()
     mpsQ_svd_th2Um(tmp_blocs, lhs_blocs, rhs_blocs, **kwargs)
 
 
