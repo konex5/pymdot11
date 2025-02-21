@@ -9,6 +9,7 @@ from pyfhmdot.dmrg_contraction import (
     create_env_blocs,
     create_three_sites_env_blocs,
     create_two_sites_env_blocs,
+    select_quantum_sector,
 )
 
 from pyfhmdot.models.pymodels import suzu_trotter_obc_exp
@@ -218,28 +219,9 @@ def initialize_idmrg_even_size(
     d,
 ):
     env_bloc = create_two_sites_env_blocs(ham_left, ham_right, conserve_total)
-
-    allowed_sector_left = conserve_qnum(
-        1, size=size, qnum_conserved=conserve_total, d=d
+    select_quantum_sector(
+        env_bloc, position, size=size, qnum_conserved=conserve_total, d=d
     )
-    allowed_sector_right = conserve_qnum(
-        size - 1, size=size, qnum_conserved=conserve_total, d=d
-    )
-    for key in list(env_bloc.keys()):
-        shape = env_bloc[key].shape
-        if (
-            not (internal_qn_sum(key[0], key[1]) in allowed_sector_left)
-            or not (internal_qn_sub(key[3], key[2]) in allowed_sector_right)
-            or not (internal_qn_sum(key[4], key[5]) in allowed_sector_left)
-            or not (internal_qn_sub(key[7], key[6]) in allowed_sector_right)
-        ):
-            env_bloc.pop(key)  # quantum conserved is used here
-        elif not (
-            shape[0] * shape[1] * shape[2] * shape[3]
-            == shape[4] * shape[5] * shape[6] * shape[7]
-        ):
-            env_bloc.pop(key)  # non physical blocs
-
     sim_dict = {
         "dw_one_serie": 0,
         "dw_total": 0,
@@ -293,29 +275,12 @@ def finalize_idmrg_even_size(
     conserve_total,
     d,
 ):
-    # select_quantum_sector
-    allowed_sector_left = conserve_qnum(
-        position, size=size, qnum_conserved=conserve_total, d=d
-    )
-    allowed_sector_right = conserve_qnum(
-        size - position, size=size, qnum_conserved=conserve_total, d=d
-    )
-
     # contract and permute
     env_bloc = create_env_blocs(bloc_left, ham_mpo_left, ham_mpo_right, bloc_right)
-    for key in list(env_bloc.keys()):
-        if not (
-            internal_qn_sum(key[0], key[1]) in allowed_sector_left
-            and internal_qn_sum(key[0], key[1]) == internal_qn_sum(key[4], key[5])
-        ) or not (
-            internal_qn_sub(key[3], key[2]) in allowed_sector_right
-            and internal_qn_sub(key[3], key[2]) == internal_qn_sub(key[7], key[6])
-        ):
-            env_bloc.pop(key)  # quantum conserved is used here
-
-    # minimize energy
+    select_quantum_sector(
+        env_bloc, position, size=size, qnum_conserved=conserve_total, d=d
+    )
     theta = minimize_on_mm(env_bloc, None, None, None, driver="scipy")
-
     theta_to_mm(
         theta,
         dst_left,

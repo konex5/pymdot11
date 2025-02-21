@@ -7,9 +7,13 @@ from pyfhmdot.initialize import finalize_idmrg_even_size
 
 from pyfhmdot.routine.eig_routine import minimize_theta_with_scipy as minimize_theta
 from pyfhmdot.routine.eig_routine import apply_eigenvalues
-from pyfhmdot.routine.indices import internal_qn_sub, internal_qn_sum
 from pyfhmdot.routine.interface import theta_to_mm
-from pyfhmdot.dmrg_contraction import create_env_blocs, update_left, update_right
+from pyfhmdot.dmrg_contraction import (
+    create_env_blocs,
+    select_quantum_sector,
+    update_left,
+    update_right,
+)
 from pyfhmdot.routine.minimize import (
     minimize_and_move as _minimize_and_move,
     minimize_on_mm,
@@ -462,25 +466,11 @@ def dmrg_minimize_two_sites(
     conserve_total,
     d,
 ):
-    # select_quantum_sector
-    allowed_sector_left = conserve_qnum(
-        position, size=size, qnum_conserved=conserve_total, d=d
-    )
-    allowed_sector_right = conserve_qnum(
-        size - position, size=size, qnum_conserved=conserve_total, d=d
-    )
 
     env_bloc = create_env_blocs(bloc_left, ham_mpo_left, ham_mpo_right, bloc_right)
-
-    for key in list(env_bloc.keys()):
-        if not (
-            internal_qn_sum(key[0], key[1]) in allowed_sector_left
-            and internal_qn_sum(key[0], key[1]) == internal_qn_sum(key[4], key[5])
-        ) or not (
-            internal_qn_sub(key[3], key[2]) in allowed_sector_right
-            and internal_qn_sub(key[3], key[2]) == internal_qn_sub(key[7], key[6])
-        ):
-            env_bloc.pop(key)  # quantum conserved is used here
+    select_quantum_sector(
+        env_bloc, position, size=size, qnum_conserved=conserve_total, d=d
+    )
 
     # minimize energy
     theta = minimize_on_mm(env_bloc, None, None, None, driver="scipy")

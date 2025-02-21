@@ -7,6 +7,8 @@ from pyfhmdot.intense.contract import (
     filter_left_right,
 )
 from pyfhmdot.intense.mul_mp import multiply_mp
+from pyfhmdot.conservation import conserve_qnum
+from pyfhmdot.routine.indices import internal_qn_sub, internal_qn_sum
 
 
 def create_env_blocs(bloc_left, ham_mpo_left, ham_mpo_right, bloc_right):
@@ -100,3 +102,21 @@ def create_three_sites_env_blocs(ham_left, ham_middle, ham_right, conserve_total
             tmp_env_blocs[key].transpose([0, 1, 3, 5, 2, 4, 6, 7]).reshape(new_shape)
         )
     return env_bloc
+
+
+def select_quantum_sector(env_bloc, position, *, size, qnum_conserved, d):
+    allowed_sector_left = conserve_qnum(
+        position, size=size, qnum_conserved=qnum_conserved, d=d
+    )
+    allowed_sector_right = conserve_qnum(
+        size - position, size=size, qnum_conserved=qnum_conserved, d=d
+    )
+    for key in list(env_bloc.keys()):
+        if not (
+            internal_qn_sum(key[0], key[1]) in allowed_sector_left
+            and internal_qn_sum(key[0], key[1]) == internal_qn_sum(key[4], key[5])
+        ) or not (
+            internal_qn_sub(key[3], key[2]) in allowed_sector_right
+            and internal_qn_sub(key[3], key[2]) == internal_qn_sub(key[7], key[6])
+        ):
+            env_bloc.pop(key)  # quantum conserved is used here
