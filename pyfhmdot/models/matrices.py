@@ -11,23 +11,6 @@ from validity import quantum_name_model_from_qnmodel as _qn_model
 
 ############################################################
 
-# # jump random and second nearest neighboor
-
-# # def checkforRandom(ham_expr,L):
-# #     pass
-
-# def checknumberparam(modelID,parameters):
-#     if ( _models.hamiltonian[modelID]['nb_param'] == len(parameters) ):
-#         return True
-#     else:
-#         return False
-
-# def checkunderperiod_infinite():
-#     pass
-
-# def checkunderQN():
-#     pass
-
 
 def _parameters2finalparameters(tupleMlist, parameters):
     """
@@ -39,9 +22,6 @@ def _parameters2finalparameters(tupleMlist, parameters):
     """
     if tupleMlist[0][0] == "M" and len(tupleMlist[0]) == 3:
         return (float(parameters[tupleMlist[0][2]])) * tupleMlist[0][1], tupleMlist[-1]
-    # if tupleMlist[1][0]=='MR' and len(tupleMlist[1][-1])==1:
-    #     if isinstance(parameters[tupleMlist[0]],list):
-    #         return ([float(_)*tupleMlist[1][-1][0] for _ in parameters[tupleMlist[0]]], tupleMlist[-1]
     if tupleMlist[0][0] == "EXP" and len(tupleMlist[0]) == 3:
         return (
             float(parameters[tupleMlist[0][2][0]])

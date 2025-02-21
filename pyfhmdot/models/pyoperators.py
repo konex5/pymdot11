@@ -41,78 +41,7 @@ def single_operator(name, coef):  # -> one bloc
     return operators[name]
 
 
-def two_sites_bond_operator(name, coef, weight_on_left=None):  # -> two blocs
-    bonds = [
-        "sh_id_no-sh_id_no",
-        "sh_sm_no-sh_sp_no",
-        "sh_sp_no-sh_sm_no",
-        "sh_sx_no-sh_sx_no",
-        "sh_sy_no-sh_sy_no",
-        "sh_sz_no-sh_sz_no",
-        "sh_id_u1-sh_id_u1",
-        "sh_sm_u1-sh_sp_u1",
-        "sh_sp_u1-sh_sm_u1",
-        "sh_sz_u1-sh_sz_u1",
-    ]
-    if name in bonds:
-        left_name, right_name = name.split("-")
-
-        if weight_on_left is None:
-            return single_operator(left_name, _np.sqrt(coef)), single_operator(
-                right_name, _np.sqrt(coef)
-            )
-        elif weight_on_left:
-            return single_operator(left_name, coef), single_operator(right_name, 1.0)
-        else:
-            return single_operator(left_name, 1.0), single_operator(right_name, coef)
-
-    """
-    # the above is ill defined with QN conservation
-    "sh-SzoSz": {  # ok
-        "nb_site": 2,
-        0: "sh-Sz",
-        1: "sh-Sz",
-        "qchange": {
-            "sh-None": [(0,), (0,)],
-            "sh-U1": [(0,), (0,)],
-            "sh-SU2": [(0, 0), (0, 0)],
-        },
-    },
-    "sh-SpoSm": {  # ok
-        "nb_site": 2,
-        0: "sh-Sp",
-        1: "sh-Sm",
-        "qchange": {
-            "sh-None": [(0,), (0,)],
-            "sh-U1": [(+1,), (-1,)],
-            "sh-SU2": [(0, +1), (0, -1)],
-        },
-    },
-    "sh-SmoSp": {  # ok
-        "nb_site": 2,
-        0: "sh-Sm",
-        1: "sh-Sp",
-        "qchange": {
-            "sh-None": [(0,), (0,)],
-            "sh-U1": [(-1,), (+1,)],
-            "sh-SU2": [(0, -1), (0, +1)],
-        },
-    },
-    # the following is ill defined with QN conservation
-    "sh-SxoSx": {
-        "nb_site": 2,
-        0: "sh-Sx",
-        1: "sh-Sx",
-        "qchange": {"sh-None": [(0,), (0,)]},
-    },
-    "sh-SyoSy": {
-        "nb_site": 2,
-        0: "sh-Sy",
-        1: "sh-Sy",
-        "qchange": {"sh-None": [(0,), (0,)]},
-    },
-    # the above is ill defined with QN conservation
-    # -----------------------------------------------------------
+"""
     # ### so
     # ### PLEASE CHECK VERY CAREFULLY SINCE
     # # index [0] is |s=1,mz=-1> down
@@ -251,6 +180,36 @@ def two_sites_bond_operator(name, coef, weight_on_left=None):  # -> two blocs
             ]
         },
     },
+"""
+
+
+def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
+    bonds = [
+        "sh_id_no-sh_id_no",
+        "sh_sm_no-sh_sp_no",
+        "sh_sp_no-sh_sm_no",
+        "sh_sx_no-sh_sx_no",
+        "sh_sy_no-sh_sy_no",
+        "sh_sz_no-sh_sz_no",
+        "sh_id_u1-sh_id_u1",
+        "sh_sm_u1-sh_sp_u1",
+        "sh_sp_u1-sh_sm_u1",
+        "sh_sz_u1-sh_sz_u1",
+    ]
+    if name in bonds:
+        left_name, right_name = name.split("-")
+
+        if weight_on_left is None:
+            return single_operator(left_name, _np.sqrt(coef)), single_operator(
+                right_name, _np.sqrt(coef)
+            )
+        elif weight_on_left:
+            return single_operator(left_name, coef), single_operator(right_name, 1.0)
+        else:
+            return single_operator(left_name, 1.0), single_operator(right_name, coef)
+
+
+"""
     # the above is ill defined with QN conservation
     "so-IdoId": {
         "nb_site": 2,
@@ -305,8 +264,10 @@ def two_sites_bond_operator(name, coef, weight_on_left=None):  # -> two blocs
         1: "so-Sy",
         "qchange": {"sh-None": [(0,), (0,)]},
     },
-    # the above is ill defined with QN conservation
-    # -----------------------------------------------------------
+
+"""
+
+"""
     # ### ldsh=ladder spin half
     # # the numbers correspond to legs
     # ## ldsh-U1detached <<<<<<<<<<< PROBLEM! Sz_tot cons impossible
@@ -799,11 +760,8 @@ def two_sites_bond_operator(name, coef, weight_on_left=None):  # -> two blocs
     #      },
     "skeleton": {"qcons_compatibility": ["None"], "nb_site": 0, "qchange": []},
 
-    """
     return operators
 
-
-"""
 
 
 # the doubled system is always the difference of the two qns (not the sum!!)

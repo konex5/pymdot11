@@ -1,3 +1,10 @@
+def hamiltonian(
+    all_terms, on_site, on_bond, special_on_site, special_on_bond, subhamiltonian
+):
+    ham_expr = []
+    hamiltonian(subhamiltonian)
+
+
 def model_info():
     hamiltonian = {
         # ### SKELETON
