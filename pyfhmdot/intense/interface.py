@@ -1,8 +1,13 @@
 from copy import deepcopy as _copy
 
-from pyfhmdot.intense.contract import (
-    contract_dmps_left_border as _contract_dmps_left_border,
-)
+
+from pyfhmdot.intense.contract import contract_dmps_dmps_left_border as _contract_dmps_dmps_left_border
+from pyfhmdot.intense.contract import contract_dmps_dmps_right_border as _contract_dmps_dmps_right_border
+from pyfhmdot.intense.contract import contract_dmps_left_border as _contract_dmps_left_border
+from pyfhmdot.intense.contract import contract_left_right_small_bloc as _contract_left_right_small_bloc
+from pyfhmdot.intense.contract import contract_left_small_bloc_dmps as _contract_left_small_bloc_dmps
+from pyfhmdot.intense.contract import contract_right_small_bloc_dmps as _contract_right_small_bloc_dmps
+
 from pyfhmdot.intense.contract import (
     contract_dmps_right_border as _contract_dmps_right_border,
 )
@@ -69,6 +74,32 @@ def measure_dmps(mps_one, position=-1):
 
     dst = {}
     _contract_left_right_very_small_bloc(dst, tmp_left, tmp_right)
+
+    return dst[()][()]
+
+
+def measure_dmps_dmps(dmps_one, dmps_two, position=-1):
+    if position == -1:
+        position = len(dmps_one) // 2
+
+    tmp_left = {}
+    _contract_dmps_dmps_left_border(tmp_left, dmps_one[0],dmps_two[0])
+    tmp = {}
+    for l in range(1, position + 1, 1):
+        tmp, tmp_left = tmp_left, tmp  # swap
+        tmp_left.clear()
+        _contract_left_small_bloc_dmps(tmp_left, tmp, dmps_one[l],dmps_two[l])
+
+    tmp_right = {}
+    _contract_dmps_dmps_right_border(tmp_right, dmps_one[-1],dmps_two[-1])
+    tmp.clear()
+    for l in range(len(dmps_one) - 2, position, -1):
+        tmp, tmp_right = tmp_right, tmp  # swap
+        tmp_right.clear()
+        _contract_right_small_bloc_dmps(tmp_right, tmp, dmps_one[l], dmps_two[l])
+
+    dst = {}
+    _contract_left_right_small_bloc(dst, tmp_left, tmp_right)
 
     return dst[()][()]
 

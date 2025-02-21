@@ -4,7 +4,7 @@
 import argparse
 import sys
 import os
-from pyfhmdot.intense.interface import measure_dmps, measure_mps_mps
+from pyfhmdot.intense.interface import measure_dmps, measure_dmps_dmps, measure_mps_mps
 
 from pyfhmdot.general import (
     load_model_info_size,
@@ -60,12 +60,11 @@ if __name__ == "__main__":
         print(f"{bra_norm}")        
         ket_norm = measure_dmps(ket_dmps)
         print(f"{ket_norm}")
-        # bra_dnorm = measure_dmps_dmps(bra_dmps,bra_dmps)
-        # print(f"{bra_dnorm}")
-        # ket_dnorm = measure_dmps_dmps(bra_dmps,bra_dmps)
-        # print(f"{ket_dnorm}")
-        # braket_norm = measure_dmps_dmps(bra_dmps,ket_dmps)
-        pass
+        bra_dnorm = measure_dmps_dmps(bra_dmps,bra_dmps)
+        print(f"{bra_dnorm}")
+        ket_dnorm = measure_dmps_dmps(ket_dmps,ket_dmps)
+        print(f"{ket_dnorm}")
+        braket_norm = measure_dmps_dmps(bra_dmps,ket_dmps)
 
     if len(list(bra_dmps[0].values())[0].shape) == 3 and len(list(ket_dmps[0].values())[0].shape) == 3:
         # bra_norm = measure_mps_mps(bra_dmps,bra_dmps)

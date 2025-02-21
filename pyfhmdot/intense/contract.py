@@ -94,8 +94,8 @@ def contract_right_small_bloc_dmps(dst, right_bloc, mps_down, mps_up):
     #    2|
     # 0 -|_|-3
     #    1|
-    multiply_mp(tmp, right_bloc, mps_down, [0], [3])
-    multiply_mp(dst, tmp, mps_up, [0, 1, 2], [3, 2, 1])
+    multiply_mp(tmp, mps_up, right_bloc, [3], [1])
+    multiply_mp(dst, mps_down, tmp, [1,2,3], [2,1, 3])
     # dst
     #  1-| |
     #  0-|_|
