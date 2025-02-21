@@ -16,6 +16,7 @@ clean:
 	find . -name '*.pyo' -exec rm -f {} \;
 	find . -name '*~' -exec rm -f {} \;
 	rm -rf $$(find . -name '__pycache__')
+	rm -rf $$(find . -name '.mypy_cache')
 
 
 pep8:
