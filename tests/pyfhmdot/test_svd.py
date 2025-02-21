@@ -23,6 +23,33 @@ def test_dgemm():
 
 
 def test_dgesvd():
+    import numpy as np
     from scipy.linalg import svd as _svd
+    from copy import deepcopy
 
-    a,_ = two_two_random_matrices()
+    a, b = two_two_random_matrices()
+
+    adeep = deepcopy(a)
+    u, s, vd = _svd(
+        a,
+        full_matrices=False,
+        compute_uv=True,
+        overwrite_a=True,
+    )
+    assert adeep[0, 0] != a[0, 0]
+    assert np.all(adeep != a)
+
+    usvd = np.dot(np.dot(u, np.diag(s)), v)
+    assert usvd[0, 0] == adeep[0, 0]
+    assert np.all(usvd == adeep)
+
+    u, s, vd = _svd(
+        b,
+        full_matrices=False,
+        compute_uv=True,
+        overwrite_a=False,
+        lapack_driver="gesvd",
+    )
+
+    usvd = np.dot(np.dot(u, np.diag(s)), v)
+    assert np.all(usvd == adeep)
