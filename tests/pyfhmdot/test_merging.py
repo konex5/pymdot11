@@ -157,12 +157,12 @@ def test_check_slices_degenerate_blocs_dimtwo(theta_blocs_large):
 
 
 def test_mpsQ_svd_th2Um(theta_blocs_small):
-    mpsL = {}
-    mpsR = {}
+    lhs_blocs = {}
+    rhs_blocs = {}
     theta_to_um(
         theta_blocs_small,
-        mpsL,
-        mpsR,
+        lhs_blocs,
+        rhs_blocs,
         {
             "eps_truncation_error": 1e-8,
             "dw_Dmax": 800,
@@ -175,12 +175,12 @@ def test_mpsQ_svd_th2Um(theta_blocs_small):
 
 
 def test_mpsQ_svd_th2mV(theta_blocs_small):
-    mpsL = {}
-    mpsR = {}
+    lhs_blocs = {}
+    rhs_blocs = {}
     theta_to_mv(
         theta_blocs_small,
-        mpsL,
-        mpsR,
+        lhs_blocs,
+        rhs_blocs,
         {
             "eps_truncation_error": 1e-8,
             "dw_Dmax": 800,

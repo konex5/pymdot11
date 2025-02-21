@@ -88,17 +88,17 @@ def svd_nondeg(
 
 
 def svd_deg(
-    thetaQ: _Dict[tuple, _np.ndarray],
+    theta_blocs: _Dict[tuple, _np.ndarray],
     deg: _List[_Tuple[int, _List[_Tuple[int, int, int, int]]]],
     subnewsize: _List[_List],
     array_of_U: _List[_np.ndarray],
     array_of_S: _List[_np.array],
     array_of_V: _List[_np.ndarray],
 ) -> None:
-    if len(thetaQ.keys()) == 0:
+    if len(theta_blocs.keys()) == 0:
         datatype = None
     else:
-        datatype = list(thetaQ.values())[0].dtype
+        datatype = list(theta_blocs.values())[0].dtype
     for i in range(len(deg)):
         # construct the degenerated matrix
         thetaDeg = _np.zeros((subnewsize[i][0], subnewsize[i][1]), dtype=datatype)
@@ -112,7 +112,7 @@ def svd_deg(
             dimR = subnewsize[i][7][posR]
             sliceL = slice(offL, offL + dimL[0] * dimL[1])
             sliceR = slice(offR, offR + dimR[0] * dimR[1])
-            thetaDeg[sliceL, sliceR] = thetaQ[it].reshape(
+            thetaDeg[sliceL, sliceR] = theta_blocs[it].reshape(
                 dimL[0] * dimL[1], dimR[0] * dimR[1]
             )
         try:

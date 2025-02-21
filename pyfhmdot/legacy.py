@@ -39,7 +39,7 @@ def _svd_nondeg(block_dict, nondeg, nondeg_dims, array_of_U, array_of_S, array_o
     pass
 
 
-def _sliceds(thetaQ, deg, subnewsize):
+def _sliceds(theta_blocs, deg, subnewsize):
     for i in range(len(deg)):  # for each deg global block
         # define a local basis
         left__loc_basis = sorted(set([(it[0], it[1]) for it in deg[i][1]]))
@@ -49,7 +49,7 @@ def _sliceds(thetaQ, deg, subnewsize):
         right_loc_dim = len(right_loc_basis) * [(0, 0)]
         # for each local_index
         for it in deg[i][1]:
-            dims = thetaQ._blocks[it].shape
+            dims = theta_blocs._blocks[it].shape
             left__loc_dim[left__loc_basis.index((it[0], it[1]))] = (dims[0], dims[1])
             right_loc_dim[right_loc_basis.index((it[2], it[3]))] = (dims[2], dims[3])
         # find the totdim
@@ -78,11 +78,11 @@ def _sliceds(thetaQ, deg, subnewsize):
         )
 
 
-def _svd_deg(thetaQ, deg, subnewsize, array_of_U, array_of_S, array_of_V):
-    if len(thetaQ._blocks.keys()) == 0:
+def _svd_deg(theta_blocs, deg, subnewsize, array_of_U, array_of_S, array_of_V):
+    if len(theta_blocs._blocks.keys()) == 0:
         pass
     else:
-        datatype = thetaQ._blocks.itervalues().next().dtype
+        datatype = theta_blocs._blocks.itervalues().next().dtype
 
     # print(subnewsize)
     for i in range(len(deg)):
@@ -98,7 +98,7 @@ def _svd_deg(thetaQ, deg, subnewsize, array_of_U, array_of_S, array_of_V):
             dimR = subnewsize[i][7][posR]
             sliceL = slice(offL, offL + dimL[0] * dimL[1])
             sliceR = slice(offR, offR + dimR[0] * dimR[1])
-            thetaDeg[sliceL, sliceR] = thetaQ._blocks[it].reshape(
+            thetaDeg[sliceL, sliceR] = theta_blocs._blocks[it].reshape(
                 dimL[0] * dimL[1], dimR[0] * dimR[1]
             )
         # print("thetaDeg",thetaDeg)
@@ -264,42 +264,44 @@ def _mult_deg_UM(
 ############################################################
 
 
-def theta_to_um(thetaQ, mpsL, mpsR, simdict):
-    lab = thetaQ.get_labels()
+def theta_to_um(theta_blocs, lhs_blocs, rhs_blocs, simdict):
+    lab = theta_blocs.get_labels()
     if len(lab) != 4:
         raise (Exception("To svd, you should have a theta matrix form."))
 
-    bas = thetaQ._lbasis
-    keys = list(thetaQ._blocks.iterkeys())
+    bas = theta_blocs._lbasis
+    keys = list(theta_blocs._blocks.iterkeys())
     middle = retained_QN(bas, keys, direction_right=True)
 
     # # froebenius norm !
     # norm_before = 0.
-    # for _ in thetaQ._blocks.itervalues():
+    # for _ in theta_blocs._blocks.itervalues():
     #     norm_before += _np.linalg.norm(_)**2
     # norm_before = _np.sqrt(norm_before)
     # print('norm_before=',norm_before)
 
     ### HERE
-    # mpsL = _QTensor([bas[0],bas[1],middle],[lab[0],lab[1],(lab[0][0],lab[0][1]+1)])
-    # mpsR = _QTensor([middle,bas[2],bas[3]],[(lab[0][0],lab[0][1]+1),lab[2],lab[3]])
-    mpsL._lbasis[-1] = middle
-    mpsR._lbasis[+0] = middle
-    mpsL._blocks = dict()
-    mpsR._blocks = dict()
+    # lhs_blocs = _QTensor([bas[0],bas[1],middle],[lab[0],lab[1],(lab[0][0],lab[0][1]+1)])
+    # rhs_blocs = _QTensor([middle,bas[2],bas[3]],[(lab[0][0],lab[0][1]+1),lab[2],lab[3]])
+    lhs_blocs._lbasis[-1] = middle
+    rhs_blocs._lbasis[+0] = middle
+    lhs_blocs._blocks = dict()
+    rhs_blocs._blocks = dict()
 
     nondeg, deg = degeneracy_in_QN(bas, keys, middle, True)
 
     subnewsize_deg = []
-    _sliceds(thetaQ, deg, subnewsize_deg)
-    nondeg_dims = [thetaQ._blocks[_[1]].shape for _ in nondeg]
+    _sliceds(theta_blocs, deg, subnewsize_deg)
+    nondeg_dims = [theta_blocs._blocks[_[1]].shape for _ in nondeg]
 
     array_of_U = []
     array_of_S = []
     array_of_V = []
 
-    _svd_nondeg(thetaQ._blocks, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V)
-    _svd_deg(thetaQ, deg, subnewsize_deg, array_of_U, array_of_S, array_of_V)
+    _svd_nondeg(
+        theta_blocs._blocks, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V
+    )
+    _svd_deg(theta_blocs, deg, subnewsize_deg, array_of_U, array_of_S, array_of_V)
     # print('SSSSSSSSSSSSSSSSSSSSSS')
     # print(array_of_S)
 
@@ -328,8 +330,8 @@ def theta_to_um(thetaQ, mpsL, mpsR, simdict):
         array_of_V,
         deg,
         subnewsize_deg,
-        mpsL._blocks,
-        mpsR._blocks,
+        lhs_blocs._blocks,
+        rhs_blocs._blocks,
     )
     _mult_nondeg_UM(
         array_of_U,
@@ -338,51 +340,53 @@ def theta_to_um(thetaQ, mpsL, mpsR, simdict):
         array_of_V,
         nondeg,
         nondeg_dims,
-        mpsL._blocks,
-        mpsR._blocks,
+        lhs_blocs._blocks,
+        rhs_blocs._blocks,
     )
 
-    # return mpsL, mpsR
+    # return lhs_blocs, rhs_blocs
     pass
 
 
-def theta_to_mv(thetaQ, mpsL, mpsR, simdict):
-    lab = thetaQ.get_labels()
+def theta_to_mv(theta_blocs, lhs_blocs, rhs_blocs, simdict):
+    lab = theta_blocs.get_labels()
     if len(lab) != 4:
         raise (Exception("To svd, you should have a theta matrix form."))
 
-    bas = thetaQ._lbasis
-    keys = list(thetaQ._blocks.iterkeys())
+    bas = theta_blocs._lbasis
+    keys = list(theta_blocs._blocks.iterkeys())
     middle = retained_QN(bas, keys, direction_right=False)
 
     # # froebenius norm
     # norm_before = 0.
-    # for _ in thetaQ._blocks.itervalues():
+    # for _ in theta_blocs._blocks.itervalues():
     #     norm_before += _np.linalg.norm(_)**2
     # norm_before = _np.sqrt(norm_before)
     # print('norm_before=',norm_before)
 
     ### HERE
-    # mpsL = _QTensor([bas[0],bas[1],middle],[lab[0],lab[1],(lab[0][0],lab[0][1]+1)])
-    # mpsR = _QTensor([middle,bas[2],bas[3]],[(lab[0][0],lab[0][1]+1),lab[2],lab[3]])
-    mpsL._lbasis[-1] = middle
-    mpsR._lbasis[+0] = middle
-    mpsL._blocks = dict()
-    mpsR._blocks = dict()
+    # lhs_blocs = _QTensor([bas[0],bas[1],middle],[lab[0],lab[1],(lab[0][0],lab[0][1]+1)])
+    # rhs_blocs = _QTensor([middle,bas[2],bas[3]],[(lab[0][0],lab[0][1]+1),lab[2],lab[3]])
+    lhs_blocs._lbasis[-1] = middle
+    rhs_blocs._lbasis[+0] = middle
+    lhs_blocs._blocks = dict()
+    rhs_blocs._blocks = dict()
 
     nondeg, deg = degeneracy_in_QN(bas, keys, middle, False)
     # print("nondeg, deg",nondeg, deg)
 
     subnewsize_deg = []
-    _sliceds(thetaQ, deg, subnewsize_deg)
-    nondeg_dims = [thetaQ._blocks[_[1]].shape for _ in nondeg]
+    _sliceds(theta_blocs, deg, subnewsize_deg)
+    nondeg_dims = [theta_blocs._blocks[_[1]].shape for _ in nondeg]
 
     array_of_U = []
     array_of_S = []
     array_of_V = []
 
-    _svd_nondeg(thetaQ._blocks, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V)
-    _svd_deg(thetaQ, deg, subnewsize_deg, array_of_U, array_of_S, array_of_V)
+    _svd_nondeg(
+        theta_blocs._blocks, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V
+    )
+    _svd_deg(theta_blocs, deg, subnewsize_deg, array_of_U, array_of_S, array_of_V)
     # print('SSSSSSSSSSSSSSSSSSSSS')
     # print(array_of_S)
 
@@ -412,8 +416,8 @@ def theta_to_mv(thetaQ, mpsL, mpsR, simdict):
         array_of_V,
         deg,
         subnewsize_deg,
-        mpsL._blocks,
-        mpsR._blocks,
+        lhs_blocs._blocks,
+        rhs_blocs._blocks,
     )
     _mult_nondeg_MV(
         array_of_U,
@@ -422,9 +426,9 @@ def theta_to_mv(thetaQ, mpsL, mpsR, simdict):
         array_of_V,
         nondeg,
         nondeg_dims,
-        mpsL._blocks,
-        mpsR._blocks,
+        lhs_blocs._blocks,
+        rhs_blocs._blocks,
     )
 
-    # return mpsL, mpsR
+    # return lhs_blocs, rhs_blocs
     pass

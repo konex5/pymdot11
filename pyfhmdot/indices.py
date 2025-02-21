@@ -275,7 +275,7 @@ def degeneracy_in_theta(
 
 
 def slices_degenerate_blocs(
-    thetaQ: _Dict[_Tuple, _np.ndarray],
+    theta_blocs: _Dict[_Tuple, _np.ndarray],
     degenerate_list: _List[_Tuple[int, _List[_Tuple[int, int, int, int]]]],
     subnewsize: _List[_List],
 ) -> None:
@@ -288,7 +288,7 @@ def slices_degenerate_blocs(
         right_loc_dim = len(right_loc_basis) * [(0, 0)]
         # for each local_index
         for it in degenerate_list[i][1]:
-            dims = thetaQ[it].shape
+            dims = theta_blocs[it].shape
             left__loc_dim[left__loc_basis.index((it[0], it[1]))] = (dims[0], dims[1])
             right_loc_dim[right_loc_basis.index((it[2], it[3]))] = (dims[2], dims[3])
         # find the totdim

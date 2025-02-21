@@ -64,14 +64,14 @@ def mm_to_theta_with_gate(
     multiply_arrays_and_transpose(dst_blocs, tmp_blocs, gate_blocs, dst_indices)
 
 
-def theta_to_um(thetaQ, mpsL, mpsR, simdict, **kwargs):
+def theta_to_um(theta_blocs, lhs_blocs, rhs_blocs, simdict, **kwargs):
 
-    keys = list(thetaQ.keys())
+    keys = list(theta_blocs.keys())
     middle = potential_middle_indices(keys, direction_right=True)
 
     # # froebenius norm !
     # norm_before = 0.
-    # for _ in thetaQ._blocks.itervalues():
+    # for _ in theta_blocs._blocks.itervalues():
     #     norm_before += _np.linalg.norm(_)**2
     # norm_before = _np.sqrt(norm_before)
     # print('norm_before=',norm_before)
@@ -79,19 +79,18 @@ def theta_to_um(thetaQ, mpsL, mpsR, simdict, **kwargs):
     nondeg, deg = degeneracy_in_theta(keys, middle, direction_right=True)
 
     subnewsize_deg = []
-    slices_degenerate_blocs(thetaQ, deg, subnewsize_deg)
-    nondeg_dims = [thetaQ[_[1]].shape for _ in nondeg]
+    slices_degenerate_blocs(theta_blocs, deg, subnewsize_deg)
+    nondeg_dims = [theta_blocs[_[1]].shape for _ in nondeg]
 
     array_of_U = []
     array_of_S = []
     array_of_V = []
 
-    svd_nondeg(thetaQ, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V)
-    svd_deg(thetaQ, deg, subnewsize_deg, array_of_U, array_of_S, array_of_V)
+    svd_nondeg(theta_blocs, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V)
+    svd_deg(theta_blocs, deg, subnewsize_deg, array_of_U, array_of_S, array_of_V)
 
     eps_truncation_error = simdict["eps_truncation_error"]
     chi_max = simdict["dw_Dmax"]
-    chi_max_total = simdict["dw_Dmax_tot"]
 
     cut, dw = truncation_strategy(array_of_S, eps_truncation_error, chi_max)
 
@@ -109,8 +108,8 @@ def theta_to_um(thetaQ, mpsL, mpsR, simdict, **kwargs):
         array_of_V,
         deg,
         subnewsize_deg,
-        mpsL,
-        mpsR,
+        lhs_blocs,
+        rhs_blocs,
     )
     mult_nondeg_UM(
         array_of_U,
@@ -119,19 +118,19 @@ def theta_to_um(thetaQ, mpsL, mpsR, simdict, **kwargs):
         array_of_V,
         nondeg,
         nondeg_dims,
-        mpsL,
-        mpsR,
+        lhs_blocs,
+        rhs_blocs,
     )
 
 
-def theta_to_mv(thetaQ, mpsL, mpsR, simdict, **kwargs):
+def theta_to_mv(theta_blocs, lhs_blocs, rhs_blocs, simdict, **kwargs):
 
-    keys = list(thetaQ.keys())
+    keys = list(theta_blocs.keys())
     middle = potential_middle_indices(keys, direction_right=False)
 
     # # froebenius norm
     # norm_before = 0.
-    # for _ in thetaQ._blocks.itervalues():
+    # for _ in theta_blocs._blocks.itervalues():
     #     norm_before += _np.linalg.norm(_)**2
     # norm_before = _np.sqrt(norm_before)
     # print('norm_before=',norm_before)
@@ -139,19 +138,18 @@ def theta_to_mv(thetaQ, mpsL, mpsR, simdict, **kwargs):
     nondeg, deg = degeneracy_in_theta(keys, middle, direction_right=False)
 
     subnewsize_deg = []
-    slices_degenerate_blocs(thetaQ, deg, subnewsize_deg)
-    nondeg_dims = [thetaQ[_[1]].shape for _ in nondeg]
+    slices_degenerate_blocs(theta_blocs, deg, subnewsize_deg)
+    nondeg_dims = [theta_blocs[_[1]].shape for _ in nondeg]
 
     array_of_U = []
     array_of_S = []
     array_of_V = []
 
-    svd_nondeg(thetaQ, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V)
-    svd_deg(thetaQ, deg, subnewsize_deg, array_of_U, array_of_S, array_of_V)
+    svd_nondeg(theta_blocs, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V)
+    svd_deg(theta_blocs, deg, subnewsize_deg, array_of_U, array_of_S, array_of_V)
 
     eps_truncation_error = simdict["eps_truncation_error"]
     chi_max = simdict["dw_Dmax"]
-    chi_max_total = simdict["dw_Dmax_tot"]
     cut, dw = truncation_strategy(
         array_of_S,
         eps_truncation_error,
@@ -173,8 +171,8 @@ def theta_to_mv(thetaQ, mpsL, mpsR, simdict, **kwargs):
         array_of_V,
         deg,
         subnewsize_deg,
-        mpsL,
-        mpsR,
+        lhs_blocs,
+        rhs_blocs,
     )
     mult_nondeg_MV(
         array_of_U,
@@ -183,6 +181,6 @@ def theta_to_mv(thetaQ, mpsL, mpsR, simdict, **kwargs):
         array_of_V,
         nondeg,
         nondeg_dims,
-        mpsL,
-        mpsR,
+        lhs_blocs,
+        rhs_blocs,
     )
