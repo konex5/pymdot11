@@ -11,7 +11,7 @@ from pyfhmdot.utils.general import (
 )
 from pyfhmdot.utils.iotools import check_filename_and_extension_h5
 
-from pyfhmdot.intense.interface import measure_dmps_mpo_dmps
+from pyfhmdot.intense.interface import measure_dmps_mpo_dmps, measure_dmps_mpo_mpo_dmps
 
 
 if __name__ == "__main__":
@@ -66,4 +66,6 @@ if __name__ == "__main__":
 
     energy = measure_dmps_mpo_dmps(ket_dmps,ham_mpo,bra_dmps)
     print(f"<bra|H|ket>={energy}")
-    #measure_dmps_mpo_mpo_dmps(ket_dmps,ham_mpo,bra_dmps)
+    variance = measure_dmps_mpo_mpo_dmps(ket_dmps,ham_mpo,ham_mpo,bra_dmps)
+    print(f"<bra|H^2|ket>={variance}")
+    
