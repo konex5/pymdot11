@@ -27,10 +27,18 @@ def test_print_single():
     assert print_single(5, 2) == "\rA*BBB"
     assert print_double(5, 2) == "\rA*=BB"
 
+    assert print_single(5, 4) == "\rAAA*B"
+    assert print_double(5, 4) == "\rAAA*="
+
+    assert len(print_single(7, 4)) == 8
+    assert len(print_double(7, 4)) == 8
+
 
 @pytest.mark.parametrize("size", [10, 11])
 def test_sweep_move(size):
     from pyfhmdot.algorithm import sweep_move
+
+    # sweep_move(size, start_position=1, end_position=size)
 
     assert size == size
     pass
