@@ -958,13 +958,13 @@ def suzu_trotter_exp_to_blocs(
         arg, id_dense, on_site_left, on_site_right, nn_bond, is_dgate, d=dense_d
     )
 
-    blocks = []
+    blocks = {}
     if is_dgate == False:
         for i, j, k, l, si, sj, sk, sl in _generate_slices(fake_d, degenerate_list):
             tmp = t[si, sj, sk, sl]
             if not _np.all(tmp == 0):
                 tmp.setflags(write=0)
-                blocks.append([[i, j, k, l], tmp])
+                blocks[(i, j, k, l)] = tmp
     else:
         for (
             i,
@@ -987,7 +987,7 @@ def suzu_trotter_exp_to_blocs(
             tmp = t[si, sj, sk, sl, sm, sn, so, sp]
             if not _np.all(tmp == 0):
                 tmp.setflags(write=0)
-                blocks.append([[i, j, k, l, m, n, o, p], tmp])
+                blocks[(i, j, k, l, m, n, o, p)] = tmp
     return blocks
 
 

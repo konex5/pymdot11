@@ -75,21 +75,15 @@ def test_hamiltonian_gate():
 
 
 def test_gate_exp():
-    from pyfhmdot.models.pyoperators import single_operator
     from pyfhmdot.models.pymodels import suzu_trotter_obc_exp
 
     model_name = "sh_xxz-hz_u1"
     parameters = {"Jxy": 7, "Jz": -5, "hz": 3}
 
-    a = suzu_trotter_obc_exp(-0.01, model_name, parameters, 10, is_dgate=True)
+    a = suzu_trotter_obc_exp(-0.01, model_name, parameters, 10, is_dgate=False)
     model_name = "sh_xxz-hz_no"
     parameters = {"Jxy": 7, "Jz": -5, "hz": 3}
     b = suzu_trotter_obc_exp(-0.01, model_name, parameters, 10, is_dgate=False)
-    ############################################################
-    # MATRICES ARE CORRECT!
-    # manybody.models.quantum_name = 'sh-None'
-    # A = manybody.matrices.suzu_trotter_obc_exp(-0.02,'sh-xxz-hz',[1,1,2],10,True)[0]
-    # manybody.models.quantum_name = 'sh-U1'
-    # B = manybody.matrices.suzu_trotter_obc_exp(-0.02,'sh-xxz-hz',[1,1,2],10,True)[0]
-    # for i in xrange(len(B)):
-    #     print(B[i][1][0,0,0,0] == A[0][1][tuple(B[i][0])])
+
+    for i in range(len(b)):
+        assert b[i][(0, 0, 0, 0)][0, 0, 0, 0] == a[i][(0, 0, 0, 0)][0, 0, 0, 0]
