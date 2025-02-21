@@ -5,7 +5,6 @@ from pyfhmdot.initialize import (
     initialize_left_right,
     initialize_left_right_variance,
 )
-from pyfhmdot.intense.contract import filter_left_right
 
 from pyfhmdot.simulation import (
     compress_mps,
@@ -180,30 +179,4 @@ def time_evolve_double(dmps, dggate, ddmrg_dict):
 
 
 def lowering_temperature(dmps, dggate, ldmrg_dict):
-
     dynamical_dmps(dmps, dggate, ldmrg_dict)
-    """
-        if ( sim_dict["beta"] / (sim_dict["save_every"]*sim_dict["dbeta"])):
-
-            output = outputHEAD + f"{sim_dict['beta']}.h5"
-
-            if sim_dict["right_direction"]:
-                info["central_matrix"] = 2
-            else:
-                info["central_matrix"] = L - 1
-
-            info["chi_middle_chain"] = list(
-                (_.shape[0] for _ in dmps[L / 2]._blocks.values())
-            )
-
-            mps2save = [_.split_pair(("s", l + 1)) for l, _ in enumerate(dmps)]
-
-            _a_mps = list2gen_with_coef(mps2save, coefsite)
-
-             info["dnorm"] = 1.0
-            info["norm"] = Qmeasure.obc_norm_density(L, _a_mps)
-            del _a_mps
-            info["2B"] = beta
-
-            hdf5_create_mpo(output, mps2save, coefsite, model, info, sim_dict, "TDMRG")
-    """
