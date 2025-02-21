@@ -714,6 +714,7 @@ def dmrg_sweep_lanczos(
 
         if start_left:
             for l in range(1, size - 2, 1):
+                print_double(size, l, "MM")
                 minimize_lanczos_and_move(
                     l,
                     mps,
@@ -726,14 +727,10 @@ def dmrg_sweep_lanczos(
                     direction_right=1,
                     is_um=True,
                 )
-                # left_right[l - 1] = update_left(
-                #     mps[l - 1], ham[l - 1], left_right[l - 2], l == 1
-                # )
                 print_double(size, l, "A=")
-                # left_right[l] = update_left(mps[l], ham[l], left_right[l-1])
-                # print_double(size, l+1, "A=")
         else:
             for l in range(size - 3, 0, -1):
+                print_double(size, l, "MM")
                 minimize_lanczos_and_move(
                     l,
                     mps,
@@ -746,12 +743,8 @@ def dmrg_sweep_lanczos(
                     direction_right=-1,
                     is_um=False,
                 )
-                left_right[l - 1] = update_right(
-                    mps[l], ham[l], left_right[l], l == size
-                )
                 print_double(size, l, "=B")
-                # left_right[l-1] = update_right(mps[l-1], ham[l-1], left_right[l])
-                # print_double(size, l-1, "=B")
+
 
         start_left = not start_left
 

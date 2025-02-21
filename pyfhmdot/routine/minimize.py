@@ -31,10 +31,10 @@ def minimize_lanczos_and_move(
             left_right[l-1] = update_left(mps[l - 1], ham[l - 1], left_right[l - 2], False)
     else:
         apply_mm_at(mps,l+2,{"dw_one_serie":0},chi_max,True,eps,is_um=False,direction_right=-1)
-        if l==len(mps)-2:
-            left_right[l + 1] = update_right(mps[l+1], ham[l+1], [None], True)
+        if l==len(mps)-3:
+            left_right[l + 1] = update_right(mps[l+2], ham[l+2], [None], True)
         else:
-            left_right[l + 1] = update_right(mps[l+1], ham[l+1], left_right[l+1], False)
+            left_right[l + 1] = update_right(mps[l+2], ham[l+2], left_right[l+2], False)
 
     env_blocs = {}
     contract_left_right_mpo_mpo_permute(
