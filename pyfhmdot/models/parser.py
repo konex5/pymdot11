@@ -1,6 +1,50 @@
+import os
+import toml
+import json
+import sys
+
+from typing import List
 import numpy as _np
 from scipy.linalg import expm as _expm
 from numbers import Number as _ntype
+
+# example JSON<->BOOST compatible
+# toml.dumps({"xy":{"a":1, "b_EXP":(2,3),"c_LIST":[1,2,3,4,5,6]},"zz": {"Jz":1}})
+
+
+def check_filename_and_extension(filename: str) -> bool:
+    ext = os.path.splitext(filename)[-1]
+    valid_file = os.path.exists(filename) and (ext in [".json", ".toml"])
+    return valid_file
+
+
+def read_filename(filename: str) -> dict:
+    if not check_filename_and_extension(filename):
+        sys.exit(
+            f"The file {filename} is not valid. Check extension (json or toml) and path."
+        )
+    with open(filename, "r") as file:
+        if os.path.splitext(filename)[-1] == ".json":
+            return json.loads(file.read())
+        elif os.path.splitext(filename)[-1] == ".toml":
+            return toml.loads(file.read())
+
+
+def write_filename(filename: str, params: dict) -> dict:
+    with open(filename, "w") as file:
+        if os.path.splitext(filename)[-1] == ".json":
+            file.write(json.dumps(params))
+        elif os.path.splitext(filename)[-1] == ".toml":
+            file.write(toml.dumps(params))
+
+
+"""    
+
+
+def load_hamiltonian_file(filename:str):
+    if not os.path.exists(filename):
+        sys.exit(f"The filename {filename} is not a valid file.")
+    if (filename[-3:] == "."):
 
 
 def read_parameters(line: str):
@@ -13,43 +57,12 @@ def read_parameters(line: str):
     else:
         return param_name, float(param_value_str)
 
-
-
-def _parameters2finalparameters(tupleMlist, parameters):
-    """
-    input (('M',7.,2),(Sz,1))
-    output parameters[2]*7.,(Sz,1)
-
-    input (('EXP',[1./2.,2.j],[0,1]),(SpoSm,1)
-    output parameters[0]*1./2. np.exp(2.j*parameters[1]),(SpoSm,1)
-    """
-    if tupleMlist[0][0] == "M" and len(tupleMlist[0]) == 3:
-        return (float(parameters[tupleMlist[0][2]])) * tupleMlist[0][1], tupleMlist[-1]
-    # if tupleMlist[1][0]=='MR' and len(tupleMlist[1][-1])==1:
-    #     if isinstance(parameters[tupleMlist[0]],list):
-    #         return ([float(_)*tupleMlist[1][-1][0] for _ in parameters[tupleMlist[0]]], tupleMlist[-1]
-    if tupleMlist[0][0] == "_EXP" and len(tupleMlist[0]) == 3:
-        return (
-            float(parameters[tupleMlist[0][2][0]])
-            * tupleMlist[0][1][0]
-            * _np.exp(float(parameters[tupleMlist[0][2][1]]) * tupleMlist[0][1][1])
-        ), tupleMlist[-1]
-    raise (
-        Exception("Error in _parameters2finalparameters when constructing hamiltonian")
-    )
-
-
-def _finalparameters2finalperiod(tupleMlistreturned, period):
-    return (
-        tupleMlistreturned[0],
-        tupleMlistreturned[1][0],
-        tupleMlistreturned[1][1],
-        period,
-    )
+def parameters_to_list(hamiltonian_dict,param_name,param_value,*,size) -> List[float],List[str]:
+    pass
 
 
 def _ham4expr2final(ham4expr, period, parameters, finalhamlistreturned):
-    for i in xrange(4):
+    for i in range(4):
         # 1-ONSITE__2-NEAREST_NEIGHBOR__3-SECOND_NEARESTNEIGHBOR__4-SPECIAL-TERM(like-borders)
         for tupleMlist in ham4expr[i]:
             finalhamlistreturned[i].append(
@@ -61,15 +74,15 @@ def _ham4expr2final(ham4expr, period, parameters, finalhamlistreturned):
 
 
 def _appendsubmodel(model, parameters, finalhamlistreturned):
-    for submodeltuple in _models.hamiltonian[model]["submodel"]:
+    for submodeltuple in models[model]["submodel"]:
         _appendsubmodel(
             submodeltuple[0],
             [parameters[idx] for idx in submodeltuple[1]],
             finalhamlistreturned,
         )
     _ham4expr2final(
-        _models.hamiltonian[model]["ham_expr"],
-        _models.hamiltonian[model]["period"],
+        models[model]["ham_expr"],
+        models[model]["period"],
         parameters,
         finalhamlistreturned,
     )
@@ -116,3 +129,4 @@ def onsite_fuse_for_mpo(tmpblocks):
                     # can only be last # shortlist.index(lab)
                     outblocks[-1][1] += tmpblocks[l][1]
     return outblocks
+"""
