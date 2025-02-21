@@ -1044,8 +1044,8 @@ def suzu_trotter_obc_exp(arg, model_name, parameters, size, is_dgate, in_group):
     id_dense = single_operator(name=head + "_id_no", coef=1.0)
     on_site = on_site_operators_from_hamiltonian(head + "_" + mod + "_no", parameters)
     on_site_left_border = on_site_fuse_for_mpo(on_site)
-    on_site = on_site_fuse_for_mpo(on_site, coef=1 / 2.0)
     on_site_right_border = on_site_fuse_for_mpo(on_site)
+    on_site = on_site_fuse_for_mpo(on_site, coef=1.0 / 2.0)
 
     # fuse
     nn_bond = nn_bond_operators_from_hamiltonian(head + "_" + mod + "_no", parameters)

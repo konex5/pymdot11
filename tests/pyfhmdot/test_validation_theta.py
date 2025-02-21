@@ -257,4 +257,5 @@ def test_validation_theta_step_one_right():
         conserve_left_right_after_gate=False,
         direction_right=1,
     )
+    # found the problem, the gate is wrong at border in the new code!! 
     pass
