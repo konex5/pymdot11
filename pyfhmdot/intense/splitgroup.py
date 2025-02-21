@@ -203,3 +203,21 @@ def group_dmps(model_name, dst_dmp, mp):
 
 def split_dmps(model_name, dst_mp, dmp):
     reshape_and_split(model_name, dst_mp, dmp, 1)
+
+
+def group_all(model_name, dmps):
+    dmps_out = []
+    for i, tmp in enumerate(dmps):
+        _ = {}
+        group_dmps(model_name, _, tmp)
+        dmps_out.append(_)
+    return dmps_out
+
+
+def split_all(model_name, dmps):
+    dmps_out = []
+    for i, tmp in enumerate(dmps):
+        _ = {}
+        split_dmps(model_name, _, tmp)
+        dmps_out.append(_)
+    return dmps_out

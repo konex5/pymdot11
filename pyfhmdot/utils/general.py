@@ -54,6 +54,20 @@ def add_model_parameters(filepath, parameters):
     add_dictionary(filepath, parameters, folder="INFO_PARAMETERS")
 
 
+def add_state_info(filepath, d):
+    """
+    {
+        "size" : 12
+        "dbeta": 2.0
+        "time": 0.5
+        "dw_total": 1e-5
+        "normalize": 1 #True
+        "chi_middle": 30
+    }
+    """
+    add_dictionary(filepath, d, folder="INFO_STATE")
+
+
 def add_model_idmrg_simulation(filepath, parameters):
     """
     {
@@ -142,6 +156,12 @@ def load_model_info_model_name(filepath):
 def load_model_parameters(filepath):
     d = {}
     load_dictionary(filepath, d, folder="INFO_PARAMETERS")
+    return d
+
+
+def load_model_state(filepath):
+    d = {}
+    load_dictionary(filepath, d, folder="INFO_STATE")
     return d
 
 

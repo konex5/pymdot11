@@ -8,6 +8,7 @@ import os
 from pyfhmdot.utils.general import (
     add_model_info,
     add_mps,
+    add_state_info,
     load_model_info_model_name,
     load_model_info_size,
 )
@@ -50,6 +51,10 @@ if __name__ == "__main__":
 
     create_h5(arguments.output)
     add_model_info(arguments.output, {"size": size, model_name: 0})
+    add_state_info(
+        arguments.output,
+        {"size": size, "dw_total": 0, "chi_middle": 1, "dbeta": 0, "time": 0},
+    )
     add_mps(arguments.output, dmps, folder="QMP")
 
     print("Maximal entangled state created successfully.")
