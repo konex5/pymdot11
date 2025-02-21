@@ -181,8 +181,8 @@ def measure_mps_mpo_mps(mps_one, mpo, mps_two, position=-1):
         _contract_left(tmp_left, tmp, mps_one[l], mpo[l], mps_two[l])
 
     tmp_right = {}
-    _contract_right_border(tmp_right, mps_one[0], mpo[0], mps_two[0])
-    for l in range(len(mps_one), position, -1):
+    _contract_right_border(tmp_right, mps_one[-1], mpo[-1], mps_two[-1])
+    for l in range(len(mps_one)-2, position, -1):
         tmp = _copy(tmp_right)  # swap
         tmp_right.clear()
         _contract_right(tmp_right, tmp, mps_one[l], mpo[l], mps_two[l])
@@ -225,20 +225,20 @@ def measure_dmps_mpo_mpo_dmps(dmps_one, mpo_one, mpo_two, dmps_two, position=-1)
     _contract_left_border_very_big(
         tmp_left, dmps_one[0], mpo_one[0], mpo_two[0], dmps_two[0]
     )
+    tmp = {}
     for l in range(1, position, 1):
-        tmp = _copy(tmp_left)  # swap
-        tmp_left.clear()
+        tmp, tmp_left = tmp_left, tmp  # swap
         _contract_left_very_big(
             tmp_left, tmp, dmps_one[l], mpo_one[l], mpo_two[l], dmps_two[l]
         )
 
     tmp_right = {}
     _contract_right_border_very_big(
-        tmp_right, dmps_one[0], mpo_one[0], mpo_two[0], dmps_two[0]
+        tmp_right, dmps_one[-1], mpo_one[-1], mpo_two[-1], dmps_two[-1]
     )
+    tmp = {}
     for l in range(len(dmps_one) - 2, position, -1):
-        tmp = _copy(tmp_right)  # swap
-        tmp_right.clear()
+        tmp, tmp_right = tmp_right, tmp  # swap
         _contract_right_very_big(
             tmp_right, tmp, dmps_one[l], mpo_one[l], mpo_two[l], dmps_two[l]
         )
