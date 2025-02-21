@@ -1,2 +1,2 @@
 def automation():
-    print("test")
+    assert True

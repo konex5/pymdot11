@@ -10,6 +10,11 @@ def user_type(complex: bool):
         if complex:
             return dtype
 
+@pytest.fixture
+def make_test():
+    def _make_test():
+        assert True
+    return _make_test
 
 @pytest.fixture
 def make_mps():

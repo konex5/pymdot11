@@ -1,6 +1,5 @@
 import pytest
 
-
 @pytest.mark.skip(msg="module fhmdot not ready yet")
 def test_example():
     from example import view_nocopy
@@ -25,3 +24,12 @@ def test_scipy():
     import matplotlib.pyplot
 
     assert "import matplotlib worked!" == "import matplotlib worked!"
+
+
+def test_automation_import():
+    from automation import automation
+
+    automation()
+
+def test_conftest(make_test):
+    make_test()
