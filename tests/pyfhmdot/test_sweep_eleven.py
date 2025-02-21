@@ -24,7 +24,6 @@ def test_eleven_times(
     mpo = make_single_dummy_dgate()
     ggate = [11 * [mpo], 11 * [mpo], 11 * [mpo], 11 * [mpo]]
     sweep_eleven_times(
-        11,
         dmps,
         ggate,
         {"dw_one_serie": 0, "dw_total": 0},
