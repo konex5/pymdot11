@@ -27,6 +27,7 @@ from pyfhmdot.routine.mul_routine import (
     mul_usv_deg,
 )
 
+
 def mm_to_theta_no_gate(
     dst_blocs: _Dict[tuple, _np.ndarray],
     lhs_blocs: _Dict[tuple, _np.ndarray],

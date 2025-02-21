@@ -27,3 +27,16 @@ def apply_eigenvalues(
 ):
     for key in list(eigenvalues.keys()):
         eigenvectors[key] *= eigenvalues[key]
+
+
+def minimize_scipy_on_mm(
+    env_blocs: _Dict[tuple, _np.ndarray],
+    th_blocs: _Dict[tuple, float] = None,
+    max_iteration=None,
+    tolerance=None,
+) -> _Dict[tuple, float]:
+    # minimize energy
+    eigenvalues, eigenvectors = {}, {}
+    minimize_theta_with_scipy(env_blocs, eigenvalues, eigenvectors, chi_max=10)
+    apply_eigenvalues(eigenvalues, eigenvectors)
+    return eigenvectors

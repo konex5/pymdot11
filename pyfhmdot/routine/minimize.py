@@ -1,4 +1,3 @@
-from mdot_routine import minimize_lanczos_on_m, minimize_lanczos_on_mm
 from pyfhmdot.intense.contract import (
     contract_left_right_bloc_with_mpo,
     contract_left_right_mpo_mpo_permute,
@@ -10,7 +9,28 @@ from numpy import all as _all
 from pyfhmdot.simulation import update_left, update_right
 
 
-def minimize_lanczos_and_move(
+def minimize_on_mm(env_blocs, th_blocs, max_iteration, tolerance, *, driver):
+    if driver == "lanczos":
+        from mdot_routine import minimize_lanczos_on_mm
+
+        new_th_blocs = minimize_lanczos_on_mm(
+            env_blocs, th_blocs, max_iteration, tolerance
+        )
+    elif driver == "jacobi":
+        # from mdot_routine import minimize_jacobi_on_mm
+        pass
+    elif driver == "scipy":
+        from pyfhmdot.routine.eig_routine import minimize_scipy_on_mm
+
+        new_th_blocs = minimize_scipy_on_mm(
+            env_blocs, th_blocs, max_iteration, tolerance
+        )
+    else:
+        raise ValueError("The driver value is either 'lanczos', 'jacobi' or 'scipy'.")
+    return new_th_blocs
+
+
+def minimize_and_move(
     l,
     mps,
     ham,
@@ -22,7 +42,8 @@ def minimize_lanczos_and_move(
     eps,
     *,
     direction_right,
-    is_um
+    is_um,
+    driver="lanczos",
 ):
     if direction_right == 1:
         apply_mm_at(
@@ -86,7 +107,9 @@ def minimize_lanczos_and_move(
         if key not in valid_keys:
             th_blocs.pop(key)
 
-    new_th_blocs = minimize_lanczos_on_mm(env_blocs, th_blocs, max_iteration, tolerance)
+    new_th_blocs = minimize_on_mm(
+        env_blocs, th_blocs, max_iteration, tolerance, driver=driver
+    )
     mps[l].clear()
     mps[l + 1].clear()
     theta_to_mm(
@@ -100,22 +123,3 @@ def minimize_lanczos_and_move(
         eps=eps,
         is_um=is_um,
     )
-
-
-def minimize_lanczos(l, mps, ham, left_right, max_iteration, tolerance):
-    env_bloc = {}
-    contract_left_right_bloc_with_mpo(
-        env_bloc, left_right[l - 1], ham[l], left_right[l]
-    )
-    # for key in list(env_bloc.keys()):
-    #     tmp_shape = env_bloc[key].shape
-    #     if tmp_shape[0] != tmp_shape[3] and tmp_shape[2] != tmp_shape[5]:
-    #         env_bloc.pop(key)
-
-    # for key in env_bloc.keys():
-    #     tmp_shape = env_bloc[key].shape
-    #     if (key[0],key[1],key[2]) in mps[l].keys():
-    #         if mps[l][(key[0],key[1],key[2])].shape != (tmp_shape[0], tmp_shape[1], tmp_shape[2]):
-    #             mps[l].pop((key[0],key[1],key[2]))
-
-    mps[l] = minimize_lanczos_on_m(env_bloc, mps[l], 100, tolerance)

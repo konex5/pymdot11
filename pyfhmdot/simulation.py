@@ -646,7 +646,7 @@ def compress_mps(
         start_left = not start_left
 
 
-def dmrg_sweep_lanczos(
+def dmrg_sweep(
     mps,
     ham,
     left_right,
@@ -658,8 +658,9 @@ def dmrg_sweep_lanczos(
     nb_sweeps,
     *,
     start_left=True,
+    driver="lanczos",
 ):
-    from pyfhmdot.routine.minimize import minimize_lanczos_and_move, minimize_lanczos
+    from pyfhmdot.routine.minimize import minimize_and_move as minimize_lanczos_and_move
 
     size = len(mps)
 
@@ -681,6 +682,7 @@ def dmrg_sweep_lanczos(
                     eps,
                     direction_right=1,
                     is_um=True,
+                    driver=driver,
                 )
                 print_double(size, l, "A=")
         else:
@@ -698,65 +700,7 @@ def dmrg_sweep_lanczos(
                     eps,
                     direction_right=-1,
                     is_um=False,
-                )
-                print_double(size, l, "=B")
-
-        start_left = not start_left
-
-
-def dmrg_sweep_jacobi(
-    mps,
-    ham,
-    left_right,
-    left_right_var,
-    chi_max,
-    normalize,
-    eps,
-    max_iteration,
-    tolerance,
-    nb_sweeps,
-    *,
-    start_left=True,
-):
-    from pyfhmdot.routine.minimize import minimize_lanczos_and_move, minimize_lanczos
-
-    size = len(mps)
-
-    for layer in range(nb_sweeps):
-        print(f"dmrg sweep {layer+1}/{nb_sweeps}")
-
-        if start_left:
-            for l in range(1, size - 2, 1):
-                print_double(size, l, "MM")
-                minimize_lanczos_and_move(
-                    l,
-                    mps,
-                    ham,
-                    left_right,
-                    max_iteration,
-                    tolerance,
-                    chi_max,
-                    normalize,
-                    eps,
-                    direction_right=1,
-                    is_um=True,
-                )
-                print_double(size, l, "A=")
-        else:
-            for l in range(size - 3, 0, -1):
-                print_double(size, l, "MM")
-                minimize_lanczos_and_move(
-                    l,
-                    mps,
-                    ham,
-                    left_right,
-                    max_iteration,
-                    tolerance,
-                    chi_max,
-                    normalize,
-                    eps,
-                    direction_right=-1,
-                    is_um=False,
+                    driver=driver,
                 )
                 print_double(size, l, "=B")
 
@@ -764,7 +708,7 @@ def dmrg_sweep_jacobi(
 
 
 def dmrg_warmup(mps, ham, left_right, sim_dict, *, start_left):
-    dmrg_sweep_lanczos(
+    dmrg_sweep(
         mps,
         ham,
         left_right,
@@ -775,11 +719,12 @@ def dmrg_warmup(mps, ham, left_right, sim_dict, *, start_left):
         tolerance=sim_dict["tolerance"],
         nb_sweeps=sim_dict["nb_sweeps_warmup"],
         start_left=start_left,
+        driver="lanczos",
     )
 
 
 def dmrg_sweeps(mps, ham, left_right, left_right_var, sim_dict, *, start_left):
-    dmrg_sweep_jacobi(
+    dmrg_sweep(
         mps,
         ham,
         left_right,
@@ -791,4 +736,5 @@ def dmrg_sweeps(mps, ham, left_right, left_right_var, sim_dict, *, start_left):
         tolerance=sim_dict["tolerance"],
         nb_sweeps=sim_dict["nb_sweeps"],
         start_left=start_left,
+        driver="lanczos",  # TODO = "jacobi"
     )
