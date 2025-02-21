@@ -5,9 +5,6 @@ import argparse
 import sys
 import os
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-
-
 from pyfhmdot.general import get_model_info, create_maximal_entangled_state
 
 if __name__ == "__main__":
