@@ -83,7 +83,9 @@ def indices_dst_mul_mpo(
 
     for left_index in left_indices:
         for right_index in right_indices:
-            if _np.all([left_index[lind[i]] == right_index[rind[i]] for i in range(len(lind))]):
+            if _np.all(
+                [left_index[lind[i]] == right_index[rind[i]] for i in range(len(lind))]
+            ):
                 about_indices_to_contract.append(
                     (
                         tuple(
@@ -137,4 +139,3 @@ def multiply_mp(
                 old_blocks2[it2],
                 axes=(index1, index2),
             )
-

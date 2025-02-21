@@ -35,4 +35,3 @@ def test_fuse_mpo(make_single_dummy_dgate):
     dst_blocs = {}
     fuse_mp(dst_blocs, theta, 0)
     pass
-
