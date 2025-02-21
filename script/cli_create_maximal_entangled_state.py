@@ -5,10 +5,9 @@ import argparse
 import sys
 import os
 
-from pyfhmdot.general import (
+from pyfhmdot.utils.general import (
     add_model_info,
     add_mps,
-    create_maximal_entangled_state,
     load_model_info_model_name,
     load_model_info_size,
 )
@@ -17,6 +16,8 @@ from pyfhmdot.utils.iotools import (
     check_filename_and_extension_to_create_h5,
     create_h5,
 )
+
+from pyfhmdot.create import create_maximal_entangled_state
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="cli, create maximal entangled state")
@@ -48,7 +49,7 @@ if __name__ == "__main__":
     _, dmps = create_maximal_entangled_state(size, model_name)
 
     create_h5(arguments.output)
-    add_model_info(arguments.output, {"size":size, model_name: 0})
+    add_model_info(arguments.output, {"size": size, model_name: 0})
     add_mps(arguments.output, dmps, folder="QMP")
 
     print("Maximal entangled state created successfully.")

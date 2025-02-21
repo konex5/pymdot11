@@ -4,9 +4,8 @@
 import argparse
 import sys
 import os
-from pyfhmdot.dynamical import dynamical_dmps
 
-from pyfhmdot.general import (
+from pyfhmdot.utils.general import (
     add_model_bdmrg_simulation,
     add_model_info,
     add_mps,
@@ -14,13 +13,14 @@ from pyfhmdot.general import (
     load_model_info_model_name,
     load_model_info_size,
     load_mps,
-    change_right_index,
 )
-from pyfhmdot.intense.splitgroup import group_dmps, group_four_dgate, split_dmps
+from pyfhmdot.intense.splitgroup import group_dmps, split_dmps
 from pyfhmdot.utils.iotools import (
     check_filename_and_extension_h5,
     create_h5,
 )
+
+from pyfhmdot.entrypoint import time_evolve_double
 
 
 if __name__ == "__main__":
@@ -77,8 +77,7 @@ if __name__ == "__main__":
     for st in range(4):
         ggate.append(load_mps(arguments.gates, size - 1, folder=f"TIME_GATE_{st:02g}"))
 
-    dynamical_dmps(dmps, ggate, bdmrg_simulation_parameters)
-
+    time_evolve_double(dmps, ggate, bdmrg_simulation_parameters)
 
     dmps_out = []
     for i, tmp in enumerate(dmps):
@@ -88,6 +87,6 @@ if __name__ == "__main__":
 
     output_path = arguments.output + "/2B_00.0250_00.0125.h5"
     create_h5(output_path)
-    add_model_info(output_path,{model_name:0,"size":size})
+    add_model_info(output_path, {model_name: 0, "size": size})
     add_model_bdmrg_simulation(output_path, bdmrg_simulation_parameters)
     add_mps(output_path, dmps_out, folder="QMP")

@@ -50,7 +50,7 @@ def contract_left_right_very_small_bloc(dst, left_blocs, right_blocs):
     # 0   |_|-1
     # right
     #  0-|_|    1
-    multiply_mp(dst, left_blocs, right_blocs, [0,1], [1,0])
+    multiply_mp(dst, left_blocs, right_blocs, [0, 1], [1, 0])
 
 
 def contract_dmps_dmps_left_border(dst, mps_down, mps_up):
@@ -95,7 +95,7 @@ def contract_right_small_bloc_dmps(dst, right_bloc, mps_down, mps_up):
     # 0 -|_|-3
     #    1|
     multiply_mp(tmp, mps_up, right_bloc, [3], [1])
-    multiply_mp(dst, mps_down, tmp, [1,2,3], [2,1, 3])
+    multiply_mp(dst, mps_down, tmp, [1, 2, 3], [2, 1, 3])
     # dst
     #  1-| |
     #  0-|_|

@@ -6,7 +6,7 @@ def test_eleven_times(
     make_maximal_entangled_state_u1,
     make_single_dummy_dgate,
 ):
-    from pyfhmdot.algorithm import sweep_eleven_times, sweep_eleven_times_hard
+    from pyfhmdot.simulation import sweep_eleven_times, sweep_eleven_times_hard
 
     # L=6; start_odd_bonds=True; start_left=True # ok for even and odd sites
     # sweep_eleven_times(L,L*[None], [(L-1)*[None],(L-1)*[None],(L-1)*[None],(L-1)*[None]],{"dw_one_serie":0, "dw_total": 0},10,True,10**-8,start_left=start_left,start_odd_bonds=start_odd_bonds)

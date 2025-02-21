@@ -2,7 +2,7 @@ import pytest
 
 
 def test_valid_gate(make_single_dummy_dgate):
-    from pyfhmdot.general import create_hamiltonian_gates
+    from pyfhmdot.create import create_hamiltonian_gates
     import numpy as np
 
     valid_gate = make_single_dummy_dgate()

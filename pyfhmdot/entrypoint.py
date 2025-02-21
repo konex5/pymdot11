@@ -1,8 +1,23 @@
-from numpy import sum as _sum
-from pyfhmdot.algorithm import sweep_eleven_times as _sweep_eleven_times
+from pyfhmdot.simulation import sweep_eleven_times as _sweep_eleven_times
 
 
-def dynamical_dmps(dmps, ggate, sim_dict):
+def infinite_to_finite_ground_state(size, impo, idmrg_dict):
+    pass
+    # return
+
+
+def variational_ground_state(mps, mpo, zdmrg_dict):
+    # left_bloc right_bloc
+    pass
+
+
+def time_evolve_single(mps, ggate, sdmrg_dict):
+    # while
+    # dynamical_mps(mps, ggate, sdmrg_dict)
+    pass
+
+
+def dynamical_dmps(dmps, dggate, sim_dict):
     """
     sim_dict["tau_max"]
     sim_dict["dtau"]
@@ -21,7 +36,7 @@ def dynamical_dmps(dmps, ggate, sim_dict):
     dw_dict = {"dw_one_serie": 0, "dw_total": sim_dict["dw_total"]}
     _sweep_eleven_times(
         dmps,
-        ggate,
+        dggate,
         dw_dict=dw_dict,
         chi_max=sim_dict["chi_max"],
         normalize=sim_dict["normalize"],
@@ -30,10 +45,19 @@ def dynamical_dmps(dmps, ggate, sim_dict):
         start_odd_bonds=sim_dict["start_odd_bonds"],
     )
     sim_dict["dw_one_serie"] = dw_dict["dw_one_serie"]
-    sim_dict["dw_total"] += _sum(dw_dict["dw_total"])
+    sim_dict["dw_total"] += dw_dict["dw_total"]
     print("discarded weight in one step :", sim_dict["dw_one_serie"])
     print("discarded weight accumulate  :", sim_dict["dw_total"])
 
+
+def time_evolve_double(dmps, dggate, ddmrg_dict):
+    # while
+    dynamical_dmps(dmps, dggate, ddmrg_dict)
+
+
+def lowering_temperature(dmps, dggate, ldmrg_dict):
+
+    dynamical_dmps(dmps, dggate, ldmrg_dict)
     """
         if ( sim_dict["beta"] / (sim_dict["save_every"]*sim_dict["dbeta"])):
 
@@ -59,16 +83,3 @@ def dynamical_dmps(dmps, ggate, sim_dict):
 
             hdf5_create_mpo(output, mps2save, coefsite, model, info, sim_dict, "TDMRG")
     """
-
-
-def time_evolve_double(dmps, ggate, sim_dict, time_max, dtime):
-    while True:
-        dynamical_dmps(dmps, ggate, sim_dict, tau_max=time_max, dtau=dtime)
-        sim_dict["start_left"] = not sim_dict["start_left"]
-        sim_dict["start_odd_bonds"] = not sim_dict["start_odd_bonds"]
-        sim_dict["beta"] = round(sim_dict["beta"] + 2 * sim_dict["dbeta"], 4)
-
-
-def lowering_temperature(dmps, ggate, sim_dict, beta_max, dbeta):
-    while True:
-        dynamical_dmps(dmps, ggate, sim_dict, tau_max=beta_max, dtau=dbeta)

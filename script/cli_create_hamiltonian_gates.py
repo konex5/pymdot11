@@ -11,16 +11,18 @@ from pyfhmdot.utils.iotools import (
 )
 from pyfhmdot.utils.iodicts import check_filename_and_extension, read_dictionary
 
-from pyfhmdot.general import (
+from pyfhmdot.utils.general import (
     add_model_bdmrg_simulation,
     add_model_tdmrg_simulation,
     add_model_info,
     add_model_parameters,
     add_mps,
-    create_hamiltonian_gates,
     load_model_info_model_name,
     load_model_info_size,
 )
+
+from pyfhmdot.create import create_hamiltonian_gates
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="cli, create hamiltonian gates")

@@ -2,7 +2,7 @@ import pytest
 
 
 def test_sweeps():
-    from pyfhmdot.algorithm import sweep
+    from pyfhmdot.simulation import sweep
 
     for i, j in enumerate(sweep(5)):
         assert i + 1 == j
@@ -21,7 +21,7 @@ def test_sweeps():
 
 
 def test_print_single():
-    from pyfhmdot.algorithm import print_single, print_double
+    from pyfhmdot.simulation import print_single, print_double
 
     assert print_single(5, 2) == "\rA*BBB"
     assert print_double(5, 2) == "\rA*=BB"
@@ -35,7 +35,7 @@ def test_print_single():
 
 @pytest.mark.parametrize("size", [10, 11])
 def test_sweep_move(size):
-    from pyfhmdot.algorithm import sweep_move
+    from pyfhmdot.simulation import sweep_move
 
     # sweep_move(size, start_position=1, end_position=size)
 
@@ -44,7 +44,7 @@ def test_sweep_move(size):
 
 
 def test_modulo_odd_bonds_should_apply():
-    from pyfhmdot.algorithm import should_apply
+    from pyfhmdot.simulation import should_apply
 
     assert should_apply(3, True)
     assert not should_apply(2, True)

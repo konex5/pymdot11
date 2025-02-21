@@ -16,8 +16,8 @@ eps_truncation = 1e-8
 chi_max = 30
 save_every = 1
 tau_max = 1.0
-start_left = 1
-start_odd_bonds = 0
+start_left = 0
+start_odd_bonds = 1
 
 [tdmrg_simulation]
 dtau = 0.025
