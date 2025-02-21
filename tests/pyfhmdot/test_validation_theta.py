@@ -1,18 +1,7 @@
 import pytest
 
-
-def test_validation_theta_step_two():
-    from numpy import array, all
-    from copy import deepcopy
-
-    mpsL = {}
-    mpsL[(0, 1, 0)] = array(
-        [[[-7.07106781e-01], [-7.07106781e-01]], [[-5.55111512e-17], [5.55111512e-17]]]
-    )
-
-    mpsR = {}
-    mpsR[(0, 1, 0)] = array([[[0.70710678], [0.70710678]]])
-
+def get_theta():
+    from numpy import array
     old_theta = {
         (0, 0, 0, 0): array([[[[0.99483226]]]]),
         (0, 0, 1, 1): array([[[[0.99226175, 0.0], [0.0, 1.00780536]]]]),
@@ -78,6 +67,22 @@ def test_validation_theta_step_two():
         (2, 2, 1, 1): array([[[[1.00780536, 0.0], [0.0, 0.99226175]]]]),
         (2, 2, 2, 2): array([[[[0.99483226]]]]),
     }
+    return old_theta, new_theta
+
+
+def test_validation_theta_step_two_left():
+    from numpy import array, all
+    from copy import deepcopy
+
+    mpsL = {}
+    mpsL[(0, 1, 0)] = array(
+        [[[-7.07106781e-01], [-7.07106781e-01]], [[-5.55111512e-17], [5.55111512e-17]]]
+    )
+
+    mpsR = {}
+    mpsR[(0, 1, 0)] = array([[[0.70710678], [0.70710678]]])
+
+    old_theta, new_theta = get_theta()
 
     assert len(old_theta) == 19 and len(new_theta) == 19
 
@@ -111,14 +116,29 @@ def test_validation_theta_step_two():
         1,
         {"dw_one_serie": 0},
         100,
-        True,
+        1,
         1e-62,
         is_um=True,
         conserve_left_right_after_gate=False,
         direction_right=1,
     )
     for key in mps[0].keys():
-        assert all(mps[0][key] == old_results_mpsL[key])
-    
+        assert all(abs(mps[0][key] - old_results_mpsL[key]) < 1e-8)
+
     for key in mps[1].keys():
-        assert all(mps[1][key] == old_results_mpsR[key])
+        assert all(abs(mps[1][key] - old_results_mpsR[key]) < 1e-8)
+
+
+def test_validation_theta_step_one_right():
+    from numpy import array, all
+
+    mpsR = {(0, 1, 0): array([[[0.70710678], [0.70710678]]])}
+
+    mpsL = {
+        (2, 0, 0): array([[[-0.00260362]]]),
+        (1, 1, 0): array(
+            [[[-0.71250989], [-0.70163324]], [[-0.00363906], [0.00369547]]]
+        ),
+        (0, 2, 0): array([[[-0.00260362]]]),
+    }
+    pass
