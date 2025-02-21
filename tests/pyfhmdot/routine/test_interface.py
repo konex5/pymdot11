@@ -75,7 +75,7 @@ def test_multiply_blocs_sparse_with_gate_real(
 
 def test_routine_interface_minimize_theta():
     from pyfhmdot.create import create_infinite_hamiltonian
-    from pyfhmdot.simulation import initialize_idmrg
+    from pyfhmdot.simulation import initialize_idmrg_even_size
     from pyfhmdot.intense.contract import contract_left_right_mpo_mpo_permute
     from pyfhmdot.routine.interface import minimize_theta
 
@@ -84,7 +84,7 @@ def test_routine_interface_minimize_theta():
     mp_right = {}
     left = {}
     right = {}
-    initialize_idmrg(
+    initialize_idmrg_even_size(
         left,
         mp_left,
         right,
