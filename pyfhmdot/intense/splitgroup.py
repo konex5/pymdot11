@@ -165,6 +165,8 @@ def reshape_and_split(model_name, newblocks, oldblocks, index):
 
 
 def group_four_dgate(model_name, dst_dgate, dgate):
+    # for dgate : GOES OUT IN SSWW-SSWW order
+    # # [('s',(l+1)),('s',(l+2)),('W',(l+1)),('W',(l+2)),('W',-(l+1)),('W',-(l+2)),('s',-(l+1)),('s',-(l+2))])
     tmp_four = {}
     for key, values in dgate.items():
         tmp_four[
