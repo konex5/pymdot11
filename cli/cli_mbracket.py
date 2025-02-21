@@ -4,7 +4,7 @@
 import argparse
 import sys
 import os
-from pyfhmdot.dynamical import dynamical_dmps
+from pyfhmdot.intense.interface import measure_dmps
 
 from pyfhmdot.general import (
     add_model_bdmrg_simulation,
@@ -25,16 +25,16 @@ from pyfhmdot.utils.iotools import (
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="cli, run Tdmrg simulation")
     parser.add_argument(
-        "-l",
-        "--left",
+        "-b",
+        "--bra",
         type=str,
         action="store",
         help="gates path",
         required=True,
     )
     parser.add_argument(
-        "-r",
-        "--right",
+        "-k",
+        "--ket",
         type=str,
         action="store",
         help="hamiltonian path",
@@ -46,29 +46,29 @@ if __name__ == "__main__":
 
     arguments = parser.parse_args()
 
-    if not check_filename_and_extension_h5(arguments.left):
+    if not check_filename_and_extension_h5(arguments.bra):
         sys.exit(
-            f"cli_mbracket.py: error: the hamiltonian path {arguments.left} is not a valid path."
+            f"cli_mbracket.py: error: the hamiltonian path {arguments.bra} is not a valid path."
         )
-    if not check_filename_and_extension_h5(arguments.right):
+    if not check_filename_and_extension_h5(arguments.ket):
         sys.exit(
-            f"cli_mbracket.py: error: the hamiltonian path {arguments.right} is not a valid path."
+            f"cli_mbracket.py: error: the hamiltonian path {arguments.ket} is not a valid path."
         )
     # if not os.path.exists(os.path.dirname(arguments.output)):
     #     sys.exit(
     #         f"cli_Tdmrg.py: error: the output dirpath {os.path.dirname(arguments.output)} is not a valid directory path."
     #     )
 
-    size = load_model_info_size(arguments.left)
-    if size == load_model_info_size(arguments.right):
+    size = load_model_info_size(arguments.bra)
+    if size == load_model_info_size(arguments.ket):
         pass
 
-    tmp_dmps = load_mps(arguments.left, size, folder="QMP")
-    tmp_dmps = load_mps(arguments.right, size, folder="QMP")
-    # dmps = []
-    # for i, tmp in enumerate(tmp_dmps):
-    #     _ = {}
-    #     group_dmps(model_name, _, tmp)
-    #     if i == size - 1:
-    #         _ = change_right_index(_, 2 * size)
-    #     dmps.append(_)
+    bra_dmps = load_mps(arguments.bra, size, folder="QMP")
+    ket_dmps = load_mps(arguments.ket, size, folder="QMP")
+    
+    bra_norm = measure_dmps(bra_dmps)
+    print(f"{bra_norm}")
+    ket_norm = measure_dmps(ket_dmps)
+    print(f"{ket_norm}")    
+    # bra_dnorm = measure_dmps_dmps(bra_dmps,bra_dmps)
+    # ket_dnorm = measure_dmps_dmps(bra_dmps)
