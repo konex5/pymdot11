@@ -10,6 +10,8 @@ hz = 3.0
 [idmrg_simulation]
 chi_max = 30
 eps_truncation = 1e-8
+conserve_total = 10
+
 
 [Tdmrg_simulation]
 dtau = 0.0125

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+
+echo "BETA TEMPERATURE"
 ./script/cli_create_hamiltonian.py -i ./tests/example/model.toml -o /tmp/hamiltonian.h5
 ./script/cli_create_hamiltonian_gates.py -i tests/example/model.toml -o /tmp/hamiltonian_gates.h5
 ./script/cli_create_maximal_entangled_state.py -H /tmp/hamiltonian.h5 -o /tmp/2B_00.0000.h5
@@ -28,3 +30,5 @@ echo "energies"
 ./script/cli_energy.py -b /tmp/2B_00.0250.h5 -k /tmp/2B_00.0250.h5 -H /tmp/hamiltonian.h5
 
 
+echo "ZERO TEMPERATURE"
+./script/cli_idmrg.py -H /tmp/hamiltonian.h5 -o /tmp/2B_inf.h5
