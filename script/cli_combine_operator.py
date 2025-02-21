@@ -99,7 +99,7 @@ if __name__ == "__main__":
         ket_dmps[arguments.position - 1].clear()
         ket_dmps[arguments.position - 1] = new_dst
         # no update indices required since we only sum the indices.
-        
+
     else:
         new_mp = {}
         multiply_mp(new_mp, operator, ket_dmps[arguments.position - 1], [0], [1])
@@ -111,7 +111,7 @@ if __name__ == "__main__":
         ket_dmps[arguments.position - 1].clear()
         ket_dmps[arguments.position - 1] = new_dst
         # TODO Sp, Sm requires to increase, lower all the following blocks
-        #update_indices(ket_dmps,arguments.position,operator)
+        # update_indices(ket_dmps,arguments.position,operator)
 
     create_h5(arguments.output)
     add_model_info(arguments.output, {"size": size, model_name: 0})

@@ -53,7 +53,6 @@ if __name__ == "__main__":
     is_beta_simulation = "Tdmrg_simulation" in large_dictionary.keys()
     is_tdmrg_simulation = "tdmrg_simulation" in large_dictionary.keys()
     is_tmps_simulation = "tmps_simulation" in large_dictionary.keys()
-    
 
     if not (is_tdmrg_simulation or is_beta_simulation or is_tmps_simulation):
         sys.exit(
@@ -96,7 +95,7 @@ if __name__ == "__main__":
 
         for st, step in enumerate(ham_mpo):
             add_mps(arguments.output, step, folder=f"DTIME_GATE_{st:02g}")
-    
+
     if is_tdmrg_simulation:
         tmps_simulation_parameters = large_dictionary.pop("tmps_simulation")
         add_model_tmps_simulation(arguments.output, tmps_simulation_parameters)
