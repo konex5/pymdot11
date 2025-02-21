@@ -1,9 +1,9 @@
-{ buildPythonPackage, fhmdot, numpy, pytestCheckHook, scipy, src }:
+{ buildPythonPackage, fhmdot, nix-gitignore, numpy, pytestCheckHook, scipy }:
 
 buildPythonPackage rec {
   pname = "pyfhmdot";
   version = "0.0";
-  inherit src;
+  src = nix-gitignore.gitignoreSourcePure [ ".gitignore" "buil*" ] ./.;
 
   propagatedBuildInputs = [ fhmdot numpy ];
 
