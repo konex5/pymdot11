@@ -1,6 +1,12 @@
 import numpy as _np
 from scipy.linalg import svd as _svd
 
+from typing import Dict as _Dict
+from typing import List as _List
+from typing import Optional as _Optional
+from typing import Tuple as _Tuple
+
+
 from pyfhmdot.indices import (
     degeneracy_in_theta,
     potential_middle_indices,
@@ -8,7 +14,7 @@ from pyfhmdot.indices import (
 )
 
 
-def normalize_the_array(list_of_array, cut):
+def normalize_the_array(list_of_array: _List[_np.array], cut: _Optional[_List[int]]) -> None:
     if isinstance(cut, list):
         norm = _np.sqrt(
             _np.sum(
@@ -27,10 +33,10 @@ def normalize_the_array(list_of_array, cut):
 
 
 def truncation_strategy(
-    list_of_array,
-    eps_truncation_error=10 ** -32,
-    chi_max=600,
-):
+    list_of_array: _List[_np.array],
+    eps_truncation_error: float = 10 ** -32,
+    chi_max: int = 600,
+) -> _Tuple[list,float]:
     #
     # epsilon = || forall bloc s_bloc ||_2^2
     # chi_max = max chi of bloc
@@ -56,7 +62,12 @@ def truncation_strategy(
 
 
 def _svd_nondeg(
-    block_dict, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V
+    block_dict: _Dict[tuple, _np.ndarray],
+    nondeg: _List[_Tuple[int, _Tuple[int, int, int, int]]],
+    nondeg_dims: _List[_Tuple[int, int, int, int]],
+    array_of_U: _List[_np.ndarray],
+    array_of_S: _List[_np.array],
+    array_of_V: _List[_np.ndarray],
 ) -> None:
     for i in range(len(nondeg)):
         dims = nondeg_dims[i]
@@ -81,7 +92,14 @@ def _svd_nondeg(
         array_of_V.append(V)
 
 
-def _svd_deg(thetaQ, deg, subnewsize, array_of_U, array_of_S, array_of_V) -> None:
+def _svd_deg(
+    thetaQ: _Dict[tuple, _np.ndarray],
+    deg: _List[_Tuple[int, _List[_Tuple[int, int, int, int]]]],
+    subnewsize: _List[_List],
+    array_of_U: _List[_np.ndarray],
+    array_of_S: _List[_np.array],
+    array_of_V: _List[_np.ndarray],
+) -> None:
     if len(thetaQ.keys()) == 0:
         datatype = None
     else:
@@ -176,9 +194,6 @@ def _mult_deg_MV(
             array_S.pop()
             subnewsize.pop()
             deg.pop()
-
-
-############################################################
 
 
 def _mult_nondeg_UM(
