@@ -142,6 +142,36 @@ def multiply_blocs_with_gate(lhs_blocs, rhs_blocs, theta_blocs):
     return dest_blocs
 
 
+def indices_prepare_destination_without_gate(
+    left_indices, right_indices, *, conserve_left_right=False
+):
+    about_indices_to_contract = []
+
+    for left_index in left_indices:
+        for right_index in right_indices:
+            if left_index[2] == right_index[0]:
+                if (not conserve_left_right) or (
+                    conserve_left_right
+                    and (
+                        left_index[0] + left_index[1] == right_index[1] + right_index[2]
+                    )
+                ):
+                    about_indices_to_contract.append(
+                        (
+                            (
+                                left_index[0],
+                                left_index[1],
+                                right_index[1],
+                                right_index[2],
+                            ),
+                            left_index,
+                            right_index,
+                        )
+                    )
+
+    return sorted(set(about_indices_to_contract))
+
+
 def prepare_targets(old_blocks1, old_blocks2, index2contract):
     target_key12 = []
     for it1 in old_blocks1.keys():

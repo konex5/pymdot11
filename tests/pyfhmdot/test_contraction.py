@@ -7,30 +7,7 @@ from pyfhmdot.contract import (
 )
 
 
-lhs_indices = [
-    (0, 0, 0),
-    (0, 1, 0),
-    (0, 0, 1),
-    (0, 1, 1),
-    (1, 0, 2),
-    (1, 1, 3),
-    (1, 0, 3),
-]
-rhs_indices = [
-    (0, 0, 0),
-    (0, 1, 0),
-    (0, 0, 1),
-    (0, 1, 1),
-    (1, 0, 2),
-    (2, 1, 0),
-    (2, 0, 3),
-    (1, 0, 4),
-    (1, 0, 1),
-    (1, 1, 1),
-]
-
-
-def test_prepare_index_target_no_gate():
+def test_prepare_index_target_no_gate(lhs_indices, rhs_indices):
     t = prepare_index_target_no_gate(lhs_indices, rhs_indices)
     assert len(t) == 18
     assert t[0][0]
@@ -123,7 +100,9 @@ def test_two_mps_multiplication_dense(make_single_dense_mps):
     assert dest_blocs[(0, 0, 0, 0)].shape == (3, 4, 4, 2)
 
 
-def test_prepare_index_target_with_gate_dense(make_single_dense_mps, make_single_dense_gate):
+def test_prepare_index_target_with_gate_dense(
+    make_single_dense_mps, make_single_dense_gate
+):
     lhs_blocs = make_single_dense_mps(chiL=3, d=4, chiR=5)
     rhs_blocs = make_single_dense_mps(chiL=5, d=4, chiR=2)
     gate_blocs = make_single_dense_gate(d=4)

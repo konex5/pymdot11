@@ -10,6 +10,46 @@ def make_test():
 
 
 @pytest.fixture
+def lhs_indices():
+    return [
+        (0, 0, 0),
+        (0, 1, 0),
+        (1, 1, 3),
+        (0, 0, 1),
+        (0, 1, 1),
+        (1, 0, 2),
+        (1, 0, 3),
+    ]
+
+
+@pytest.fixture
+def rhs_indices():
+    return [
+        (0, 0, 0),
+        (0, 1, 0),
+        (2, 1, 0),
+        (0, 0, 1),
+        (0, 1, 1),
+        (1, 0, 2),
+        (2, 0, 3),
+        (1, 0, 4),
+        (1, 0, 1),
+        (1, 1, 1),
+    ]
+
+
+def theta_indices():
+    return [
+        (0, 0, 0, 0),
+        (0, 0, 1, 1),
+        (1, 1, 1, 1),
+        (0, 1, 0, 1),
+        (0, 1, 1, 0),
+        (1, 0, 1, 0),
+    ]
+
+
+@pytest.fixture
 def make_single_dense_mps():
     import numpy as np
 
@@ -54,8 +94,7 @@ def make_single_dense_gate():
             gate = np.random.random(d * d * d * d)
         else:
             gate = (
-                np.random.random(d * d * d * d)
-                + np.random.random(d * d * d * d) * 1j
+                np.random.random(d * d * d * d) + np.random.random(d * d * d * d) * 1j
             )
         gate_out = gate.reshape(d, d, d, d) / np.sum(gate ** 2)
         return {(0, 0, 0, 0): gate_out}
