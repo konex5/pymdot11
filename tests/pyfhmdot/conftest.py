@@ -192,6 +192,21 @@ def make_maximal_entangled_state_u1():
     return _make_maximal_entangled_state_u1
 
 @pytest.fixture
+def make_single_ab_before():
+    import numpy as np
+    mp_left = {}
+    mp_left[(0, 1, 0)] = np.array([[[-7.07106781e-01],
+        [-7.07106781e-01]],
+       [[-5.55111512e-17],
+        [ 5.55111512e-17]]])
+    
+    mp_right = {}
+    mp_right[(0,1,0)] = np.array([[[0.70710678],
+        [0.70710678]]])
+    return mp_left,mp_right
+
+
+@pytest.fixture
 def make_single_dummy_dgate():
     def _make_single_dummy_dgate():
         import numpy as np
@@ -218,6 +233,31 @@ def make_single_dummy_dgate():
     return _make_single_dummy_dgate
 
 
+@pytest.fixture
+def make_single_ab_after():
+    import numpy as np
+    mp_left = {}
+    mp_left[(0, 0, 0)] = np.array([[[ 1.00000000e+00]],
+       [[-9.24492802e-33]]])
+    mp_left[(0, 1, 1)] = np.array([[[-7.01647432e-01,  7.12524303e-01],
+        [-7.12524303e-01, -7.01647432e-01]],
+
+       [[-5.50821898e-17,  5.58648184e-17],
+        [ 5.59360802e-17,  5.50098233e-17]]])
+    mp_left[(0, 2, 2)] = np.array([[[ 1.00000000e+00]],
+       [[-9.24492802e-33]]])
+
+    mp_right = {}
+    mp_right[(0,0,0)] = np.array([[[0.00260362]]])
+    mp_right[(1,1,0)] = np.array([[[ 0.70163324],
+        [ 0.71250989]],
+
+       [[ 0.00369547],
+        [-0.00363906]]])
+    mp_right[2,0,0] = np.array([[[0.00260362]]])
+
+    return mp_left,mp_right        
+    
 
 def mps(make_mps):
     return make_mps()
