@@ -84,6 +84,27 @@ def mul_mv_nondeg(
             nondeg.pop()
 
 
+def mul_um_nondeg(
+    array_U, array_S, cut, array_V, nondeg, nondeg_dims, dst_lhs_blocs, dst_rhs_blocs
+):
+    for i in range(len(nondeg)):  # reversed, and passed by pop.
+        Dsi = cut[i]
+        if Dsi != 0:
+            dims = nondeg_dims[i]
+            dst_lhs_blocs[(nondeg[i][1][0], nondeg[i][1][1], nondeg[i][0])] = array_U[
+                i
+            ][:, :Dsi].reshape(dims[0], dims[1], Dsi)
+            dst_rhs_blocs[(nondeg[i][0], nondeg[i][1][2], nondeg[i][1][3])] = _np.dot(
+                _np.diag(array_S[i][:Dsi]), array_V[i][:Dsi, :]
+            ).reshape(Dsi, dims[2], dims[3])
+        else:
+            array_U.pop()
+            array_V.pop()
+            array_S.pop()
+            nondeg_dims.pop()
+            nondeg.pop()
+
+
 def mul_mv_deg(
     array_U: _List[_np.ndarray],
     array_S: _List[_np.array],
@@ -125,25 +146,6 @@ def mul_mv_deg(
             deg.pop()
 
 
-def mul_um_nondeg(
-    array_U, array_S, cut, array_V, nondeg, nondeg_dims, dst_lhs_blocs, dst_rhs_blocs
-):
-    for i in range(len(nondeg)):  # reversed, and passed by pop.
-        Dsi = cut[i]
-        if Dsi != 0:
-            dims = nondeg_dims[i]
-            dst_lhs_blocs[(nondeg[i][1][0], nondeg[i][1][1], nondeg[i][0])] = array_U[
-                i
-            ][:, :Dsi].reshape(dims[0], dims[1], Dsi)
-            dst_rhs_blocs[(nondeg[i][0], nondeg[i][1][2], nondeg[i][1][3])] = _np.dot(
-                _np.diag(array_S[i][:Dsi]), array_V[i][:Dsi, :]
-            ).reshape(Dsi, dims[2], dims[3])
-        else:
-            array_U.pop()
-            array_V.pop()
-            array_S.pop()
-            nondeg_dims.pop()
-            nondeg.pop()
 
 
 def mul_um_deg(
