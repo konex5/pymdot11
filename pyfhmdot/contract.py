@@ -200,6 +200,20 @@ def indices_theta_prepare_conservation_for_gate(
 
     return sorted(set(destination_indices))
 
+# HERE!
+def multiply_blocs_no_gate_applied(dst_blocs, lhs_blocs,rhs_blocs,*,conserve_left_right=False):
+    dest_indices = indices_prepare_destination_without_gate(lhs_blocs.keys(),rhs_blocs.keys(),conserve_left_right=conserve_left_right)
+    contract_arrays(dst_blocs, lhs_blocs,rhs_blocs,(2,0),dest_indices)
+
+
+def multiply_blocs_with_gate_applied(dst_blocs, lhs_blocs,rhs_blocs,gate_blocs,*,conserve_left_right_before=False,conserve_left_right_after=False):
+    tmp_indices = indices_prepare_destination_without_gate(lhs_blocs.keys(),rhs_blocs.keys(),conserve_left_right=conserve_left_right_before)
+    tmp_blocs = {}
+    contract_arrays(tmp_blocs, lhs_blocs,rhs_blocs,(2,0),tmp_indices)
+    dest_indices = indices_theta_prepare_conservation_for_gate(tmp_blocs.keys(),gate_blocs.keys(),conserve_left_right=conserve_left_right_after)
+    #contract_arrays_and_transpose(dst_blocs, tmp_blocs,gate_blocs,([1,2],[2,3]),dest_indices) # todo
+    
+
 
 def list_degenerate_indices(destination_indices):
     list_degenerate = []
