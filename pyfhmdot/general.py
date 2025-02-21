@@ -225,7 +225,7 @@ def create_hamiltonian_gates(
     return dgate_imaginary_time
 
 
-def create_maximal_entangled_state(size, model_name):
+def create_maximal_entangled_state(size, model_name,in_group=False):
     head, _, tail = model_name.split("_")
 
     operator_name = head + "_id_" + tail
