@@ -4,7 +4,7 @@ import pytest
 @pytest.fixture
 def make_test():
     def _make_test():
-        assert True
+        return True
 
     return _make_test
 
