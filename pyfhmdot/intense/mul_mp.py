@@ -35,21 +35,26 @@ def fuse_mpo(dst_blocs, mpo_blocs, index):
     This method is used for ED only
     fuse index and index+1
     """
-    #deg1 = len(set([_[index] for _ in mpo_blocs.keys()]))
-    deg2 = len(set([_[index+1] for _ in mpo_blocs.keys()]))
+    # deg1 = len(set([_[index] for _ in mpo_blocs.keys()]))
+    deg2 = len(set([_[index + 1] for _ in mpo_blocs.keys()]))
 
     def get_fused_index(key, index, deg2):
-        return key[index]*deg2+key[index+1]
+        return key[index] * deg2 + key[index + 1]
 
     for it in mpo_blocs.keys():
-        dst_indices = tuple([_ for i, _ in enumerate(it)
-                             if i < index] + [get_fused_index(it, index, deg2)] + [_ for i, _ in enumerate(it)
-                                                                                   if i > index+1])
+        dst_indices = tuple(
+            [_ for i, _ in enumerate(it) if i < index]
+            + [get_fused_index(it, index, deg2)]
+            + [_ for i, _ in enumerate(it) if i > index + 1]
+        )
         tmp = mpo_blocs[it].shape
-        dst_shape = tuple([_ for i, _ in enumerate(tmp)
-                             if i < index] + [tmp[index]*tmp[index+1]] + [_ for i, _ in enumerate(tmp)
-                                                                                   if i > index+1])
+        dst_shape = tuple(
+            [_ for i, _ in enumerate(tmp) if i < index]
+            + [tmp[index] * tmp[index + 1]]
+            + [_ for i, _ in enumerate(tmp) if i > index + 1]
+        )
         dst_blocs[dst_indices] = mpo_blocs[it].reshape(dst_shape)
+
 
 def split_mpo():
     pass
@@ -57,56 +62,65 @@ def split_mpo():
 
 def trace_mpo(dst_blocs, mpo_blocs, index1, index2):
     for it in mpo_blocs.keys():
-        dst_indices = tuple([_ for i, _ in enumerate(it)
-                             if i not in [index1, index2]])
+        dst_indices = tuple([_ for i, _ in enumerate(it) if i not in [index1, index2]])
         if dst_indices in dst_blocs.keys():
-            dst_blocs[dst_indices] += _np.trace(mpo_blocs[it],
-                                                axis1=index1, axis2=index2)
+            dst_blocs[dst_indices] += _np.trace(
+                mpo_blocs[it], axis1=index1, axis2=index2
+            )
         else:
             dst_blocs[dst_indices] = _np.trace(
-                mpo_blocs[it], axis1=index1, axis2=index2)
+                mpo_blocs[it], axis1=index1, axis2=index2
+            )
 
 
 def indices_dst_mul_mpo(
-        left_indices: _KeysView[tuple],
-        right_indices: _KeysView[tuple], lind: int, rind: int) -> _List[_Tuple[tuple, tuple, tuple]]:
+    left_indices: _KeysView[tuple],
+    right_indices: _KeysView[tuple],
+    lind: int,
+    rind: int,
+) -> _List[_Tuple[tuple, tuple, tuple]]:
     about_indices_to_contract = []
 
     for left_index in left_indices:
         for right_index in right_indices:
             if left_index[lind] == right_index[rind]:
-                about_indices_to_contract.append((
-                    tuple(
-                        [
-                            left_index[i]
-                            for i in range(len(left_index))
-                            if i is not lind
-                        ]
-                        + [
-                            right_index[i]
-                            for i in range(len(right_index))
-                            if i is not rind
-                        ]
-                    ),
-                    left_index,
-                    right_index)
+                about_indices_to_contract.append(
+                    (
+                        tuple(
+                            [
+                                left_index[i]
+                                for i in range(len(left_index))
+                                if i is not lind
+                            ]
+                            + [
+                                right_index[i]
+                                for i in range(len(right_index))
+                                if i is not rind
+                            ]
+                        ),
+                        left_index,
+                        right_index,
+                    )
                 )
 
     return sorted(set(about_indices_to_contract))
 
 
-def multiply_mp(new_blocks: _Dict[tuple, _np.ndarray],
-                old_blocks1: _Dict[tuple, _np.ndarray],
-                old_blocks2: _Dict[tuple, _np.ndarray],
-                index1: int,
-                index2: int
-                ) -> None:
+def multiply_mp(
+    new_blocks: _Dict[tuple, _np.ndarray],
+    old_blocks1: _Dict[tuple, _np.ndarray],
+    old_blocks2: _Dict[tuple, _np.ndarray],
+    index1: int,
+    index2: int,
+) -> None:
     """
     This method is used for ED
     """
     from pyfhmdot.routine.indices import list_degenerate_indices
+
     buildtarget = indices_dst_mul_mpo(
-        old_blocks1.keys(), old_blocks2.keys(), index1, index2)
+        old_blocks1.keys(), old_blocks2.keys(), index1, index2
+    )
 
     list_isnew = list_degenerate_indices([_[0] for _ in buildtarget])
     for new, it in zip(list_isnew, buildtarget):
@@ -125,12 +139,13 @@ def multiply_mp(new_blocks: _Dict[tuple, _np.ndarray],
             )
 
 
-def trace_mp(new_blocks: _Dict[tuple, _np.ndarray],
-             old_blocks1: _Dict[tuple, _np.ndarray],
-             old_blocks2: _Dict[tuple, _np.ndarray],
-             index1: int,
-             index2: int
-             ) -> None:
+def trace_mp(
+    new_blocks: _Dict[tuple, _np.ndarray],
+    old_blocks1: _Dict[tuple, _np.ndarray],
+    old_blocks2: _Dict[tuple, _np.ndarray],
+    index1: int,
+    index2: int,
+) -> None:
     """
     This method is used for ED
     """
