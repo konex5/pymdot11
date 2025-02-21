@@ -181,7 +181,9 @@ def indices_theta_prepare_conservation_for_gate(
             if gate_index[2] == theta_index[1] and gate_index[3] == theta_index[2]:
                 if (not conserve_left_right) or (
                     conserve_left_right
-                    and (theta_index[0] + gate_index[0] == gate_index[1] + theta_index[3])
+                    and (
+                        theta_index[0] + gate_index[0] == gate_index[1] + theta_index[3]
+                    )
                 ):
                     destination_indices.append(
                         (

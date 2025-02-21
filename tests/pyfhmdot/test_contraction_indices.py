@@ -41,12 +41,11 @@ def test_prepare_targets_two_mps_without_gate(lhs_indices, rhs_indices, gate_ind
     destination_indices = indices_theta_prepare_conservation_for_gate(
         [_[0] for _ in dst_indices], gate_indices, conserve_left_right=False
     )
-    assert destination_indices[0][0] == (0,0,0,0)
+    assert destination_indices[0][0] == (0, 0, 0, 0)
     assert len(destination_indices) == 20
     #
     destination_indices = indices_theta_prepare_conservation_for_gate(
         [_[0] for _ in dst_indices], gate_indices, conserve_left_right=True
     )
-    assert destination_indices[0][0] == (0,0,0,0)
+    assert destination_indices[0][0] == (0, 0, 0, 0)
     assert len(destination_indices) == 5
-    
