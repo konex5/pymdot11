@@ -77,3 +77,31 @@ def contract_left_bloc(dst,left_bloc, mps_down,mpo,mps_up):
     #    | |
     #    |_|- 0
 
+
+def contract_right_bloc(dst,right_bloc, mps_down,mpo,mps_up):
+    tmp = {}
+    # mps_down
+    #    2|
+    # 0 -|_|-3
+    #    1|
+    multiply_mp(tmp,right_bloc,mps_down,[0],[3])
+    # tmp
+    #      | |-1
+    #    4|| |-0
+    #  2-|___|
+    #     3|
+    tmp_tmp = {}
+    multiply_mp(tmp_tmp,tmp,mpo,[0,4],[3,1])
+    # tmp
+    #     4| |-0
+    #  3-|   |
+    #  1-|___|
+    #     2|
+    multiply_mp(dst,tmp_tmp,mps_up,[0,2,4],[3,2,1])
+    # dst
+    # 2 -| |
+    #    | |
+    # 1 -| |
+    #    | |
+    # 0 -|_|
+
