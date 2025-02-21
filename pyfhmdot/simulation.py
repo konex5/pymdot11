@@ -1,6 +1,7 @@
 from pyfhmdot.algorithm import apply_mm_at, apply_gate_on_mm_at
 from copy import deepcopy as _copy
 from logging import warning as _warning
+from pyfhmdot.conservation import conserve_qnum
 from pyfhmdot.initialize import finalize_idmrg_even_size
 
 from pyfhmdot.intense.contract import (
@@ -467,15 +468,8 @@ def dmrg_minimize_two_sites(
     d,
 ):
     # select_quantum_sector
-    diff = min(size - conserve_total, conserve_total)
-    if position < diff or position > size - diff:
-        allowed_sector = list(range(d))  # all
-    elif conserve_total <= size // 2:
-        allowed_sector = list(range(d - 1))  # inc
-    elif size - conserve_total <= size // 2:
-        allowed_sector = list(range(1, d))  # dec
-    else:
-        allowed_sector = []  # should never occur
+    allowed_sector_left = conserve_qnum(position,size=size,qnum_conserved=conserve_total,d=d)
+    allowed_sector_right = conserve_qnum(size-position,size=size,qnum_conserved=conserve_total,d=d)
 
     # contract and permute
     env_bloc = {}
@@ -484,25 +478,19 @@ def dmrg_minimize_two_sites(
     )
     for key in list(env_bloc.keys()):
         shape = env_bloc[key].shape
-        if not (
+        if (
+            not (key[0] + key[1] in allowed_sector_left)
+            or not (key[3]-key[2] in allowed_sector_right)
+            or not (key[4] + key[5] in allowed_sector_left)
+            or not (key[7]-key[6] in allowed_sector_right)
+        ):
+            env_bloc.pop(key)  # quantum conserved is used here
+        elif not (
             shape[0] * shape[1] * shape[2] * shape[3]
             == shape[4] * shape[5] * shape[6] * shape[7]
         ):
             env_bloc.pop(key)  # non physical blocs
-        elif (
-            not (key[1] in allowed_sector)
-            or not (key[2] in allowed_sector)
-            or not (key[5] in allowed_sector)
-            or not (key[6] in allowed_sector)
-        ):
-            env_bloc.pop(key)  # quantum conserved is used here
-        elif not (
-            key[0] + key[1] - key[2] - key[3] == 0
-            and key[4] + key[5] - key[6] - key[7] == 0
-        ):
-            env_bloc.pop(
-                key
-            )  # quantum sum is preserved here (left sum is same as right sum)
+        
     # minimize energy
     eigenvalues = {}
     eigenvectors = {}
@@ -515,7 +503,7 @@ def dmrg_minimize_two_sites(
     #         eigenvectors.pop(key)
     #         eigenvalues.pop(key)
     #         _warning("eigenvectors removed a posteriori.")
-    select_lowest_blocs(eigenvalues, eigenvectors)
+    # select_lowest_blocs(eigenvalues, eigenvectors)
     # select_quantum_sector(eigenvalues, eigenvectors)
     apply_eigenvalues(eigenvalues, eigenvectors)
 
@@ -527,7 +515,7 @@ def dmrg_minimize_two_sites(
         sim_dict["chi_max"],
         True,
         True,
-        1,
+        -3,
         sim_dict["eps_truncation"],
     )
     theta_to_mm(
@@ -538,7 +526,7 @@ def dmrg_minimize_two_sites(
         sim_dict["chi_max"],
         True,
         False,
-        3,
+        2,
         sim_dict["eps_truncation"],
     )
 
@@ -556,7 +544,7 @@ def idmrg_even(
     conserve_total,
     d,
 ):
-    for _ in range(iterations):
+    for pos in range(2,iterations+2):
         tmp_imps_left = {}
         tmp_imps_right = {}
 
@@ -568,7 +556,7 @@ def idmrg_even(
             ham_mpo[0],
             ham_mpo[1],
             idmrg_dict,
-            position=iterations,
+            position=pos,
             size=size,
             conserve_total=conserve_total,
             d=d,
@@ -599,7 +587,7 @@ def idmrg_even(
         ham_mpo[0],
         ham_mpo[1],
         idmrg_dict,
-        position=(size - len(dst_imps_left) - 1) // 2,
+        position=(size) // 2,
         size=size,
         conserve_total=conserve_total,
         d=d,

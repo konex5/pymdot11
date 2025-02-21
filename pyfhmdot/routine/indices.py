@@ -111,7 +111,7 @@ def potential_middle_indices(
         for theta_index in theta_indices:
             middle_indices.append(internal_qn_sum(theta_index[0], theta_index[1]))
             middle_indices.append(internal_qn_sum(theta_index[3], theta_index[2]))
-    elif direction_right == 1:  # take from left sum
+    elif direction_right in [1,-3]:  # take from left sum
         for theta_index in theta_indices:
             middle_indices.append(internal_qn_sum(theta_index[0], theta_index[1]))
     elif direction_right == 2:  # take from right sub
@@ -176,6 +176,16 @@ def degeneracy_in_theta(
                 degenerate.append((j, tmp))
             elif len(tmp) == 1:
                 nondeg.append((j, tmp[0]))
+    elif direction_right == -3:  # conserve left sum qnum
+        for j in range(len(middle)):
+            tmp = []
+            for it in keys:
+                if middle[j] == internal_qn_sum(it[0], it[1]):
+                    tmp.append(it)
+            if len(tmp) > 1:
+                degenerate.append((middle[j], tmp))
+            elif len(tmp) == 1:
+                nondeg.append((middle[j], tmp[0]))
     elif direction_right == 2:  # conserve right sub qnum
         for j in range(len(middle)):
             tmp = []
@@ -183,9 +193,9 @@ def degeneracy_in_theta(
                 if middle[j] == internal_qn_sub(it[3], it[2]):
                     tmp.append(it)
             if len(tmp) > 1:
-                degenerate.append((j, tmp))
+                degenerate.append((middle[j], tmp))
             elif len(tmp) == 1:
-                nondeg.append((j, tmp[0]))
+                nondeg.append((middle[j], tmp[0]))
     elif direction_right == 3:  # conserve right only sum qnum
         for j in range(len(middle)):
             tmp = []

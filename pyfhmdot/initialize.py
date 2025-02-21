@@ -8,7 +8,7 @@ import sys
 from pyfhmdot.models.pymodels import suzu_trotter_obc_exp
 from pyfhmdot.models.pymodels import hamiltonian_obc
 from pyfhmdot.models.pyoperators import single_operator
-
+from pyfhmdot.conservation import conserve_qnum
 
 from pyfhmdot.intense.contract import (
     contract_left_bloc_mps,
@@ -303,12 +303,30 @@ def initialize_idmrg_even_size(
     #    1| |3
     env_bloc = {}
     for key in tmp_env_blocs.keys():
-        new_key = (0, key[1], key[3], 0, 0, key[2], key[4], 0)
+        new_key = (0, key[1], key[3], conserve_total, 0, key[2], key[4], conserve_total)
         tmp_shape = tmp_env_blocs[key].shape
         new_shape = (1, tmp_shape[1], tmp_shape[3], 1, 1, tmp_shape[2], tmp_shape[4], 1)
         env_bloc[new_key] = (
             tmp_env_blocs[key].transpose([0, 1, 3, 2, 4, 5]).reshape(new_shape)
         )
+
+    allowed_sector_left = conserve_qnum(1,size=size,qnum_conserved=conserve_total,d=d)
+    allowed_sector_right = conserve_qnum(size-1,size=size,qnum_conserved=conserve_total,d=d)
+    for key in list(env_bloc.keys()):
+        shape = env_bloc[key].shape
+        if (
+            not (key[0]+key[1] in allowed_sector_left)
+            or not (key[3]-key[2] in allowed_sector_right)
+            or not (key[4]+key[5] in allowed_sector_left)
+            or not (key[7]-key[6] in allowed_sector_right)
+        ):
+            env_bloc.pop(key)  # quantum conserved is used here
+        elif not (
+            shape[0] * shape[1] * shape[2] * shape[3]
+            == shape[4] * shape[5] * shape[6] * shape[7]
+        ):
+            env_bloc.pop(key)  # non physical blocs
+        
 
     sim_dict = {
         "dw_one_serie": 0,
@@ -320,22 +338,7 @@ def initialize_idmrg_even_size(
     eigenvalues = {}
     eigenvectors = {}
     minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
-
-    # select_quantum_sector
-    diff = min(size - conserve_total, conserve_total)
-    if position < diff or position > size - diff:
-        allowed_sector = list(range(d))  # all
-    elif conserve_total <= size // 2:
-        allowed_sector = list(range(d - 1))  # inc
-    elif size - conserve_total <= size // 2:
-        allowed_sector = list(range(1, d))  # dec
-    else:
-        allowed_sector = []  # should never occur
-
-    for key in list(eigenvectors.keys()):
-        if not (key[1] in allowed_sector and key[2] in allowed_sector):
-            eigenvectors.pop(key)
-            eigenvalues.pop(key)
+    
     # select_lowest_blocs(eigenvalues, eigenvectors)
     apply_eigenvalues(eigenvalues, eigenvectors)
 
@@ -347,7 +350,7 @@ def initialize_idmrg_even_size(
         sim_dict["chi_max"],
         True,
         True,
-        1,
+        -3,
         sim_dict["eps_truncation"],
     )
     theta_to_mm(
@@ -358,7 +361,7 @@ def initialize_idmrg_even_size(
         sim_dict["chi_max"],
         True,
         False,
-        3,
+        2,
         sim_dict["eps_truncation"],
     )
 
@@ -381,15 +384,8 @@ def finalize_idmrg_even_size(
     d,
 ):
     # select_quantum_sector
-    diff = min(size - conserve_total, conserve_total)
-    if position < diff or position > size - diff:
-        allowed_sector = list(range(d))  # all
-    elif conserve_total <= size // 2:
-        allowed_sector = list(range(d - 1))  # inc
-    elif size - conserve_total <= size // 2:
-        allowed_sector = list(range(1, d))  # dec
-    else:
-        allowed_sector = []  # should never occur
+    allowed_sector_left = conserve_qnum(position,size=size,qnum_conserved=conserve_total,d=d)
+    allowed_sector_right = conserve_qnum(size-position,size=size,qnum_conserved=conserve_total,d=d)
 
     # contract and permute
     env_bloc = {}
@@ -398,25 +394,19 @@ def finalize_idmrg_even_size(
     )
     for key in list(env_bloc.keys()):
         shape = env_bloc[key].shape
-        if not (
+        if (
+            not (key[0] + key[1] in allowed_sector_left)
+            or not (key[3]-key[2] in allowed_sector_right)
+            or not (key[4] + key[5] in allowed_sector_left)
+            or not (key[7]-key[6] in allowed_sector_right)
+        ):
+            env_bloc.pop(key)  # quantum conserved is used here
+        elif not (
             shape[0] * shape[1] * shape[2] * shape[3]
             == shape[4] * shape[5] * shape[6] * shape[7]
         ):
             env_bloc.pop(key)  # non physical blocs
-        elif (
-            not (key[1] in allowed_sector)
-            or not (key[2] in allowed_sector)
-            or not (key[5] in allowed_sector)
-            or not (key[6] in allowed_sector)
-        ):
-            env_bloc.pop(key)  # quantum conserved is used here
-        elif not (
-            key[0] + key[1] - key[2] - key[3] == 0
-            and key[4] + key[5] - key[6] - key[7] == 0
-        ):
-            env_bloc.pop(
-                key
-            )  # quantum sum is preserved here (left sum is same as right sum)
+    
     # minimize energy
     eigenvalues = {}
     eigenvectors = {}
@@ -441,7 +431,7 @@ def finalize_idmrg_even_size(
         sim_dict["chi_max"],
         True,
         None,
-        -1,
+        -3,
         sim_dict["eps_truncation"],
     )
 
