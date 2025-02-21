@@ -48,6 +48,10 @@ def theta_indices():
         (1, 0, 1, 0),
     ]
 
+@pytest.fixture
+def gate_indices():
+    return theta_indices()
+
 
 @pytest.fixture
 def make_single_dense_mps():

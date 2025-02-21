@@ -172,6 +172,33 @@ def indices_prepare_destination_without_gate(
     return sorted(set(about_indices_to_contract))
 
 
+def indices_theta_prepare_conservation_for_gate(
+    theta_indices, gate_indices, *, conserve_left_right=False
+):
+    destination_indices = []
+    for theta_index in theta_indices:
+        for gate_index in gate_indices:
+            if gate_index[2] == theta_index[1] and gate_index[3] == theta_index[2]:
+                if (not conserve_left_right) or (
+                    conserve_left_right
+                    and (theta_index[0] + gate_index[0] == gate_index[1] + theta_index[3])
+                ):
+                    destination_indices.append(
+                        (
+                            (
+                                theta_index[0],
+                                gate_index[0],
+                                gate_index[1],
+                                theta_index[3],
+                            ),
+                            theta_index,
+                            gate_index,
+                        )
+                    )
+
+    return sorted(set(destination_indices))
+
+
 def prepare_targets(old_blocks1, old_blocks2, index2contract):
     target_key12 = []
     for it1 in old_blocks1.keys():
