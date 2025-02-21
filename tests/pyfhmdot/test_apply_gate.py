@@ -3,9 +3,9 @@ import pytest
 def test_valid_gate(make_single_dummy_dgate):
     from pyfhmdot.general import create_hamiltonian_gates
     import numpy as np
-    gate=create_hamiltonian_gates("sh_xxz-hz_u1",{"Jxy":1,"Jz":2,"hz":3},10,dbeta=0.025,is_dgate=True,in_group=True)[0][1]
     valid_gate = make_single_dummy_dgate()
-
+    gate=create_hamiltonian_gates("sh_xxz-hz_u1",{"Jxy":1/4.,"Jz":2./4.,"hz":3./2.},3,dbeta=0.025,is_dgate=True,in_group=True)[0][0]
+    # up and down are inverted.. !!
     for key in valid_gate.keys():
         assert np.all(np.abs(valid_gate[key] - gate[key]) < 1e-8)
 
