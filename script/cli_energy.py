@@ -16,6 +16,7 @@ from pyfhmdot.intense.interface import (
     measure_dmps_mpo_mpo_dmps,
     measure_mps_mpo_mpo_mps,
     measure_mps_mpo_mps,
+    measure_mps_mps,
 )
 
 
@@ -87,7 +88,8 @@ if __name__ == "__main__":
         and len(list(ket_dmps[0].values())[0].shape) == 3
     ):
         energy = measure_mps_mpo_mps(ket_dmps, ham_mpo, bra_dmps)
-        print(f"<bra|H|ket>= {energy}")
+        norm = measure_mps_mps(ket_dmps, bra_dmps)
+        print(f"<bra|H|ket>/<bra|ket>= {energy/norm}")
         hsquare = measure_mps_mpo_mpo_mps(ket_dmps, ham_mpo, ham_mpo, bra_dmps)
-        print(f"<bra|H^2|ket>= {hsquare}")
-        print(f"<bra|(H-E)^2|ket>= {hsquare-energy**2}")
+        print(f"<bra|H^2|ket>/<bra|ket>== {hsquare/norm}")
+        print(f"<bra|(H-E)^2|ket>/<bra|ket>== {(hsquare-energy**2)/norm}")

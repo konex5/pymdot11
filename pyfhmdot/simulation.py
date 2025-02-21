@@ -502,7 +502,7 @@ def dmrg_minimize_two_sites(
     eigenvalues = {}
     eigenvectors = {}
     minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
-    # apply_eigenvalues(eigenvalues, eigenvectors)
+    apply_eigenvalues(eigenvalues, eigenvectors)
 
     theta_to_mm(
         eigenvectors,

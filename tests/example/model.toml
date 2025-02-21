@@ -26,6 +26,18 @@ conserve_total = 5
 eps_truncation = 1e-8
 normalize = 1
 
+[tmps_simulation]
+chi_max = 30
+dtau = 0.025
+dw_one_step = 0
+dw_total = 0
+eps_truncation = 1e-8
+normalize = 0
+save_every = 1
+start_left = 0
+start_odd_bonds = 1
+tau_max = 0.5
+
 [Tdmrg_simulation]
 chi_max = 100
 dtau = 0.025

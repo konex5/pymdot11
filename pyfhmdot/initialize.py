@@ -1,4 +1,5 @@
 from copy import deepcopy as _copy
+from locale import normalize
 from numpy import sqrt as _sqrt
 from numpy import iscomplex as _iscomplex
 from numpy import imag as _imag
@@ -265,7 +266,7 @@ def initialize_idmrg_odd_size(
             eigenvectors.pop(key)
             eigenvalues.pop(key)
     # select_lowest_blocs(eigenvalues, eigenvectors)
-    # apply_eigenvalues(eigenvalues, eigenvectors)
+    apply_eigenvalues(eigenvalues, eigenvectors)
 
     # TODO!
     theta_to_mm(
@@ -274,7 +275,7 @@ def initialize_idmrg_odd_size(
         imps_right,
         sim_dict,
         sim_dict["chi_max"],
-        True,
+        sim_dict["normalize"],
         None,
         1,
         sim_dict["eps_truncation"],
@@ -338,6 +339,7 @@ def initialize_idmrg_even_size(
         "dw_total": 0,
         "chi_max": 10,
         "eps_truncation": 1e-20,
+        "normalize":True
     }
     # minimize energy
     eigenvalues = {}
@@ -353,7 +355,7 @@ def initialize_idmrg_even_size(
         {},
         sim_dict,
         sim_dict["chi_max"],
-        True,
+        sim_dict["normalize"],
         True,
         1,
         sim_dict["eps_truncation"],
@@ -364,7 +366,7 @@ def initialize_idmrg_even_size(
         imps_right,
         sim_dict,
         sim_dict["chi_max"],
-        True,
+        sim_dict["normalize"],
         False,
         -1,
         sim_dict["eps_truncation"],
@@ -430,7 +432,7 @@ def finalize_idmrg_even_size(
     #         _warning("eigenvectors removed a posteriori.")
     # select_lowest_blocs(eigenvalues, eigenvectors)
     # select_quantum_sector(eigenvalues, eigenvectors)
-    # apply_eigenvalues(eigenvalues, eigenvectors)
+    apply_eigenvalues(eigenvalues, eigenvectors)
 
     theta_to_mm(
         eigenvectors,

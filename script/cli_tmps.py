@@ -15,13 +15,12 @@ from pyfhmdot.utils.general import (
     load_model_tdmrg_simulation,
     load_mps,
 )
-from pyfhmdot.intense.splitgroup import group_all, split_all
 from pyfhmdot.utils.iotools import (
     check_filename_and_extension_h5,
     create_h5,
 )
 
-from pyfhmdot.entrypoint import time_evolve_double
+from pyfhmdot.entrypoint import time_evolve_single
 
 
 if __name__ == "__main__":
@@ -36,10 +35,10 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "-M",
-        "--dmps",
+        "--mps",
         type=str,
         action="store",
-        help="hamiltonian path",
+        help="mps path",
         required=True,
     )
     parser.add_argument(
@@ -50,29 +49,29 @@ if __name__ == "__main__":
 
     if not check_filename_and_extension_h5(arguments.gates):
         sys.exit(
-            f"cli_Tdmrg.py: error: the hamiltonian path {arguments.gates} is not a valid path."
+            f"cli_tmps.py: error: the hamiltonian path {arguments.gates} is not a valid path."
         )
-    if not check_filename_and_extension_h5(arguments.dmps):
+    if not check_filename_and_extension_h5(arguments.mps):
         sys.exit(
-            f"cli_Tdmrg.py: error: the hamiltonian path {arguments.dmps} is not a valid path."
+            f"cli_tmps.py: error: the hamiltonian path {arguments.mps} is not a valid path."
         )
     if not os.path.exists(os.path.dirname(arguments.output)):
         sys.exit(
-            f"cli_Tdmrg.py: error: the output dirpath {os.path.dirname(arguments.output)} is not a valid directory path."
+            f"cli_tmps.py: error: the output dirpath {os.path.dirname(arguments.output)} is not a valid directory path."
         )
 
     size = load_model_info_size(arguments.gates)
     model_name = load_model_info_model_name(arguments.gates)
     tdmrg_simulation_parameters = load_model_tdmrg_simulation(arguments.gates)
-    info_state = load_model_state(arguments.dmps)
+    info_state = load_model_state(arguments.mps)
     dbeta = info_state["dbeta"]
     time = info_state["time"]
 
-    dmps = group_all(model_name, load_mps(arguments.dmps, size, folder="QMP"))
+    mps = load_mps(arguments.mps, size, folder="QMP")
 
     ggate = []
     for st in range(4):
-        ggate.append(load_mps(arguments.gates, size - 1, folder=f"DTIME_GATE_{st:02g}"))
+        ggate.append(load_mps(arguments.gates, size - 1, folder=f"TIME_GATE_{st:02g}"))
 
     save = 0
     while (
@@ -81,7 +80,7 @@ if __name__ == "__main__":
         * tdmrg_simulation_parameters["dtau"]
         < tdmrg_simulation_parameters["tau_max"]
     ):
-        time_evolve_double(dmps, ggate, tdmrg_simulation_parameters)
+        time_evolve_single(mps, ggate, tdmrg_simulation_parameters)
         time += tdmrg_simulation_parameters["dtau"]
         save += 1
         tdmrg_simulation_parameters["start_odd_bonds"] = (
@@ -96,5 +95,5 @@ if __name__ == "__main__":
             create_h5(output_path)
             add_model_info(output_path, {model_name: 0, "size": size})
             add_model_bdmrg_simulation(output_path, tdmrg_simulation_parameters)
-            add_mps(output_path, split_all(model_name, dmps), folder="QMP")
+            add_mps(output_path, mps, folder="QMP")
             save = 0

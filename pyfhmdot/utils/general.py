@@ -104,6 +104,22 @@ def add_model_tdmrg_simulation(filepath, parameters):
         "tau_max": 4,
     }
     """
+    add_dictionary(filepath, parameters, folder="INFO_SIM_DTIME_DMRG")
+
+
+def add_model_tmps_simulation(filepath, parameters):
+    """
+    {
+        "dtau": 0.025,
+        "normalize": 1, #True
+        "dw_one_step": 0,
+        "dw_total": 0,
+        "eps_truncation": 10 ** -8,
+        "chi_max": 600,
+        "save_every": -1,
+        "tau_max": 4,
+    }
+    """
     add_dictionary(filepath, parameters, folder="INFO_SIM_TIME_DMRG")
 
 
@@ -178,6 +194,12 @@ def load_model_zdmrg_simulation(filepath):
 
 
 def load_model_tdmrg_simulation(filepath):
+    d = {}
+    load_dictionary(filepath, d, folder="INFO_SIM_DTIME_DMRG")
+    return d
+
+
+def load_model_tmps_simulation(filepath):
     d = {}
     load_dictionary(filepath, d, folder="INFO_SIM_TIME_DMRG")
     return d

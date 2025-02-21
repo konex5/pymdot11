@@ -11,7 +11,7 @@ def test_idmrg_all():
         imps,
         "sh_xxz-hz_u1",
         {"Jxy": 1, "Jz": 1, "hz": 0},
-        {"chi_max": 10, "eps_truncation": 1e-8, "dw_total": 0, "dw_one_serie": 0},
+        {"chi_max": 10, "normalize": True, "eps_truncation": 1e-8, "dw_total": 0, "dw_one_serie": 0},
         size=12,
         conserve_total=6,
     )
@@ -30,7 +30,7 @@ def test_idmrg_all():
             "nb_sweeps": 5,
             "chi_max_warmup": 30,
             "chi_max": 60,
-            "normalize": True,
+            "normalize": False,
             "eps_truncation": 10**-8,
             "max_iteration": 30,
             "tolerance": 10**-5,
