@@ -37,7 +37,7 @@ if __name__ == "__main__":
         sys.exit(
             f"cli_create_maximal_entangled_state.py: error: the hamiltonian path {arguments.hamiltonian} is not a valid path."
         )
-    if not check_filename_and_extension_to_create_h5:
+    if not check_filename_and_extension_to_create_h5(arguments.output):
         sys.exit(
             f"cli_create_maximal_entangled_state.py: error: the output dirpath {os.path.dirname(arguments.output)} is not a valid directory path."
         )
