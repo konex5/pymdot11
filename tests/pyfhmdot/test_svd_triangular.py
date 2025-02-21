@@ -14,12 +14,12 @@ def test_dgemm():
 
     a, b = two_two_random_matrices()
     c = _dot(a, b)
-    assert c[0, 0] == a[0, 0] * b[0, 0] + a[0, 1] * b[1, 0]
+    assert abs(c[0, 0] - (a[0, 0] * b[0, 0] + a[0, 1] * b[1, 0])) < 1e-7
 
     from numpy import tensordot as _tensordot
 
     d = _tensordot(a, b, (1, 0))
-    assert d[0, 0] == a[0, 0] * b[0, 0] + a[0, 1] * b[1, 0]
+    assert abs(d[0, 0] - (a[0, 0] * b[0, 0] + a[0, 1] * b[1, 0])) < 1e-7
 
 
 def test_dgesvd():
