@@ -120,60 +120,19 @@ def sweep_move(size, *, start_position, end_position, apply_UM, apply_MV, **kwar
             apply_MV(kwargs["mps_left"][site_i - 1], kwargs["mps_right"][site_i])
 
 
-def sweep_and_apply(
-    size,
-    *,
-    start_position,
-    end_position,
-    apply_UM,
-    apply_MV,
-    apply_gate_UM,
-    apply_gate_MV,
-    start_odd_bonds,
-    **kwargs,
-):
-
-    should_apply_gate = (start_position % 2) == 0
-    if start_odd_bonds:
-        should_apply_gate = not should_apply_gate
-
-    if start_position < end_position:
-        for site_i in sweep(size, from_site=start_position, to_site=end_position):
-            if should_apply_gate:
-                apply_gate_UM(
-                    kwargs["mps"][site_i - 1],
-                    kwargs["mps"][site_i],
-                    gate_blocs=kwargs["gate"][site_i],
-                    **kwargs,
-                )
-            else:
-                apply_UM(kwargs["mps"][site_i - 1], kwargs["mps"][site_i], **kwargs)
-            should_apply_gate = not should_apply_gate
+def should_go_left(size, layer, position, start_left):
+    if position <= 2:
+        return True
+    elif position >= size-1:
+        return False
+    elif (layer % 2 == 0) == start_left:
+        return True
     else:
-        for site_i in sweep(size, from_site=start_position, to_site=end_position):
-            if should_apply_gate:
-                apply_gate_MV(
-                    kwargs["mps"][site_i - 1],
-                    kwargs["mps"][site_i],
-                    gate_blocs=kwargs["gate"][site_i],
-                    **kwargs,
-                )
-            else:
-                apply_MV(kwargs["mps"][site_i - 1], kwargs["mps"][site_i], **kwargs)
-            should_apply_gate = not should_apply_gate
+        return False
 
 
-def apply_border(
-    size,
-    *,
-    position,
-    apply_UM,
-    apply_MV,
-    apply_gate_UM,
-    apply_gate_MV,
-    start_odd_bonds=True,
-    **kwargs,
-):
+def should_apply_gate(size, layer, position, start_left, start_odd_bonds):
+    is_even = size % 2 == 0
     pass
 
 
