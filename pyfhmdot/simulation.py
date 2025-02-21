@@ -2,8 +2,6 @@ from pyfhmdot.algorithm import apply_mm_at, apply_gate_on_mm_at
 from copy import deepcopy as _copy
 from logging import warning as _warning
 
-# from logging import makeLogRecord
-
 from pyfhmdot.intense.contract import (
     contract_left_bloc_mps,
     contract_left_right_mpo_mpo_permute,
@@ -11,7 +9,7 @@ from pyfhmdot.intense.contract import (
     contract_mps_mpo_mps_right_border,
     contract_right_bloc_mps,
 )
-from pyfhmdot.intense.mul_mp import multiply_mp, permute_blocs
+from pyfhmdot.intense.mul_mp import multiply_mp
 from pyfhmdot.routine.eig_routine import smallest_eigenvectors_from_scipy
 from pyfhmdot.routine.interface import (
     apply_eigenvalues,

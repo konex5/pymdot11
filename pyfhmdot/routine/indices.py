@@ -3,7 +3,6 @@ import numpy as _np
 from typing import Dict as _Dict
 from typing import KeysView as _KeysView
 from typing import List as _List
-from typing import Optional as _Optional
 from typing import Tuple as _Tuple
 
 
