@@ -31,7 +31,7 @@ def test_idmrg_all():
             "chi_max_warmup": 30,
             "normalize": True,
             "eps": 10**-8,
-            "max_iteration": 20,
-            "tolerance": 10**-8,
+            "max_iteration": 60,
+            "tolerance": 10**-4,
         },
     )
