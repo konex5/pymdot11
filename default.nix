@@ -11,10 +11,37 @@
 
 with pkgs;
 
-callPackage ./derivation.nix {
-  src = ./.;
-  fhmdot = callPackage ../fhmdot/derivation.nix {
-    src = ../fhmdot/.;
-    stdenv = if clangSupport then clangStdenv else gccStdenv;
+let
+
+  pythonPackageOverrides = python-self: python-super: rec {
+    fhmdot = python-self.callPackage ../fhmdot/derivation.nix {
+      src = ../fhmdot/.;
+      stdenv = if clangSupport then clangStdenv else gccStdenv;
+      mdot = callPackage ../mdot/derivation.nix {
+        src = ../mdot/.;
+        stdenv = if clangSupport then clangStdenv else gccStdenv;
+      };
+
+    };
+    pyfhmdot = python-self.callPackage ./derivation.nix {
+      inherit fhmdot;
+      src = ./.;
+    };
+    pyfhmdotapp = python-self.callPackage ./derivation-app.nix {
+      inherit fhmdot;
+      src = ./.;
+    };
+
   };
-}
+
+  python = python3.override (old: {
+    packageOverrides = lib.composeExtensions (old.packageOverrides or (_: _: { }))
+      pythonPackageOverrides;
+  });
+
+  pythonPackages = python.pkgs;
+
+in
+{ inherit pythonPackages; }
+
+
