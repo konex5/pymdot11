@@ -63,7 +63,7 @@ def contract_mps_mps_left_border(dst, mps_down, mps_up):
     #    |_|-0
 
 
-def contract_dmps_dmps_right_border(dst, mps_down, mps_up):
+def contract_mps_mps_right_border(dst, mps_down, mps_up):
     # mps_down
     #    1|
     # 0 -|_|-2
