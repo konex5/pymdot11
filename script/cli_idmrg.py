@@ -54,7 +54,12 @@ if __name__ == "__main__":
     idmrg_simulation_parameters["dw_one_serie"] = 0
     imps = []
     infinite_to_finite_ground_state(
-        imps, model_name, parameters, idmrg_simulation_parameters, size=size, conserve_total=idmrg_simulation_parameters["conserve_total"]
+        imps,
+        model_name,
+        parameters,
+        idmrg_simulation_parameters,
+        size=size,
+        conserve_total=idmrg_simulation_parameters["conserve_total"],
     )
 
     create_h5(arguments.output)
