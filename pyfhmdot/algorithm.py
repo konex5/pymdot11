@@ -1,7 +1,7 @@
-from pyfhmdot.routine import mpsQ_svd_th2mV, mpsQ_svd_th2Um
+from pyfhmdot.routine import theta_to_mv, theta_to_um
 from pyfhmdot.routine import (
-    multiply_blocs_no_gate_applied,
-    multiply_blocs_with_gate_applied,
+    mm_to_theta_no_gate,
+    mm_to_theta_with_gate,
 )
 
 
@@ -49,7 +49,7 @@ def multiply_with_gate(ma, mb, mtheta):  # -> mdest
 
 def apply_UM(lhs_blocs, rhs_blocs, **kwargs):
     tmp_blocs = {}
-    multiply_blocs_no_gate_applied(
+    mm_to_theta_no_gate(
         tmp_blocs,
         lhs_blocs,
         rhs_blocs,
@@ -57,12 +57,12 @@ def apply_UM(lhs_blocs, rhs_blocs, **kwargs):
     )
     lhs_blocs.clear()
     rhs_blocs.clear()
-    mpsQ_svd_th2Um(tmp_blocs, lhs_blocs, rhs_blocs, **kwargs)
+    theta_to_um(tmp_blocs, lhs_blocs, rhs_blocs, **kwargs)
 
 
 def apply_MV(lhs_blocs, rhs_blocs, **kwargs):
     tmp_blocs = {}
-    multiply_blocs_no_gate_applied(
+    mm_to_theta_no_gate(
         tmp_blocs,
         lhs_blocs,
         rhs_blocs,
@@ -70,12 +70,12 @@ def apply_MV(lhs_blocs, rhs_blocs, **kwargs):
     )
     lhs_blocs = {}
     rhs_blocs = {}
-    mpsQ_svd_th2mV(tmp_blocs, lhs_blocs, rhs_blocs, **kwargs)
+    theta_to_mv(tmp_blocs, lhs_blocs, rhs_blocs, **kwargs)
 
 
 def apply_gate_UM(lhs_blocs, rhs_blocs, gate_blocs, **kwargs):
     tmp_blocs = {}
-    multiply_blocs_with_gate_applied(
+    mm_to_theta_with_gate(
         tmp_blocs,
         lhs_blocs,
         rhs_blocs,
@@ -86,7 +86,7 @@ def apply_gate_UM(lhs_blocs, rhs_blocs, gate_blocs, **kwargs):
 
 def apply_gate_MV(lhs_blocs, rhs_blocs, gate_blocs, **kwargs):
     tmp_blocs = {}
-    multiply_blocs_with_gate_applied(
+    mm_to_theta_with_gate(
         tmp_blocs,
         lhs_blocs,
         rhs_blocs,

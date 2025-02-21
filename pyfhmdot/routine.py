@@ -27,7 +27,7 @@ from pyfhmdot.indices import (
 )
 
 
-def multiply_blocs_no_gate_applied(
+def mm_to_theta_no_gate(
     dst_blocs: _Dict[tuple, _np.ndarray],
     lhs_blocs: _Dict[tuple, _np.ndarray],
     rhs_blocs: _Dict[tuple, _np.ndarray],
@@ -40,7 +40,7 @@ def multiply_blocs_no_gate_applied(
     multiply_arrays(dst_blocs, lhs_blocs, rhs_blocs, dest_indices)
 
 
-def multiply_blocs_with_gate_applied(
+def mm_to_theta_with_gate(
     dst_blocs: _Dict[tuple, _np.ndarray],
     lhs_blocs: _Dict[tuple, _np.ndarray],
     rhs_blocs: _Dict[tuple, _np.ndarray],
@@ -64,7 +64,7 @@ def multiply_blocs_with_gate_applied(
     multiply_arrays_and_transpose(dst_blocs, tmp_blocs, gate_blocs, dst_indices)
 
 
-def mpsQ_svd_th2Um(thetaQ, mpsL, mpsR, simdict, **kwargs):
+def theta_to_um(thetaQ, mpsL, mpsR, simdict, **kwargs):
 
     keys = list(thetaQ.keys())
     middle = potential_middle_indices(keys, direction_right=True)
@@ -124,7 +124,7 @@ def mpsQ_svd_th2Um(thetaQ, mpsL, mpsR, simdict, **kwargs):
     )
 
 
-def mpsQ_svd_th2mV(thetaQ, mpsL, mpsR, simdict, **kwargs):
+def theta_to_mv(thetaQ, mpsL, mpsR, simdict, **kwargs):
 
     keys = list(thetaQ.keys())
     middle = potential_middle_indices(keys, direction_right=False)

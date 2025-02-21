@@ -264,7 +264,7 @@ def _mult_deg_UM(
 ############################################################
 
 
-def mpsQ_svd_th2Um(thetaQ, mpsL, mpsR, simdict):
+def theta_to_um(thetaQ, mpsL, mpsR, simdict):
     lab = thetaQ.get_labels()
     if len(lab) != 4:
         raise (Exception("To svd, you should have a theta matrix form."))
@@ -346,7 +346,7 @@ def mpsQ_svd_th2Um(thetaQ, mpsL, mpsR, simdict):
     pass
 
 
-def mpsQ_svd_th2mV(thetaQ, mpsL, mpsR, simdict):
+def theta_to_mv(thetaQ, mpsL, mpsR, simdict):
     lab = thetaQ.get_labels()
     if len(lab) != 4:
         raise (Exception("To svd, you should have a theta matrix form."))
