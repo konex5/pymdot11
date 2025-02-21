@@ -192,8 +192,8 @@ def make_maximal_entangled_state_u1():
     return _make_maximal_entangled_state_u1
 
 @pytest.fixture
-def make_simplest_dummy_dgate():
-    def _make_simplest_dummy_dgate():
+def make_single_dummy_dgate():
+    def _make_single_dummy_dgate():
         import numpy as np
         dgate = {}
         dgate[(0,0,0,0)] = np.array([0.994832]).reshape(1,1,1,1)
@@ -215,7 +215,7 @@ def make_simplest_dummy_dgate():
         dgate[(2,2,1,1)] = np.array([0.992262, 0,0, 1.00781]).reshape(1,1,2,2)
         dgate[(2,2,2,2)] = np.array([0.994832]).reshape(1,1,1,1)
         return dgate
-    return _make_simplest_dummy_dgate
+    return _make_single_dummy_dgate
 
 
 
