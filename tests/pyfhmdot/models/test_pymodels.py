@@ -45,3 +45,28 @@ def test_hamiltonian_obc():
     assert mpo[1][(0, 0, 0, 0)][0, 0, 0, 0] == 1
     assert mpo[-1][(0, 1, 1, 0)][0, 0, 0, 0] == 1
     assert mpo[-1][(4, 1, 1, 0)][0, 0, 0, 0] == 3
+
+
+def test_hamiltonian_gate():
+    from pyfhmdot.models.pyoperators import single_operator
+    from pyfhmdot.models.pymodels import (
+        on_site_operators_from_hamiltonian,
+        nn_bond_operators_from_hamiltonian,
+        _hamiltonian_gate_from_dense,
+        _exp_gate,
+    )
+
+    model_name = "sh_xxz-hz_no"
+    parameters = {"Jxy": 7, "Jz": -5, "hz": 3}
+    head, _, tail = model_name.split("_")
+    d = 2
+
+    id_bloc = single_operator(name=head + "_id_" + tail, coef=1.0)
+    on_site = on_site_operators_from_hamiltonian(model_name, parameters)
+    # fuse on_site
+
+    # fuse
+    nn_bond = nn_bond_operators_from_hamiltonian(model_name, parameters)
+    before_exp = _hamiltonian_gate_from_dense(id_bloc, on_site, on_site, nn_bond, d=2)
+
+    a = _exp_gate(0.01, before_exp, d=2)

@@ -1,3 +1,6 @@
+import numpy as _np
+from scipy.linalg import expm as _expm
+
 from pyfhmdot.models.pyoperators import single_operator, two_sites_bond_operator
 
 
@@ -761,24 +764,12 @@ def hamiltonian_obc(model_name, parameters, size):
     return mpo
 
 
-############################################################
-############################################################
-############################################################
-
-
-############################################################
-############################################################
-############################################################
-
-
-def _gate_ham_period2_numpy(site_L, site_R, bond_M, quantum_name):
-    quantum_name_NONE = quantum_name.split("-")[0] + "-None"
-    d = _models.basis[quantum_name_NONE]["deg"][0]
+def _hamiltonian_gate_from_dense(id_bloc, on_site_left, on_site_right, nn_bond, *, d):
 
     if (
-        _np.any([isinstance(x[0], complex) for x in site_L])
-        or _np.any([isinstance(x[0], complex) for x in site_R])
-        or _np.any([isinstance(x[0], complex) for x in bond_M])
+        _np.any([isinstance(x, complex) for x in on_site_left])
+        or _np.any([isinstance(x, complex) for x in on_site_right])
+        or _np.any([isinstance(x, complex) for x in nn_bond])
     ):
         t = _np.ndarray((d, d, d, d), dtype="complex128")
         t.fill(0)
@@ -786,48 +777,26 @@ def _gate_ham_period2_numpy(site_L, site_R, bond_M, quantum_name):
         t = _np.ndarray((d, d, d, d))
         t.fill(0)
 
-    # id
-    alphaId, Id = operator(quantum_name.split("-")[0] + "-Id", quantum_name_NONE)
+    # on_site_left
+    t[:, :, :, :] += (_np.outer(on_site_left[0][(0, 0)], id_bloc[(0, 0)])).reshape(
+        d, d, d, d
+    )
 
-    # on site_L
-    for param, name in site_L:
-        if isinstance(param, _ntype):
+    # on_site_right
+    t[:, :, :, :] += (_np.outer(id_bloc[(0, 0)], on_site_right[0][(0, 0)])).reshape(
+        d, d, d, d
+    )
 
-            alpha, mat = operator(name, quantum_name_NONE)
-            t[:, :, :, :] += (
-                param * _np.outer(alpha * mat[0][-1], alphaId * Id[0][-1])
-            ).reshape(d, d, d, d)
-
-    # on site_R
-    for param, name in site_R:
-        if isinstance(param, _ntype):
-            alpha, mat = operator(name, quantum_name_NONE)
-            t[:, :, :, :] += (
-                param * _np.outer(alphaId * Id[0][-1], alpha * mat[0][-1])
-            ).reshape(d, d, d, d)
-
-    # bond
-    for param, name in bond_M:
-        if isinstance(param, _ntype):
-            (alpha, mata), (beta, matb) = operator(name, quantum_name_NONE)
-            t[:, :, :, :] += (
-                param * _np.outer(alpha * mata[0][-1], beta * matb[0][-1])
-            ).reshape(d, d, d, d)
+    # nn_bond
+    for bond in nn_bond:
+        t[:, :, :, :] += (_np.outer(bond[0][(0, 0)], bond[1][(0, 0)])).reshape(
+            d, d, d, d
+        )
 
     return t
 
 
-# def _gate_ham_period3_numpy(site_L,site_R,bond_M,quantum_name):
-#     pass
-# def _gate_ham_period4_numpy(site_L,site_R,bond_M,quantum_name):
-#     pass
-
-############################################################
-############################################################
-############################################################
-
-
-def _exp_gate(arg, dH, d):
+def _exp_gate(arg, dH, *, d):
     #####
     # REMARK : exp(+arg dH) is before contracted with s..
     #  _|_|_  Wu,l Wu,l+1
@@ -842,7 +811,7 @@ def _exp_gate(arg, dH, d):
     return dU
 
 
-def _exp_dgate(arg, dH, d):
+def _exp_dgate(arg, dH, *, d):
     # TMP correspond to exp(+arg dH)
     tmp = _exp_gate(arg, dH, d)
     #####
@@ -889,11 +858,6 @@ def _exp_dgate(arg, dH, d):
     return dU2
 
 
-############################################################
-############################################################
-############################################################
-
-
 def _suzu_trotter_period2_exp_numpy(arg, site_L, site_R, bond_M, quantum_name, dgate):
     quantum_name_NONE = quantum_name.split("-")[0] + "-None"
     d = _models.basis[quantum_name_NONE]["deg"][0]
@@ -904,15 +868,6 @@ def _suzu_trotter_period2_exp_numpy(arg, site_L, site_R, bond_M, quantum_name, d
     else:
         return _exp_dgate(arg, dH, d)
 
-
-# def gate_periodicity_two_suzu_trotter_exp_numpy(arg,model,param,numtype):
-#     pass
-# def gate_periodicity_ofL_suzu_trotter_exp_numpy(arg,L,model,param,numtype):
-#     pass
-
-############################################################
-############################################################
-############################################################
 
 # below, cut from dense to quantum number (index + matrix)
 def _generate_slices(d, deg):
