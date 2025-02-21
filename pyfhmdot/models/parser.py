@@ -38,29 +38,7 @@ def write_filename(filename: str, params: dict) -> dict:
             file.write(toml.dumps(params))
 
 
-"""    
-
-
-def load_hamiltonian_file(filename:str):
-    if not os.path.exists(filename):
-        sys.exit(f"The filename {filename} is not a valid file.")
-    if (filename[-3:] == "."):
-
-
-def read_parameters(line: str):
-    param_name, param_value_str = line.split('=')
-    if param_name[-4:] == "_EXP":
-        rad, ang = param_value_str.split(',')
-        return param_name, (float(rad),float(ang))
-    elif param_name[-5:] == "_LIST":
-        return param_name, [float(_) for _ in param_value_str.split(',')]
-    else:
-        return param_name, float(param_value_str)
-
-def parameters_to_list(hamiltonian_dict,param_name,param_value,*,size) -> List[float],List[str]:
-    pass
-
-
+"""
 def _ham4expr2final(ham4expr, period, parameters, finalhamlistreturned):
     for i in range(4):
         # 1-ONSITE__2-NEAREST_NEIGHBOR__3-SECOND_NEARESTNEIGHBOR__4-SPECIAL-TERM(like-borders)

@@ -523,7 +523,11 @@ def get_hamiltonian(name):
     return models[name]
 
 
-def hamiltonian_on_site():
+def merge_parameters_and_hamiltonian_to_list(read_params: dict):
+    for model, params in read_params.items():
+        ham = get_hamiltonian(model)
+        # for i in range(4):
+        #     # 1-ONSITE__2-NEAREST_NEIGHBOR__3-SECOND_NEARESTNEIGHBOR__4-SPECIAL-TERM(like-borders)
     pass
 
 
