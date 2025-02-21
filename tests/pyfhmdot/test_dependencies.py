@@ -18,6 +18,13 @@ def test_fhmdot():
     assert True
 
 
+@pytest.mark.skip(msg="module fhmdot not ready yet")
+def test_fhmdot():
+    import h5py
+
+    assert True
+
+
 def test_numpy():
     import numpy
 
