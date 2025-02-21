@@ -16,9 +16,11 @@ from pyfhmdot.routine.indices import (
     degeneracy_in_theta,
     potential_middle_indices,
     slices_degenerate_blocs,
+    split_degenerate_indices,
 )
 from pyfhmdot.routine.mul_routine import (
-    mul_mm_blocs,
+    mul_mm_blocs_new,
+    mul_mm_blocs_snd,
     mul_theta_with_gate,
     mul_usv_nondeg,
     mul_usv_deg,
@@ -32,10 +34,11 @@ def mm_to_theta_no_gate(
     *,
     conserve_left_right: bool = False
 ) -> None:
-    dest_indices = indices_dst_theta_no_gate(
+    dest_indices_new,dest_indices_snd = split_degenerate_indices(indices_dst_theta_no_gate(
         lhs_blocs.keys(), rhs_blocs.keys(), conserve_left_right=conserve_left_right
-    )
-    mul_mm_blocs(dst_blocs, lhs_blocs, rhs_blocs, dest_indices)
+    ))
+    mul_mm_blocs_new(dst_blocs, lhs_blocs, rhs_blocs, dest_indices_new)
+    mul_mm_blocs_snd(dst_blocs, lhs_blocs, rhs_blocs, dest_indices_snd)
 
 
 def mm_to_theta_with_gate_to_delete_at_some_point(
@@ -65,12 +68,13 @@ def mm_to_theta_with_gate(
     conserve_left_right_after: bool = False
 ) -> None:
     tmp_blocs: _Dict[tuple, _np.ndarray] = {}
-    tmp_indices = indices_dst_theta_no_gate(
+    tmp_indices_new,tmp_indices_snd = split_degenerate_indices(indices_dst_theta_no_gate(
         lhs_blocs.keys(),
         rhs_blocs.keys(),
         conserve_left_right=conserve_left_right_before,
-    )
-    mul_mm_blocs(tmp_blocs, lhs_blocs, rhs_blocs, tmp_indices)
+    ))
+    mul_mm_blocs_new(tmp_blocs, lhs_blocs, rhs_blocs, tmp_indices_new)
+    mul_mm_blocs_snd(tmp_blocs, lhs_blocs, rhs_blocs, tmp_indices_snd)
     dst_indices = indices_dst_theta_with_gate(
         theta_indices=tmp_blocs.keys(),
         gate_indices=gate_blocs.keys(),
