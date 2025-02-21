@@ -1,4 +1,56 @@
-def get_hamiltonian(name):
+def pyhamiltonian(name):
+    models = {
+        "skeleton" : {
+            "nb_param" : "list_param",
+            "sub_model" : "list_sub_ham_with_param",
+            "on_site" : "on_site_term",
+            "bond" : "bond_term",
+        },
+        "sh_hx_no": {
+            "nb_param" : 1,
+            "sub_model" : [],
+            "on_site" : [(0, "hx",-1.0,"sh_sx_no")],
+            "bond" : [],
+        },
+        "sh_hz_no": {
+            "nb_param" : 1,
+            "sub_model" : [],
+            "on_site" : [(0, "hz",-1.0,"sh_sz_no")],
+            "bond" : [],
+        },
+        "sh_hz_u1": {
+            "nb_param" : 1,
+            "sub_model" : [],
+            "on_site" : [(0, "hz",-1.0,"sh_sz_u1")],
+            "bond" : [],
+        },
+        "sh_xy_no": {
+            "nb_param" : 1,
+            "sub_model" : [],
+            "on_site" : [],
+            "bond" : [(0, "Jxy",1.0/2.0,"sh_sp_no-sh_sm_no"),(0, "Jxy",1.0/2.0,"sh_sm_no-sh_sp_no")],
+        },
+        "sh_xy_u1": {
+            "nb_param" : 1,
+            "sub_model" : [],
+            "on_site" : [],
+            "bond" : [(0, "Jxy",1.0/2.0,"sh_sp_u1-sh_sm_u1"),(0, "Jxy",1.0/2.0,"sh_sm_u1-sh_sp_u1")],
+        },
+        "sh_zz_no": {
+            "nb_param" : 1,
+            "sub_model" : [],
+            "on_site" : [],
+            "bond" : [(0, "Jz",1.0,"sh_sz_no-sh_sz_no")],
+        },
+        "sh_zz_u1": {
+            "nb_param" : 1,
+            "sub_model" : [],
+            "on_site" : [],
+            "bond" : [(0, "Jz",1.0,"sh_sz_u1-sh_sz_u1")],
+        },
+    }
+
+
     models = {
         # ### SKELETON
         "skeleton_model_name": {
@@ -525,9 +577,9 @@ def get_hamiltonian(name):
 
 def merge_parameters_and_hamiltonian_to_list(read_params: dict):
     for model, params in read_params.items():
-        ham = get_hamiltonian(model)
-        # for i in range(4):
-        #     # 1-ONSITE__2-NEAREST_NEIGHBOR__3-SECOND_NEARESTNEIGHBOR__4-SPECIAL-TERM(like-borders)
+        ham = pyhamiltonian(model)
+        for i in range(4):
+            # 1-ONSITE__2-NEAREST_NEIGHBOR__3-SECOND_NEARESTNEIGHBOR__4-SPECIAL-TERM(like-borders)
     pass
 
 
