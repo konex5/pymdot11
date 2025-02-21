@@ -1,4 +1,7 @@
 import numpy as _np
+from typing import Dict as _Dict
+from typing import List as _List
+from typing import Tuple as _Tuple
 
 
 def prepare_index_target_no_gate(
@@ -142,9 +145,13 @@ def multiply_blocs_with_gate(lhs_blocs, rhs_blocs, theta_blocs):
     return dest_blocs
 
 
+# Delete above
 def indices_prepare_destination_without_gate(
-    left_indices, right_indices, *, conserve_left_right=False
-):
+    left_indices: _List[tuple],
+    right_indices: _List[tuple],
+    *,
+    conserve_left_right: bool = False
+) -> _List[_Tuple[tuple, tuple, tuple]]:
     about_indices_to_contract = []
 
     for left_index in left_indices:
@@ -173,8 +180,11 @@ def indices_prepare_destination_without_gate(
 
 
 def indices_theta_prepare_conservation_for_gate(
-    theta_indices, gate_indices, *, conserve_left_right=False
-):
+    theta_indices: _List[tuple],
+    gate_indices: _List[tuple],
+    *,
+    conserve_left_right: bool = False
+) -> _List[_Tuple[tuple, tuple, tuple]]:
     destination_indices = []
     for theta_index in theta_indices:
         for gate_index in gate_indices:
@@ -201,7 +211,7 @@ def indices_theta_prepare_conservation_for_gate(
     return sorted(set(destination_indices))
 
 
-def list_degenerate_indices(destination_indices):
+def list_degenerate_indices(destination_indices: _List[tuple]) -> _List[bool]:
     list_degenerate = []
     for l in range(len(destination_indices)):
         if destination_indices.index(destination_indices[l]) == l:
@@ -212,7 +222,12 @@ def list_degenerate_indices(destination_indices):
     return list_degenerate
 
 
-def multiply_arrays(new_blocks, old_blocks1, old_blocks2, buildtarget):
+def multiply_arrays(
+    new_blocks: _Dict[tuple, _np.ndarray],
+    old_blocks1: _Dict[tuple, _np.ndarray],
+    old_blocks2: _Dict[tuple, _np.ndarray],
+    buildtarget: _List[_Tuple[tuple, tuple, tuple]],
+) -> None:
     list_isnew = list_degenerate_indices([_[0] for _ in buildtarget])
     for new, it in zip(list_isnew, buildtarget):
         target, it1, it2 = it[0], it[1], it[2]
@@ -231,15 +246,24 @@ def multiply_arrays(new_blocks, old_blocks1, old_blocks2, buildtarget):
 
 
 def multiply_blocs_no_gate_applied(
-    dst_blocs, lhs_blocs, rhs_blocs, *, conserve_left_right=False
-):
+    dst_blocs: _Dict[tuple, _np.ndarray],
+    lhs_blocs: _Dict[tuple, _np.ndarray],
+    rhs_blocs: _Dict[tuple, _np.ndarray],
+    *,
+    conserve_left_right: bool = False
+) -> None:
     dest_indices = indices_prepare_destination_without_gate(
         lhs_blocs.keys(), rhs_blocs.keys(), conserve_left_right=conserve_left_right
     )
     multiply_arrays(dst_blocs, lhs_blocs, rhs_blocs, dest_indices)
 
 
-def multiply_arrays_and_transpose(new_blocks, old_blocks1, old_blocks2, buildtarget):
+def multiply_arrays_and_transpose(
+    new_blocks: _Dict[tuple, _np.ndarray],
+    old_blocks1: _Dict[tuple, _np.ndarray],
+    old_blocks2: _Dict[tuple, _np.ndarray],
+    buildtarget: _List[_Tuple[tuple, tuple, tuple]],
+) -> None:
     list_isnew = list_degenerate_indices([_[0] for _ in buildtarget])
     for new, it in zip(list_isnew, buildtarget):
         target, it1, it2 = it[0], it[1], it[2]
@@ -258,14 +282,14 @@ def multiply_arrays_and_transpose(new_blocks, old_blocks1, old_blocks2, buildtar
 
 
 def multiply_blocs_with_gate_applied(
-    dst_blocs,
-    lhs_blocs,
-    rhs_blocs,
-    gate_blocs,
+    dst_blocs: _Dict[tuple, _np.ndarray],
+    lhs_blocs: _Dict[tuple, _np.ndarray],
+    rhs_blocs: _Dict[tuple, _np.ndarray],
+    gate_blocs: _Dict[tuple, _np.ndarray],
     *,
-    conserve_left_right_before=False,
-    conserve_left_right_after=False
-):
+    conserve_left_right_before: bool = False,
+    conserve_left_right_after: bool = False
+) -> None:
     tmp_indices = indices_prepare_destination_without_gate(
         lhs_blocs.keys(),
         rhs_blocs.keys(),
@@ -278,11 +302,10 @@ def multiply_blocs_with_gate_applied(
         gate_blocs.keys(),
         conserve_left_right=conserve_left_right_after,
     )
-    multiply_arrays_and_transpose(
-        dst_blocs, tmp_blocs, gate_blocs, dest_indices
-    )  # todo
+    multiply_arrays_and_transpose(dst_blocs, tmp_blocs, gate_blocs, dest_indices)
 
 
+# TO DELETE BELOW
 def prepare_targets(old_blocks1, old_blocks2, index2contract):
     target_key12 = []
     for it1 in old_blocks1.keys():

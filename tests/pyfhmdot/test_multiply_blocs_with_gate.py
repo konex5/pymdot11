@@ -6,7 +6,7 @@ from pyfhmdot.contract import (
 )
 
 
-def test_multiply_blocs_dense(make_single_dense_mps, make_single_dense_gate):
+def test_multiply_blocs_dense(make_single_dense_mps):
     lhs_blocs = make_single_dense_mps(chiL=3, d=4, chiR=5)
     rhs_blocs = make_single_dense_mps(chiL=5, d=4, chiR=2)
     dest_blocs = {}
