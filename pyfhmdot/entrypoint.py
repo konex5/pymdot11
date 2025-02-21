@@ -7,6 +7,8 @@ from pyfhmdot.initialize import (
 )
 
 from pyfhmdot.simulation import (
+    dmrg_sweeps as _dmrg_sweeps,
+    dmrg_warmup as _dmrg_warmup,
     sweep_eleven_times as _sweep_eleven_times,
     idmrg_even as _idmrg_even,
 )
@@ -88,12 +90,21 @@ def variational_ground_state(mps, ham, zdmrg_dict):
     left_blocs, right_blocs = initialize_left_right(mps, ham)
     left_var, right_var = initialize_left_right_variance(mps, ham)
     # warmup
-    for i in range(zdmrg_dict["nb_warmup"]):
-        chi_max = max(zdmrg_dict["chi_max"] // 4, 1)
-
+    chi_max = max(zdmrg_dict["chi_max"] // 4, 1)
+    _dmrg_warmup(
+        mps, ham, left_blocs, right_blocs, zdmrg_dict, chi_max=chi_max
+    )  # nb_warmup
     # converge
-    for i in range(zdmrg_dict["nb_sweeps"]):
-        pass
+    _dmrg_sweeps(
+        mps,
+        ham,
+        left_blocs,
+        right_blocs,
+        left_var,
+        right_var,
+        zdmrg_dict,
+        chi_max=zdmrg_dict["chi_max"],
+    )  # nb_sweeps
 
 
 def time_evolve_single(mps, ggate, sdmrg_dict):
