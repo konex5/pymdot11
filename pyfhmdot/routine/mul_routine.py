@@ -3,7 +3,7 @@ from typing import Dict as _Dict
 from typing import List as _List
 from typing import Tuple as _Tuple
 
-from pyfhmdot.indices import list_degenerate_indices
+from pyfhmdot.routine.indices import list_degenerate_indices
 
 
 def mul_mm_blocs(

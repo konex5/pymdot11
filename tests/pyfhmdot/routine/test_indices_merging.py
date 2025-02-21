@@ -72,7 +72,7 @@ def theta_blocs_small(
 
 @pytest.mark.skip
 def test_potential_middle(theta_blocs_large, theta_blocs_average, theta_blocs_small):
-    from pyfhmdot.indices import (
+    from pyfhmdot.routine.indices import (
         potential_middle_indices,
     )
 
@@ -112,7 +112,7 @@ def test_potential_middle(theta_blocs_large, theta_blocs_average, theta_blocs_sm
 
 @pytest.mark.skip
 def test_find_degeneracy_in_theta(theta_blocs_large):
-    from pyfhmdot.indices import (
+    from pyfhmdot.routine.indices import (
         degeneracy_in_theta,
         potential_middle_indices,
     )
@@ -132,7 +132,7 @@ def test_find_degeneracy_in_theta(theta_blocs_large):
 
 
 def test_find_degeneracy_in_theta_with_qcons(theta_blocs_small):
-    from pyfhmdot.indices import (
+    from pyfhmdot.routine.indices import (
         degeneracy_in_theta,
         potential_middle_indices,
     )
@@ -147,7 +147,7 @@ def test_find_degeneracy_in_theta_with_qcons(theta_blocs_small):
 
 
 def test_check_slices_degenerate_blocs_dimone(theta_blocs_small):
-    from pyfhmdot.indices import (
+    from pyfhmdot.routine.indices import (
         degeneracy_in_theta,
         slices_degenerate_blocs,
         potential_middle_indices,
@@ -162,7 +162,7 @@ def test_check_slices_degenerate_blocs_dimone(theta_blocs_small):
 
 @pytest.mark.skip
 def test_check_slices_degenerate_blocs_dimtwo(theta_blocs_large):
-    from pyfhmdot.indices import (
+    from pyfhmdot.routine.indices import (
         degeneracy_in_theta,
         slices_degenerate_blocs,
         potential_middle_indices,

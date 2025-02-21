@@ -8,7 +8,7 @@ from pyfhmdot.routine.svd_routine import (
     svd_nondeg,
     svd_deg,
 )
-from pyfhmdot.indices import (
+from pyfhmdot.routine.indices import (
     indices_dst_theta_no_gate,
     indices_dst_theta_with_gate,
     degeneracy_in_theta,
