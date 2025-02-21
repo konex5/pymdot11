@@ -57,8 +57,8 @@ def add_model_parameters(filepath, parameters):
     add_dictionary(filepath, parameters, folder="INFO_PARAMETERS")
 
 
-def add_model_simulation(filepath, parameters):
-    """TODO
+def add_model_zdmrg_simulation(filepath, parameters):
+    """
     {
         "eps_truncation": 10 ** -8,
         "chi_max": 600,
@@ -66,18 +66,40 @@ def add_model_simulation(filepath, parameters):
         "nb_sweep": 6,
         "store_state": 2,
     }
+    """
+    pass
+
+
+def add_model_tdmrg_simulation(filepath, parameters):
+    """
     {
-        "discarded_weights": 0,
+        "dtau": 0.025,
+        "normalize": 1, #False
+        "dw_one_step": 0,
+        "dw_total": 0,
         "eps_truncation": 10 ** -8,
         "chi_max": 600,
-        "delta": 0.025,
-        "store_state": 0.5,
-        "stop_value": 4,
+        "save_every": -1,
+        "tau_max": 4,
     }
     """
-    # add_dictionary(filepath,"INFO_SIM_0DMRG",parameters)
-    # add_dictionary(filepath,"INFO_SIM_TDMRG",parameters)
-    pass
+    add_dictionary(filepath, parameters, folder="INFO_SIM_TIME_DMRG")
+
+
+def add_model_bdmrg_simulation(filepath, parameters):
+    """
+    {
+        "dtau": 0.025
+        "normalize" : 0, #True
+        "dw_one_step": 0,
+        "dw_total": 0,
+        "eps_truncation": 10 ** -8,
+        "chi_max": 600,
+        "save_every": -1,
+        "tau_max": 4,
+    }
+    """
+    add_dictionary(filepath, parameters, folder="INFO_SIM_BETA_DMRG")
 
 
 # def get_details_zdmrg():
@@ -109,9 +131,12 @@ def load_model_parameters(filepath):
     return load_dictionary(filepath, "INFO_PARAMETERS")
 
 
-def load_model_simulation(filepath):
-    # return load_dictionary(filepath,"INFO_PARAMETERS")
-    pass
+def load_model_tdmrg_simulation(filepath):
+    return load_dictionary(filepath, "INFO_SIM_TIME_DMRG")
+
+
+def load_model_bdmrg_simulation(filepath):
+    return load_dictionary(filepath, "INFO_SIM_BETA_DMRG")
 
 
 def create_hamiltonian(model_name, parameters, size):
