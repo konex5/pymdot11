@@ -25,4 +25,4 @@ def test_dgemm():
 def test_dgesvd():
     from scipy.linalg import svd as _svd
 
-    a, two_two_random_matrices()
+    a,_ = two_two_random_matrices()
