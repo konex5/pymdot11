@@ -34,106 +34,64 @@ def single_operator(name, coef):  # -> one bloc
         },
         "sh_sy_no": {(0, 0): coef * _np.array([[0, -1j], [1j, 0]], dtype=_cplx_t)},
         "sh_sy_u1": {
-            (1, 0): coef * _np.array([[-1]], dtype=_cplx_t),
-            (0, 1): coef * _np.array([[1j]], dtype=_cplx_t),
+            (0, 1): coef * _np.array([[-1j]], dtype=_cplx_t),
+            (1, 0): coef * _np.array([[1j]], dtype=_cplx_t),
         },
         # spin one
-        "so_id_no": {(0, 0): coef * _np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=_real_t)},
+        "so_id_no": {
+            (0, 0): coef * _np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=_real_t)
+        },
         "so_id_u1": {
             (0, 0): coef * _np.array([[1]], dtype=_real_t),
             (1, 1): coef * _np.array([[1]], dtype=_real_t),
             (2, 2): coef * _np.array([[1]], dtype=_real_t),
         },
-        "so_sp_no": {(0, 0): coef * _np.array([[0, 1, 0], [0, 0, 1],[0,0,0]], dtype=_real_t)},
+        "so_sp_no": {
+            (0, 0): coef * _np.array([[0, 1, 0], [0, 0, 1], [0, 0, 0]], dtype=_real_t)
+        },
         "so_sp_u1": {
             (0, 1): coef * _np.array([[1]], dtype=_real_t),
-            (1, 2): coef * _np.array([[1]], dtype=_real_t)
-            },
-        "so_sm_no": {(0, 0): coef * _np.array([[0, 0, 0], [1, 0, 0],[0,1,0]], dtype=_real_t)},
+            (1, 2): coef * _np.array([[1]], dtype=_real_t),
+        },
+        "so_sm_no": {
+            (0, 0): coef * _np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0]], dtype=_real_t)
+        },
         "so_sm_u1": {
             (1, 0): coef * _np.array([[1]], dtype=_real_t),
-            (2, 1): coef * _np.array([[1]], dtype=_real_t)
-            },
-
-
+            (2, 1): coef * _np.array([[1]], dtype=_real_t),
+        },
+        "so_sz_no": {
+            (0, 0): coef * _np.array([[1, 0, 0], [0, 0, 0], [0, 0, -1]], dtype=_real_t)
+        },
+        "so_sz_u1": {
+            (0, 0): coef * _np.array([[1]], dtype=_real_t),
+            (2, 2): coef * _np.array([[-1]], dtype=_real_t),
+        },
+        "so_sz^2_no": {
+            (0, 0): coef * _np.array([[1, 0, 0], [0, 0, 0], [0, 0, 1]], dtype=_real_t)
+        },
+        "so_sz^2_u1": {
+            (0, 0): coef * _np.array([[1]], dtype=_real_t),
+            (2, 2): coef * _np.array([[1]], dtype=_real_t),
+        },
+        "so_sx_no": {
+            (0, 0): coef * _np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]], dtype=_real_t)
+        },
+        "so_id_cplx_no": {
+            (0, 0): coef * _np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=_cplx_t)
+        },
+        "so_id_cplx_u1": {
+            (0, 0): coef * _np.array([[1]], dtype=_cplx_t),
+            (1, 1): coef * _np.array([[1]], dtype=_cplx_t),
+            (2, 2): coef * _np.array([[1]], dtype=_cplx_t),
+        },
+        "so_sy_no": {
+            (0, 0): coef
+            * _np.array([[0, -1j, 0], [1j, 0, -1j], [0, 1j, 0]], dtype=_cplx_t)
+        },
     }
 
     return operators[name]
-
-
-"""
-    "so-Sz": {  # ok
-        "nb_site": 1,
-        "coef": _np.sqrt(2),
-        "qBasis": {
-            "so-None": [
-                [
-                    (0, 0),
-                    (1 / _np.sqrt(2))
-                    * _np.array([[-1, 0, 0], [0, 0, 0],
-                                [0, 0, 1]], dtype=_real_t),
-                ]
-            ],
-            "so-U1": [
-                [(0, 0), _np.array([[-1 / _np.sqrt(2)]], dtype=_real_t)],
-                [(2, 2), _np.array([[1 / _np.sqrt(2)]], dtype=_real_t)],
-            ],
-            "so-SO3": [],
-        },
-        "qchange": {"so-None": [(0,)], "so-U1": [(0,)], "sh-SO3": [(0,)]},
-    },
-    "so-Sz^2": {  # ok (for single Ion anisotropy)
-        "nb_site": 1,
-        "coef": _np.sqrt(2),
-        "qBasis": {
-            "so-None": [
-                [
-                    (0, 0),
-                    (1 / _np.sqrt(2))
-                    * _np.array([[+1, 0, 0], [0, 0, 0],
-                                [0, 0, +1]], dtype=_real_t),
-                ]
-            ],
-            "so-U1": [
-                [(0, 0), _np.array([[+1 / _np.sqrt(2)]], dtype=_real_t)],
-                [(2, 2), _np.array([[+1 / _np.sqrt(2)]], dtype=_real_t)],
-            ],
-            "so-SO3": [],
-        },
-        "qchange": {"so-None": [(0,)], "so-U1": [(0,)], "sh-SO3": [(0,)]},
-    },
-    # the following is ill defined with QN conservation
-    "so-Sx": {  # ok
-        "nb_site": 1,
-        "qchange": [[0, 0]],
-        "coef": _np.sqrt(2),
-        "qBasis": {
-            "so-None": [
-                [
-                    (0, 0),
-                    (1 / 2.0)
-                    * _np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]],
-                                dtype=_real_t),
-                ]
-            ]
-        },
-    },
-    "so-Sy": {  # ok
-        "nb_site": 1,
-        "qchange": [[0, 0]],
-        "coef": _np.sqrt(2),
-        "qBasis": {
-            "so-None": [
-                [
-                    (0, 0),
-                    (1 / 2.0)
-                    * _np.array([[0, 1j, 0], [-1j, 0, 1j],
-                                [0, -1j, 0]], dtype=_cmpx_t),
-                ]
-            ]
-        },
-    },
-"""
 
 
 def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
