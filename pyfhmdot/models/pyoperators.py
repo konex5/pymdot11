@@ -7,6 +7,7 @@ _cplx_t = "complex128"
 def single_operator(name, coef):  # -> one bloc
 
     operators = {
+        # spin half
         "sh_id_no": {(0, 0): coef * _np.array([[1, 0], [0, 1]], dtype=_real_t)},
         "sh_id_u1": {
             (1, 1): coef * _np.array([[1]], dtype=_real_t),
@@ -36,79 +37,31 @@ def single_operator(name, coef):  # -> one bloc
             (1, 0): coef * _np.array([[-1]], dtype=_cplx_t),
             (0, 1): coef * _np.array([[1j]], dtype=_cplx_t),
         },
+        # spin one
+        "so_id_no": {(0, 0): coef * _np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=_real_t)},
+        "so_id_u1": {
+            (0, 0): coef * _np.array([[1]], dtype=_real_t),
+            (1, 1): coef * _np.array([[1]], dtype=_real_t),
+            (2, 2): coef * _np.array([[1]], dtype=_real_t),
+        },
+        "so_sp_no": {(0, 0): coef * _np.array([[0, 1, 0], [0, 0, 1],[0,0,0]], dtype=_real_t)},
+        "so_sp_u1": {
+            (0, 1): coef * _np.array([[1]], dtype=_real_t),
+            (1, 2): coef * _np.array([[1]], dtype=_real_t)
+            },
+        "so_sm_no": {(0, 0): coef * _np.array([[0, 0, 0], [1, 0, 0],[0,1,0]], dtype=_real_t)},
+        "so_sm_u1": {
+            (1, 0): coef * _np.array([[1]], dtype=_real_t),
+            (2, 1): coef * _np.array([[1]], dtype=_real_t)
+            },
+
+
     }
 
     return operators[name]
 
 
 """
-    # ### so
-    # ### PLEASE CHECK VERY CAREFULLY SINCE
-    # # index [0] is |s=1,mz=-1> down
-    # # index [1] is |s=1,mz=+0> "|0>"
-    # # index [2] is |s=1,mz=+1> up
-    # ##########################################
-    "so-Id": {  # ok
-        "nb_site": 1,
-        "coef": _np.sqrt(3),
-        "qBasis": {
-            "so-None": [
-                [
-                    (0, 0),
-                    (1 / _np.sqrt(3))
-                    * _np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]],
-                                dtype=_real_t),
-                ]
-            ],
-            "so-U1": [
-                [(0, 0), _np.array([[1 / _np.sqrt(3)]], dtype=_real_t)],
-                [(1, 1), _np.array([[1 / _np.sqrt(3)]], dtype=_real_t)],
-                [(2, 2), _np.array([[1 / _np.sqrt(3)]], dtype=_real_t)],
-            ],
-            "so-SO3": [],
-        },
-        "qchange": {"so-None": [(0,)], "so-U1": [(0,)], "sh-SO3": [(0, 0)]},
-    },
-    "so-Sp": {  # ok
-        "nb_site": 1,
-        "coef": _np.sqrt(2),
-        "qBasis": {
-            "so-None": [
-                [
-                    (0, 0),
-                    (1 / _np.sqrt(2))
-                    * _np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0]],
-                                dtype=_real_t),
-                ]
-            ],
-            "so-U1": [
-                [(0, 1), _np.array([[(1 / (_np.sqrt(2)))]], dtype=_real_t)],
-                [(1, 2), _np.array([[(1 / (_np.sqrt(2)))]], dtype=_real_t)],
-            ],
-            "so-SO3": [],
-        },
-        "qchange": {"so-None": [(0,)], "so-U1": [(+2,)], "sh-SO3": [(+2,)]},
-    },
-    "so-Sm": {  # ok
-        "nb_site": 1,
-        "coef": _np.sqrt(2),
-        "qBasis": {
-            "so-None": [
-                [
-                    (0, 0),
-                    (1 / _np.sqrt(2))
-                    * _np.array([[0, 1, 0], [0, 0, 1], [0, 0, 0]],
-                                dtype=_real_t),
-                ]
-            ],
-            "so-U1": [
-                [(1, 0), _np.array([[(1 / (_np.sqrt(2)))]], dtype=_real_t)],
-                [(2, 1), _np.array([[(1 / (_np.sqrt(2)))]], dtype=_real_t)],
-            ],
-            "so-SO3": [],
-        },
-        "qchange": {"so-None": [(0,)], "so-U1": [(-2,)], "sh-SO3": [(-2,)]},
-    },
     "so-Sz": {  # ok
         "nb_site": 1,
         "coef": _np.sqrt(2),
