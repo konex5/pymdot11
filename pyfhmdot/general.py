@@ -29,7 +29,7 @@ def get_model_name(hamiltonian_path):
 
 
 def get_model_info(hamiltonian_path):
-    return {"size": 10, "spin_name": 0, "qn_name": 1, "interaction_range": 2}
+    return {"size": 10, "spin_name": 0, "qn_name": 1, "interaction_range": 2, "periodicity" : 2}
 
 
 def get_model_parameters(hamiltonian_path):
