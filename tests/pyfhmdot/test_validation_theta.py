@@ -1,7 +1,9 @@
 import pytest
 
+
 def get_theta():
     from numpy import array
+
     old_theta = {
         (0, 0, 0, 0): array([[[[0.99483226]]]]),
         (0, 0, 1, 1): array([[[[0.99226175, 0.0], [0.0, 1.00780536]]]]),
@@ -82,6 +84,9 @@ def test_validation_theta_step_two_left():
     mpsR = {}
     mpsR[(0, 1, 0)] = array([[[0.70710678], [0.70710678]]])
 
+    mpsNextR = {}
+    mpsNextR[(0, 1, 0)] = array([[[0.70710678], [0.70710678]]])
+
     old_theta, new_theta = get_theta()
 
     assert len(old_theta) == 19 and len(new_theta) == 19
@@ -108,8 +113,8 @@ def test_validation_theta_step_two_left():
 
     from pyfhmdot.algorithm import apply_gate_on_mm_at
 
-    mps = [deepcopy(mpsL), deepcopy(mpsR)]
-    gate = [deepcopy(old_theta)]
+    mps = [deepcopy(mpsL), deepcopy(mpsR), deepcopy(mpsNextR)]
+    gate = [deepcopy(old_theta), deepcopy(old_theta)]
     apply_gate_on_mm_at(
         mps,
         gate,
@@ -128,9 +133,49 @@ def test_validation_theta_step_two_left():
     for key in mps[1].keys():
         assert all(abs(mps[1][key] - old_results_mpsR[key]) < 1e-8)
 
+    from pyfhmdot.algorithm import apply_mm_at
+
+    apply_mm_at(
+        mps,
+        2,
+        {"dw_one_serie": 0},
+        100,
+        1,
+        1e-62,
+        is_um=True,
+        conserve_left_right_before=False,
+        direction_right=1,
+    )
+
+    old_next_results_mpsR = {
+        (0, 2, 0): array([[[-0.00260362, 0.9999662]]]),
+        (1, 1, 0): array(
+            [
+                [[-0.70163324, -0.00731115], [-0.71250989, 0.00353689]],
+                [[-0.00369547, 0.00092365], [0.00363906, -0.00086739]],
+            ]
+        ),
+        (2, 0, 0): array([[[-0.00260362, -0.00016533]]]),
+    }
+    old_next_results_mpsNextR = {
+        (0, 1, 0): array(
+            [
+                [[-7.07106781e-01], [-7.07106781e-01]],
+                [[-7.85055213e-17], [7.85055213e-17]],
+            ]
+        )
+    }
+
+    for key in mps[1].keys():
+        assert all(abs(mps[1][key] - old_next_results_mpsR[key]) < 1e-8)
+
+    for key in mps[1].keys():
+        assert all(abs(mps[2][key] - old_next_results_mpsNextR[key]) < 1e-8)
+
 
 def test_validation_theta_step_one_right():
     from numpy import array, all
+    from copy import deepcopy
 
     mpsR = {(0, 1, 0): array([[[0.70710678], [0.70710678]]])}
 
@@ -141,4 +186,23 @@ def test_validation_theta_step_one_right():
         ),
         (0, 2, 0): array([[[-0.00260362]]]),
     }
+
+    old_theta, new_theta = get_theta()
+
+    from pyfhmdot.algorithm import apply_gate_on_mm_at
+
+    mps = [deepcopy(mpsL), deepcopy(mpsR)]
+    gate = [deepcopy(old_theta)]
+    apply_gate_on_mm_at(
+        mps,
+        gate,
+        1,
+        {"dw_one_serie": 0},
+        100,
+        1,
+        1e-62,
+        is_um=True,
+        conserve_left_right_after_gate=False,
+        direction_right=1,
+    )
     pass
