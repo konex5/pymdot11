@@ -872,7 +872,8 @@ def idmrg_even(
         position=(size - len(dst_imps_left) - 1) // 2,
         size=size,
         conserve_total=conserve_total,
-        d=d)
+        d=d,
+    )
 
     dst_imps_left.append(_copy(tmp_imps_left))
     dst_imps_right.append(_copy(tmp_imps_right))
