@@ -32,7 +32,7 @@ def contract_left_right_mpo_mpo_permute(dst, left_bloc, mpo_one, mpo_two, right_
     # 1   | |_|3, 5|_| |   7
     #     |  _  __  _| |
     # 0   |_| |2, 4| | |   6
-    permute_blocs(dst, tmp_tmp, [(0, 1, 2, 3, 4, 5, 6, 7), (1, 3, 5, 7, 0, 2, 4, 6)])
+    permute_blocs(dst, tmp_tmp, [(0, 1, 2, 3, 4, 5, 6, 7), (0, 4, 1, 5, 2, 6, 3, 7)])
     # dst
     # 4   | |_|5, 6|_| |   7
     #     |  _  __  _| |
