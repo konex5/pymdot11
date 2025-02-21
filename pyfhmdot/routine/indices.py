@@ -6,6 +6,18 @@ from typing import List as _List
 from typing import Tuple as _Tuple
 
 
+def split_degenerate_indices(indices: _List[tuple]) -> _List[bool]:
+    list_deg = []
+    list_nondeg = []
+    all_theta = [_[0] for _ in indices]
+    for l in range(len(indices)):
+        if all_theta.index(indices[l][0]) == l:
+            list_nondeg.append(indices[l])
+        else:
+            list_deg.append(indices[l])
+    return list_nondeg, list_deg 
+
+
 def indices_dst_theta_no_gate(
     left_indices: _KeysView[tuple],
     right_indices: _KeysView[tuple],
