@@ -27,8 +27,8 @@ def single_operator(name, coef):  # -> one bloc
             (0, 0): coef * _np.array([[1]], dtype=_real_t),
             (1, 1): coef * _np.array([[-1]], dtype=_real_t),
         },
-        "sh_id_cplx_no": {(0, 0): coef * _np.array([[1, 0], [0, 1]], dtype=_cplx_t)},
-        "sh_id_cplx_u1": {
+        "sh_id-cplx_no": {(0, 0): coef * _np.array([[1, 0], [0, 1]], dtype=_cplx_t)},
+        "sh_id-cplx_u1": {
             (1, 1): coef * _np.array([[1]], dtype=_cplx_t),
             (0, 0): coef * _np.array([[1]], dtype=_cplx_t),
         },
@@ -77,10 +77,10 @@ def single_operator(name, coef):  # -> one bloc
         "so_sx_no": {
             (0, 0): coef * _np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]], dtype=_real_t)
         },
-        "so_id_cplx_no": {
+        "so_id-cplx_no": {
             (0, 0): coef * _np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=_cplx_t)
         },
-        "so_id_cplx_u1": {
+        "so_id-cplx_u1": {
             (0, 0): coef * _np.array([[1]], dtype=_cplx_t),
             (1, 1): coef * _np.array([[1]], dtype=_cplx_t),
             (2, 2): coef * _np.array([[1]], dtype=_cplx_t),

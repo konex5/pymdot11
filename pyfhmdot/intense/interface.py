@@ -99,7 +99,7 @@ def measure_dmps_dmps(dmps_one, dmps_two, position=-1):
         tmp, tmp_right = tmp_right, {}  # swap and clear
         _contract_right_small_bloc_dmps(tmp_right, tmp, dmps_one[l], dmps_two[l])
 
-    dst = {}
+    dst = _defaultdict(lambda: _array(0))
     _contract_left_right_small_bloc(dst, tmp_left, tmp_right)
 
     return dst[()][()]
