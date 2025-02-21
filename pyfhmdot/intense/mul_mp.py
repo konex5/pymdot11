@@ -30,10 +30,28 @@ def permute_blocs(new_blocks, old_blocks, map_old2new):
         )
 
 
-def fuse_mpo(dst_blocs, mpo_blocs, index1, index2):
+def fuse_mpo(dst_blocs, mpo_blocs, index):
     """
     This method is used for ED only
+    fuse index and index+1
     """
+    #deg1 = len(set([_[index] for _ in mpo_blocs.keys()]))
+    deg2 = len(set([_[index+1] for _ in mpo_blocs.keys()]))
+
+    def get_fused_index(key, index, deg2):
+        return key[index]*deg2+key[index+1]
+
+    for it in mpo_blocs.keys():
+        dst_indices = tuple([_ for i, _ in enumerate(it)
+                             if i < index] + [get_fused_index(it, index, deg2)] + [_ for i, _ in enumerate(it)
+                                                                                   if i > index+1])
+        tmp = mpo_blocs[it].shape
+        dst_shape = tuple([_ for i, _ in enumerate(tmp)
+                             if i < index] + [tmp[index]*tmp[index+1]] + [_ for i, _ in enumerate(tmp)
+                                                                                   if i > index+1])
+        dst_blocs[dst_indices] = mpo_blocs[it].reshape(dst_shape)
+
+def split_mpo():
     pass
 
 
@@ -42,9 +60,12 @@ def trace_mpo(dst_blocs, mpo_blocs, index1, index2):
         dst_indices = tuple([_ for i, _ in enumerate(it)
                              if i not in [index1, index2]])
         if dst_indices in dst_blocs.keys():
-            dst_blocs[dst_indices] += _np.trace(mpo_blocs[it], axis1=index1, axis2=index2)
-        else:                        
-            dst_blocs[dst_indices] = _np.trace(mpo_blocs[it], axis1=index1, axis2=index2)
+            dst_blocs[dst_indices] += _np.trace(mpo_blocs[it],
+                                                axis1=index1, axis2=index2)
+        else:
+            dst_blocs[dst_indices] = _np.trace(
+                mpo_blocs[it], axis1=index1, axis2=index2)
+
 
 def indices_dst_mul_mpo(
         left_indices: _KeysView[tuple],

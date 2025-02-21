@@ -20,7 +20,13 @@ def test_trace_mpo(make_single_dummy_dgate):
     dst_blocs = {}
     trace_mpo(dst_blocs,theta,0,3)
     assert dst_blocs[(0,0)].shape == (1,1)
-    
+
+def test_fuse_mpo(make_single_dummy_dgate):
+    from pyfhmdot.intense.mul_mp import fuse_mpo
+    theta = make_single_dummy_dgate()
+    dst_blocs = {}
+    fuse_mpo(dst_blocs,theta,0)
+    pass
 
 def test_outerprod_mpo():
     from pyfhmdot.models.pymodels import hamiltonian_obc
