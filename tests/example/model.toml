@@ -9,30 +9,40 @@ hz = 3.0
 
 [idmrg_simulation]
 chi_max = 30
-eps_truncation = 1e-8
 conserve_total = 10
+dw_one_step = 0
+dw_total = 0
+eps_truncation = 1e-8
+normalize = 1
 
+[zdmrg_simulation]
+chi_max = 30
+conserve_total = 10
+dw_one_step = 0
+dw_total = 0
+eps_truncation = 1e-8
+normalize = 1
 
 [Tdmrg_simulation]
+chi_max = 30
 dtau = 0.0125
-normalize = 1
 dw_one_step = 0
 dw_total = 0
 eps_truncation = 1e-8
-chi_max = 30
+normalize = 1
 save_every = 1
-tau_max = 0.1
 start_left = 0
 start_odd_bonds = 1
+tau_max = 0.1
 
 [tdmrg_simulation]
+chi_max = 30
 dtau = 0.025
-normalize = 0
 dw_one_step = 0
 dw_total = 0
 eps_truncation = 1e-8
-chi_max = 30
+normalize = 0
 save_every = 1
-tau_max = 0.5
 start_left = 0
 start_odd_bonds = 1
+tau_max = 0.5
