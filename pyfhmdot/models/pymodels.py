@@ -222,6 +222,11 @@ def pyhamiltonian(name):
     }
     hamiltonian = {"on_site": [], "nn_bond": []}
 
+    for on_site in models[name]["on_site"]:
+        hamiltonian["on_site"].append(on_site)
+    for bond in models[name]["nn_bond"]:
+        hamiltonian["nn_bond"].append(bond)
+
     def append_sub_model(models, name, dst_hamiltonian):
         for sub_name in models[name]["sub_model"]:
             for on_site in models[sub_name]["on_site"]:
@@ -668,9 +673,9 @@ def _mpo_from_operators(id_bloc, on_site, nn_bond_left, nn_bond_right):
     # on_site
     for idx, val in on_site[0].items():
         if _np.all(val != 0):
-            blocks[(bl_dimL, idx[0], idx[1], 0)] = 0.5 * val.reshape(
+            blocks[(bl_dimL, idx[0], idx[1], 0)] = val.reshape(
                 tuple([1] + list(val.shape) + [1])
-            )  # appear twice in the bulk
+            )
 
     # nn_bond
     for i in range(1, bl_dimR, 1):
