@@ -114,3 +114,10 @@ def test_prepare_index_target_no_gate(lhs_blocs, rhs_blocs):
 def test_prepare_index_target_with_gate(lhs_blocs, rhs_blocs, theta_blocs):
     dest_blocs = multiply_blocs_with_gate(lhs_blocs, rhs_blocs, theta_blocs)
     assert dest_blocs[(0, 0, 1, 0)].shape == (3, 2, 2, 5)
+
+
+def test_two_mps_multiplication(make_single_dense_mps):
+    lhs_blocs = make_single_dense_mps(chiL=3,d=4,chiR=5)
+    rhs_blocs = make_single_dense_mps(chiL=5,d=4,chiR=2)
+    dest_blocs = multiply_blocs_no_gate(lhs_blocs, rhs_blocs)
+    assert dest_blocs[(0, 0, 0, 0)].shape == (3, 4, 4, 2)
