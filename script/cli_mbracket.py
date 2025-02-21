@@ -32,9 +32,6 @@ if __name__ == "__main__":
         help="hamiltonian path",
         required=True,
     )
-    # parser.add_argument(
-    #     "-o", "--output", type=str, action="store", help="output path", required=True
-    # )
 
     arguments = parser.parse_args()
 
