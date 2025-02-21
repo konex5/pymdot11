@@ -5,16 +5,6 @@ from typing import Tuple as _Tuple
 import numpy as _np
 
 
-def map_order(neworder, oldorder):
-    indices = [
-        (i, j) for i, x in enumerate(oldorder) for j, y in enumerate(neworder) if x == y
-    ]
-    tmp = list(zip(*indices))  # removed zip
-    if set(tmp[0]) != set(tmp[1]):
-        raise (Exception("Cannot permute indices if they are not the same (bijective)"))
-    return tmp  # list(tmp[0]),list(tmp[1]) #[0]->oldindex map [1]->newindex
-
-
 def permute_blocs(new_blocks, old_blocks, map_old2new):
     for it in old_blocks.keys():
         tmp = list(it)

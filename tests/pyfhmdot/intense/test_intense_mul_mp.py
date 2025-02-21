@@ -1,14 +1,6 @@
 import pytest
 
 
-def test_map_order():
-    from pyfhmdot.intense.mul_mp import map_order
-
-    tmp = map_order([0, 2, 1, 3], [0, 1, 2, 3])
-    tmp = map_order([0, 1, 2, 3], [0, 2, 1, 3])
-    pass
-
-
 def test_permute_arrays(make_single_dummy_dgate):
     from pyfhmdot.intense.mul_mp import permute_blocs
 
