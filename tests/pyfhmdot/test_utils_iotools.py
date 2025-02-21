@@ -6,7 +6,7 @@ def test_add_dictionary(tmp_path, make_single_blocs_mps):
         create_h5,
         add_dictionary,
         load_dictionary,
-        write_single_mp,
+        add_single_mp,
         load_single_mp,
     )
 
@@ -22,7 +22,7 @@ def test_add_dictionary(tmp_path, make_single_blocs_mps):
     real_mps = make_single_blocs_mps(
         [(0, 0, 0), (2, 0, 1), (1, 1, 3)], [(3, 3), (4, 4), (5, 5)], d=2, isreal=True
     )
-    write_single_mp(dummypath, real_mps, site=2)
+    add_single_mp(dummypath, real_mps, site=2)
     output_dict = {}
     load_single_mp(dummypath, output_dict, site=2)
     assert real_mps[(2, 0, 1)][1, 1, 0] == output_dict[(2, 0, 1)][1, 1, 0]
@@ -30,7 +30,7 @@ def test_add_dictionary(tmp_path, make_single_blocs_mps):
     imag_mps = make_single_blocs_mps(
         [(0, 0, 0), (2, 0, 1), (1, 1, 3)], [(3, 3), (4, 4), (5, 5)], d=2, isreal=False
     )
-    write_single_mp(dummypath, imag_mps, site=4)
+    add_single_mp(dummypath, imag_mps, site=4)
     output_dict = {}
     load_single_mp(dummypath, output_dict, site=4)
     assert imag_mps[(1, 1, 3)][1, 1, 0] == output_dict[(1, 1, 3)][1, 1, 0].conj().conj()

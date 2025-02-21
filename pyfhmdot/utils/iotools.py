@@ -32,7 +32,7 @@ def load_dictionary(filepath, dictionary, folder="MODEL"):
             dictionary[key] = grp[key][()]
 
 
-def write_single_mp(file_path, mp_dictionary, site=0, folder="QMP"):
+def add_single_mp(file_path, mp_dictionary, site=0, folder="QMP"):
     with _h5.File(file_path, "r+") as f:
         grp = f.create_group(f"/{folder}/{site:04g}")
         for it, val in mp_dictionary.items():
