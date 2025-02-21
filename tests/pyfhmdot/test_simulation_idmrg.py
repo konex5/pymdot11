@@ -26,9 +26,10 @@ def test_idmrg_all():
         ham,
         {
             "dw_one_serie": 0,
-            "nb_sweeps_warmup": 7,
+            "nb_sweeps_warmup": 8,
             "nb_sweeps": 5,
             "chi_max_warmup": 30,
+            "chi_max": 60,
             "normalize": True,
             "eps_truncation": 10**-8,
             "max_iteration": 30,
