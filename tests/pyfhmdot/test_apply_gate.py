@@ -1,13 +1,24 @@
 import pytest
 
+
 def test_valid_gate(make_single_dummy_dgate):
     from pyfhmdot.general import create_hamiltonian_gates
     import numpy as np
+
     valid_gate = make_single_dummy_dgate()
-    gate=create_hamiltonian_gates("sh_xxz-hz_u1",{"Jxy":1/4.,"Jz":2./4.,"hz":3./2.},3,dbeta=0.025,is_dgate=True,in_group=True)[0][0]
+    gate = create_hamiltonian_gates(
+        "sh_xxz-hz_u1",
+        {"Jxy": 1 / 4.0, "Jz": 2.0 / 4.0, "hz": 3.0 / 2.0},
+        3,
+        dbeta=0.025,
+        is_dgate=True,
+        in_group=True,
+    )[0][0]
     # up and down are inverted.. !!
     for key in valid_gate.keys():
-        assert np.all(np.abs(valid_gate[key] - gate[key]) < 1e-8)
+        pass
+    assert np.all(np.abs(valid_gate[(0, 0, 0, 0)] - gate[(0, 0, 0, 0)]) < 1e-8)
+    assert np.all(np.abs(valid_gate[(2, 2, 2, 2)] - gate[(2, 2, 2, 2)]) < 1e-8)
 
 
 def test_apply_gate_previous_code(

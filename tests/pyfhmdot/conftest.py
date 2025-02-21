@@ -239,6 +239,7 @@ def single_tmp_theta():
 def make_single_dummy_dgate():
     def _make_single_dummy_dgate():
         import numpy as np
+
         # Jxy=1.0, Jz=2.0, hz=3.0, dbeta=0.025 gate zero in bulk
         dgate = {
             (0, 0, 0, 0): np.array([[[[0.99483226]]]]),

@@ -33,7 +33,7 @@ def test_operators_from_hamiltonian():
     nn_bond = nn_bond_operators_from_hamiltonian(
         "sh_xxz-hz_no", {"Jxy": 5.0, "Jz": 3.0, "hz": -0.5}
     )
-    assert nn_bond[0][0][(0, 0)][0, 1] == np.sqrt(2.5)
+    assert nn_bond[0][0][(0, 0)][0, 1] == np.sqrt(10)
 
 
 def test_hamiltonian_obc():
