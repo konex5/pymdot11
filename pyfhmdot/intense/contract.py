@@ -21,11 +21,10 @@ def contract_mps_mpo_mps_left(dst,mps_down,mpo,mps_up):
     # tmp_left_bloc
     # tmp
     #     _
-    #  3-| |-4
-    #    | |
     #    | |-2
     #    | |
-    # 0 -|_|-1
+    #    | |-1
+    #    | |
+    #    |_|-0
     #    
-    # trace_mp(dst,tmp_left_bloc,0,3)
     

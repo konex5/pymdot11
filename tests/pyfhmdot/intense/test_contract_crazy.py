@@ -9,4 +9,5 @@ def test_contract_left(make_single_blocs_mps):
     mpo = mpo[0]
     dst = {}
     contract_mps_mpo_mps_left(dst,mps_down_left,mpo,mps_up_left)
+    assert [len(_) for _ in dst.keys()][0] == 3
 
