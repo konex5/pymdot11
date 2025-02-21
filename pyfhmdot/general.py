@@ -191,7 +191,6 @@ def create_hamiltonian_gates(
     )
 
     dgate_imaginary_time = []
-    db = abs(dbeta)
     mdb = -db
     db1F = mdb * factor1 / 2.0
     db1S = mdb * factor1
