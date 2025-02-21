@@ -1,4 +1,56 @@
-from pyfhmdot.intense.mul_mp import multiply_mp, fuse_mp, permute_blocs
+from pyfhmdot.intense.mul_mp import multiply_mp, fuse_mp, permute_blocs, trace_mp
+
+
+def contract_dmps_left_border(dst, dmps):
+    tmp = {}
+    # dmps
+    #    2|
+    # 0 -|_|-3
+    #    1|
+    fuse_mp(tmp, dmps, 0)
+    trace_mp(dst, tmp, 0, 1)
+    # dst
+    #    |_|-0
+
+
+def contract_dmps_right_border(dst, dmps):
+    # mps_down
+    #    2|
+    # 0 -|_|-3
+    #    1|
+    tmp = {}
+    fuse_mp(tmp, dmps, 2)
+    trace_mp(dst, tmp, 1, 2)
+    # dst
+    #  0-|_|
+
+
+def contract_left_very_small_bloc_dmps(dst, left_bloc, dmps):
+    # dmps
+    #    2|
+    # 0 -|_|-3
+    #    1|
+    tmp = {}
+    multiply_mp(tmp, left_bloc, dmps, [0], [0])
+    trace_mp(dst, tmp, 1, 2)
+    # dst
+    #    |_|-0
+
+
+def contract_right_very_small_bloc_dmps(dst, right_bloc, dmps):
+    # dmps
+    #    2|
+    # 0 -|_|-3
+    #    1|
+    tmp = {}
+    multiply_mp(tmp, dmps, right_bloc, [3], [0])
+    trace_mp(dst, tmp, 1, 2)
+    # dst
+    #  0-|_|
+
+
+def contract_left_right_very_small_bloc(dst, left_blocs, right_blocs):
+    multiply_mp(dst, left_blocs, right_blocs, [0], [0])
 
 
 def contract_dmps_dmps_left_border(dst, mps_down, mps_up):
