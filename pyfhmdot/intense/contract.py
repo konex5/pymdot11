@@ -7,7 +7,7 @@ from pyfhmdot.intense.mul_mp import (
 )
 
 
-def contract_left_right_mpo_mpo_permute(dst, left_bloc, right_bloc, mpo_one, mpo_two):
+def contract_left_right_mpo_mpo_permute(dst, left_bloc, mpo_one, mpo_two,right_bloc):
     # mpo
     #    2|
     # 0 -|_|-3

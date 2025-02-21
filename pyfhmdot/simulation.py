@@ -433,9 +433,15 @@ def initialize_idmrg(imps_left, imps_right, ham_left, ham_right, ham_supp_left):
     left_bloc = {}
     right_bloc = {}
     contract_mps_mpo_mps_left_border(left_bloc, imps_left[0], ham_left, imps_left[0])
+    for key in list(left_bloc.keys()):
+        if key[0] != key[2]:
+            left_bloc.pop(key)
     contract_mps_mpo_mps_right_border(
         right_bloc, imps_right[0], ham_right, imps_right[0]
     )
+    for key in list(right_bloc.keys()):
+        if key[0] != key[2]:
+            right_bloc.pop(key)
 
     if len(imps_left) == 2:
         tmp = {}
@@ -453,15 +459,26 @@ def idmrg_minimize_two_sites(
     # contract and permute
     env_bloc = {}
     contract_left_right_mpo_mpo_permute(
-        env_bloc, bloc_left, bloc_right, ham_mpo_left, ham_mpo_right
+        env_bloc, bloc_left, ham_mpo_left, ham_mpo_right, bloc_right
     )
     for key in list(env_bloc.keys()):
+        shape=env_bloc[key].shape
+        # if not (
+        #     key[0] == key[4]
+        #     and key[1] == key[5]
+        #     and key[2] == key[6]
+        #     and key[3] == key[7]
+        # ):
+        #     env_bloc.pop(key)
         if not (
-            key[0] == key[4]
-            and key[1] == key[5]
-            and key[2] == key[6]
-            and key[3] == key[7]
-        ):
+            shape[0]*shape[1]*shape[2]*shape[3] == shape[4]*shape[5]*shape[6]*shape[7]
+        ): 
+        #or not (
+        #     key[0] == key[4]
+        #     and key[1] == key[5]
+        #     and key[2] == key[6]
+        #     and key[3] == key[7]
+        #)
             env_bloc.pop(key)
     # minimize energy
     eigenvalues = {}
@@ -483,14 +500,7 @@ def idmrg_minimize_two_sites(
         -1,
         sim_dict["eps_truncation"],
     )
-    #
-    new_bloc_left = {}
-    new_bloc_right = {}
-    contract_left_bloc_mps(new_bloc_left, bloc_left, dst_left, ham_mpo_left, dst_left)
-    contract_right_bloc_mps(
-        new_bloc_right, bloc_right, dst_right, ham_mpo_right, dst_right
-    )
-    return new_bloc_left, new_bloc_right
+    
 
 
 def idmrg_even(
@@ -506,7 +516,7 @@ def idmrg_even(
         tmp_imps_left = {}
         tmp_imps_right = {}
 
-        bloc_left, bloc_right = idmrg_minimize_two_sites(
+        idmrg_minimize_two_sites(
             tmp_imps_left,
             tmp_imps_right,
             bloc_left,
@@ -515,6 +525,20 @@ def idmrg_even(
             ham_mpo[1],
             idmrg_dict,
         )
+        #
+        new_bloc_left = {}
+        new_bloc_right = {}
+        contract_right_bloc_mps(new_bloc_right, bloc_right, tmp_imps_right, ham_mpo[1], tmp_imps_right)
+        contract_left_bloc_mps(new_bloc_left, bloc_left, tmp_imps_left, ham_mpo[0], tmp_imps_left)
+        bloc_left.clear()
+        bloc_right.clear()        
+        bloc_left, bloc_right = new_bloc_left, new_bloc_right
+        for key in list(bloc_left.keys()):
+            if key[0] != key[2]:
+                bloc_left.pop(key)
+        for key in list(bloc_right.keys()):
+            if key[0] != key[2]:
+                bloc_right.pop(key)
 
         dst_imps_left.append(tmp_imps_left)
         dst_imps_right.append(tmp_imps_right)
