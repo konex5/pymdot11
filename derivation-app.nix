@@ -1,12 +1,12 @@
-{ python3Packages, src }: # nbconvert, pandoc
+{ python3Packages, fhmdot, src }: # nbconvert, pandoc
 with python3Packages;
 buildPythonApplication rec {
-  pname = "cli-golden-python";
+  pname = "cli-pyfhmdot";
   version = "0.0";
   inherit src;
 
   # nativeBuildInputs = [ sphinx sphinx_rtd_theme ]; # [ pandoc nbconvert ]
-  propagatedBuildInputs = [ click decorator jinja2 ];
+  propagatedBuildInputs = [ click decorator fhmdot jinja2 ];
 
   checkInputs = [ pytestCheckHook pyjson5 toml ];
   pytestFlagsArray = [ "tests" "-vv" ];

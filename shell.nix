@@ -1,39 +1,18 @@
-{ pkgs ? import <nixpkgs> { config.allowUnfree = true; } }:
+{ pkgs ? import
+    (
+      builtins.fetchTarball {
+        url = "https://github.com/NixOS/nixpkgs/archive/902d91def1efbea804f5158e5999cb113cedf04b.tar.gz";
+        sha256 = "sha256:1ya19ix77k2yn1c2gyzz644576c2qn11llrqhyy0c7a3y4dlwnn9";
+      }
+    )
+    { }
+}:
 
 with pkgs;
 assert hostPlatform.isx86_64;
 
 let
-  vscodeExt = vscode-with-extensions.override {
-    vscodeExtensions = with vscode-extensions;
-      [
-        bbenoist.nix
-        eamodio.gitlens
-        ms-python.python
-        ms-python.vscode-pylance
-        ms-toolsai.jupyter
-      ] ++ vscode-utils.extensionsFromVscodeMarketplace [
-        {
-          name = "emacs-mcx";
-          publisher = "tuttieee";
-          version = "0.31.0";
-          sha256 = "McSWrOSYM3sMtZt48iStiUvfAXURGk16CHKfBHKj5Zk=";
-        }
-        {
-          name = "restructuredtext";
-          publisher = "lextudio";
-          version = "135.0.0";
-          sha256 = "yjPS9fZ628bfU34DsiUmZkOleRzW6EWY8DUjIU4wp9w=";
-        }
-      ];
-  };
   pythonEnv = python3.withPackages (ps: with ps; [
-    #------------#
-    # additional #
-    #------------#
-    decorator
-    pyjson5
-    toml
     #------------#
     # pydevtools #
     #------------#
@@ -54,20 +33,20 @@ let
     jupyter-sphinx
     sphinx
     sphinx_rtd_theme
-    nbformat
-    nbconvert
+    # nbformat
+    # nbconvert
   ] ++ lib.optionals (!isPy39) [ python-language-server ]);
 in
 mkShell {
-  propagatedBuildInputs = [ pythonEnv ];
-  nativeBuildInputs = [ bashCompletion bashInteractive cacert emacs-nox git gnumake less more nixpkgs-fmt pandoc ] ++ lib.optionals (hostPlatform.isLinux) [ vscodeExt ]
-    ++ [ black sphinx yapf ];
+  propagatedBuildInputs = [ ];
+  nativeBuildInputs = [ bashCompletion bashInteractive pythonEnv ];
   buildInputs = [ ] ++ lib.optionals (hostPlatform.isLinux) [ glibcLocales ];
 
   LANG = "en_US.UTF-8";
 
   shellHook = ''
-    export HOME=$(pwd)
+    mkdir -p $(pwd)/.trash_config/
+    export HOME=$(pwd)/.trash_config
     export PYTHONPATH=$PWD:$PYTHONPATH
     export SSL_CERT_FILE=${cacert}/etc/ssl/certs/ca-bundle.crt
   '';
