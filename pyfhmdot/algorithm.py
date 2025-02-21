@@ -138,9 +138,7 @@ def sweep(size, *, from_site=None, to_site=None):
 
 def print_single(size, site_i):
     return "\r" + "".join(
-        ["A" for _ in range(site_i-1)]
-        + ["*"]
-        + ["B" for _ in range(site_i-2, size, 1)]
+        ["A" for _ in range(site_i - 1)] + ["*"] + ["B" for _ in range(site_i, size, 1)]
     )
 
 
@@ -148,14 +146,111 @@ def print_double(size, site_i):
     return "\r" + "".join(
         ["A" for _ in range(site_i - 1)]
         + ["*="]
-        + ["B" for _ in range(site_i-1, size, 1)]
+        + ["B" for _ in range(site_i - 1, size, 1)]
     )
 
 
-def sweep_eleven_times(
-    size, *, start_position, end_position, apply_function, start_odd_bonds=True
+def apply_UM(A, B):
+    pass
+
+
+def apply_MV(A, B):
+    pass
+
+
+def apply_UM_slow(A, B):
+    pass
+
+
+def apply_MV_slow(A, B):
+    pass
+
+
+def apply_gate_UM(A, B, theta):
+    pass
+
+
+def apply_gate_MV(A, B, theta):
+    pass
+
+
+def sweep_move(size, *, start_position, end_position, apply_UM, apply_MV, **kwargs):
+    if start_position < end_position:
+        for site_i in sweep(size, from_site=start_position, to_site=end_position):
+            apply_UM(kwargs["mps"][site_i - 1], kwargs["mps"][site_i])
+    else:
+        for site_i in sweep(size, from_site=start_position, to_site=end_position):
+            apply_MV(kwargs["mps"][site_i - 1], kwargs["mps"][site_i])
+
+
+def sweep_and_apply(
+    size,
+    *,
+    start_position,
+    end_position,
+    apply_UM,
+    apply_MV,
+    apply_gate_UM,
+    apply_gate_MV,
+    start_odd_bonds,
+    **kwargs
 ):
-    number_site_even = size % 2 == 0
+
+    should_apply_gate = (start_position % 2) == 0
+    if start_odd_bonds:
+        should_apply_gate = not should_apply_gate
+
+    if start_position < end_position:
+        for site_i in sweep(size, from_site=start_position, to_site=end_position):
+            if should_apply_gate:
+                apply_gate_UM(
+                    kwargs["mps"][site_i - 1],
+                    kwargs["mps"][site_i],
+                    kwargs["theta"][site_i],
+                )
+            else:
+                apply_UM(kwargs["mps"][site_i - 1], kwargs["mps"][site_i])
+            should_apply_gate = not should_apply_gate
+    else:
+        for site_i in sweep(size, from_site=start_position, to_site=end_position):
+            if should_apply_gate:
+                apply_gate_MV(
+                    kwargs["mps"][site_i - 1],
+                    kwargs["mps"][site_i],
+                    kwargs["theta"][site_i],
+                )
+            else:
+                apply_MV(kwargs["mps"][site_i - 1], kwargs["mps"][site_i])
+            should_apply_gate = not should_apply_gate
+
+
+def apply_border(
+    size,
+    *,
+    position,
+    apply_UM,
+    apply_MV,
+    apply_gate_UM,
+    apply_gate_MV,
+    start_odd_bonds=True,
+    **kwargs
+):
+    pass
+
+
+def sweep_eleven_times(
+    size,
+    *,
+    start_position,
+    end_position,
+    apply_UM,
+    apply_MV,
+    apply_gate_UM,
+    apply_gate_MV,
+    start_odd_bonds=True,
+    **kwargs
+):
+
     if start_position is None:
         start_position = 1
     if end_position is None:
@@ -168,21 +263,12 @@ def sweep_eleven_times(
         start_position = size
         right_direction = False
 
-    if (right_direction and start_odd_bonds) or (
-        not right_direction and not start_odd_bonds
-    ):
-        if number_site_even:
-            Rborder = L - 3
+    for _ in range(11):
+        if (_ % 2) == 0:
+            # apply_border(size, position=1,apply_UM,apply_MV,apply_gate_UM,apply_gate_MV,start_odd_bonds,**kwargs)
+            # sweep_and_apply(size, start_position=2,end_position=end_position-2,apply_UM,apply_MV,apply_gate_UM,apply_gate_MV,start_odd_bonds,**kwargs)
+            pass
         else:
-            Rborder = L - 2
-    elif (right_direction and not start_odd_bonds) or (
-        not right_direction and start_odd_bonds
-    ):
-        if number_site_even:
-            Rborder = L - 2
-        else:
-            Rborder = L - 3
-
-
-def apply_eleven_theta_layers(mps, *, gates):
-    pass
+            # apply_border(size, position=size-1,apply_UM,apply_MV,apply_gate_UM,apply_gate_MV,start_odd_bonds,**kwargs)
+            # sweep_and_apply(size, start_position=size-2,end_position=2,apply_UM,apply_MV,apply_gate_UM,apply_gate_MV,start_odd_bonds,**kwargs)
+            pass
