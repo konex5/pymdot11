@@ -1,5 +1,6 @@
 import numpy as _np
 from typing import Dict as _Dict
+from typing import List as _List
 from typing import Optional as _Optional
 
 from pyfhmdot.routine.svd_routine import (
@@ -86,13 +87,13 @@ def theta_to_mm(
         keys, middle, direction_right=conserve_direction_left
     )
 
-    subnewsize_deg = []
+    subnewsize_deg: _List[_List] = []
     slices_degenerate_blocs(theta_blocs, deg, subnewsize_deg)
     nondeg_dims = [theta_blocs[_[1]].shape for _ in nondeg]
 
-    array_of_U = []
-    array_of_S = []
-    array_of_V = []
+    array_of_U : _List[_np.ndarray]= []
+    array_of_S : _List[_np.array]= []
+    array_of_V : _List[_np.ndarray] = []
 
     svd_nondeg(theta_blocs, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V)
     svd_deg(theta_blocs, deg, subnewsize_deg, array_of_U, array_of_S, array_of_V)
