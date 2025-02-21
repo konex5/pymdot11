@@ -1,4 +1,3 @@
-from pyfhmdot.routine import theta_to_um, theta_to_mv
 import pytest
 
 
@@ -178,9 +177,10 @@ def test_multiply_blocs_sparse_with_gate_real(
     assert list(dest_blocs.keys())[0] == (0, 0, 0, 0)
     assert len(dest_blocs.keys()) == 5
     #
+    from pyfhmdot.routine import theta_to_mm
     dest_mps_left = {}
     dest_mps_right = {}
-    theta_to_um(
+    theta_to_mm(
         dest_blocs,
         dest_mps_left,
         dest_mps_right,
@@ -192,6 +192,7 @@ def test_multiply_blocs_sparse_with_gate_real(
             "normalize": True,
             "dw_one_serie": 0,
         },
+        is_um=True
     )
     assert len(dest_mps_left.keys()) == 3
     assert len(dest_mps_right.keys()) == 5
@@ -201,7 +202,7 @@ def test_multiply_blocs_sparse_with_gate_real(
         new_dest_blocs[(keys[0], keys[1], keys[2], 2)] = dest_blocs[keys]
     dest_mps_left = {}
     dest_mps_right = {}
-    theta_to_mv(
+    theta_to_mm(
         new_dest_blocs,
         dest_mps_left,
         dest_mps_right,
@@ -213,6 +214,7 @@ def test_multiply_blocs_sparse_with_gate_real(
             "normalize": True,
             "dw_one_serie": 0,
         },
+        is_um=False
     )
     assert len(dest_mps_left.keys()) == 5
     assert len(dest_mps_right.keys()) == 3

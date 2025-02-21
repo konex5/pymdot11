@@ -1,4 +1,3 @@
-from pyfhmdot.routine import theta_to_um, theta_to_mv
 from tests.pyfhmdot.test_multiply_blocs_with_gate import (
     test_multiply_blocs_sparse_with_gate_fake,
     test_multiply_blocs_sparse_with_gate_fake_onedir_qnum,
@@ -158,9 +157,10 @@ def test_check_slices_degenerate_blocs_dimtwo(theta_blocs_large):
 
 @pytest.mark.skip
 def test_mpsQ_svd_th2Um(theta_blocs_small):
+    from pyfhmdot.routine import theta_to_mm
     lhs_blocs = {}
     rhs_blocs = {}
-    theta_to_um(
+    theta_to_mm(
         theta_blocs_small,
         lhs_blocs,
         rhs_blocs,
@@ -171,15 +171,17 @@ def test_mpsQ_svd_th2Um(theta_blocs_small):
             "normalize": True,
             "dw_one_serie": 0,
         },
+        is_um=True
     )
     pass
 
 
 @pytest.mark.skip
 def test_mpsQ_svd_th2mV(theta_blocs_small):
+    from pyfhmdot.routine import theta_to_mm
     lhs_blocs = {}
     rhs_blocs = {}
-    theta_to_mv(
+    theta_to_mm(
         theta_blocs_small,
         lhs_blocs,
         rhs_blocs,
@@ -190,5 +192,6 @@ def test_mpsQ_svd_th2mV(theta_blocs_small):
             "normalize": True,
             "dw_one_serie": 0,
         },
+        is_um=False
     )
     pass
