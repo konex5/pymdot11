@@ -42,12 +42,61 @@ def prepare_index_target_no_gate(
     return tmp
 
 
-def prepare_index_target_with_gate(lhs_indices, rhs_indices, th_indices):
+def prepare_index_target_with_gate(
+    lhs_indices, rhs_indices, theta_indices, left_right_conservation=False
+):
     index_target_no_gate = prepare_index_target_no_gate(lhs_indices, rhs_indices)
-    pass
+    target_key12_with_theta = []
+    for _, before_theta_indices, _, _ in index_target_no_gate:
+        if not left_right_conservation:
+            keep_it_left_right = True
+        elif (
+            left_right_conservation
+            and before_theta_indices[0] + target_key12_with_theta[0]
+            == target_key12_with_theta[1] + before_theta_indices[3]
+        ):  # simple qnum
+            keep_it_left_right = True
+        else:
+            keep_it_left_right = False
+        if (
+            before_theta_indices[1] == target_key12_with_theta[2]
+            and before_theta_indices[2] == target_key12_with_theta[3]
+        ) and keep_it_left_right:
+            target_key12_with_theta.append(
+                before_theta_indices,
+                (
+                    before_theta_indices[0],
+                    theta_indices[0],
+                    theta_indices[1],
+                    before_theta_indices[3],
+                ),
+            )
+    if len(target_key12_with_theta) == 0:
+        raise ("No targeted indices possible for contraction")
+    target_key12_with_theta_zipped = list(zip(*sorted(target_key12_with_theta)))
+    tmp = []
+    for l in range(len(target_key12_with_theta_zipped[0])):
+        if (
+            target_key12_with_theta_zipped[0].index(
+                target_key12_with_theta_zipped[0][l]
+            )
+            == l
+        ):
+            is_degenerate = True
+        else:
+            is_degenerate = False
+        tmp.append(
+            (
+                is_degenerate,
+                target_key12_with_theta_zipped[0][l],
+                target_key12_with_theta_zipped[1][l],
+            )
+        )
+    return tmp
 
 
 def multiply_blocs_no_gate(dest_blocs, lhs_blocs, rhs_blocs):
+    dest_blocs = {}
     index_target_no_gate = prepare_index_target_no_gate(
         lhs_blocs.keys(), rhs_blocs.keys()
     )
@@ -66,8 +115,26 @@ def multiply_blocs_no_gate(dest_blocs, lhs_blocs, rhs_blocs):
             )
 
 
-def multiply_blocs_with_gate():
-    pass
+def multiply_blocs_with_gate(dest_blocs, lhs_blocs, rhs_blocs, theta_blocs):
+    tmp_blocs = {}
+    multiply_blocs_no_gate(tmp_blocs, lhs_blocs, rhs_blocs)
+    dest_blocs = {}
+    index_target_with_gate = prepare_index_target_with_gate(
+        lhs_blocs.keys(), rhs_blocs.keys(), theta_blocs.keys()
+    )
+    for new, target, it1, it2 in index_target_with_gate:
+        if new:
+            dest_blocs[target] = _np.tensordot(
+                theta_blocs[it1],
+                tmp_blocs[it2],
+                axes=([2, 3], [1, 2]),
+            ).transpose([2, 0, 1, 3])
+        else:
+            dest_blocs[target] += _np.tensordot(
+                theta_blocs[it1],
+                tmp_blocs[it2],
+                axes=([2, 3], [1, 2]),
+            ).transpose([2, 0, 1, 3])
 
 
 def prepare_targets(old_blocks1, old_blocks2, index2contract):
