@@ -94,7 +94,8 @@ def apply_gate_on_mm_at(
         lhs_blocs=mps[position - 1],
         rhs_blocs=mps[position],
         gate_blocs=gate[position - 1],
-        conserve_left_right=conserve_left_right_before,
+        conserve_left_right_before=False,
+        conserve_left_right_after=conserve_left_right_before,
     )
     mps[position - 1].clear()
     mps[position].clear()
@@ -135,17 +136,14 @@ def should_apply_gate(size, layer, position, start_left, start_odd_bonds):
     is_even = size % 2 == 0
     is_currently_start_left = (layer % 2 == 0) == start_left
     is_currently_applying_left = (position % 2 == 1) == start_odd_bonds
-    if is_even:
-        if is_currently_start_left:
-            return is_currently_applying_left
-        else:
-            return not is_currently_applying_left
+    
+    if is_currently_start_left:
+        return is_currently_applying_left
     else:
-        if not is_currently_start_left:
-            return is_currently_applying_left
-        else:
+        if is_even:
             return not is_currently_applying_left
-
+        else:
+            return is_currently_applying_left
 
 def sweep_eleven_times_easy(
     size,
@@ -404,7 +402,7 @@ def sweep_eleven_times(
                 print_double(size, l, "*B")
                 apply_mm_at(
                     mps,
-                    l + 1,
+                    l,
                     dw_dict,
                     chi_max,
                     normalize,
