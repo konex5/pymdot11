@@ -30,7 +30,7 @@ def permute_blocs(new_blocks, old_blocks, map_old2new):
         )
 
 
-def fuse_mpo(dst_blocs, mpo_blocs, index):
+def fuse_mp(dst_blocs, mpo_blocs, index):
     """
     This method is used for ED only
     fuse index and index+1
@@ -60,7 +60,7 @@ def split_mpo():
     pass
 
 
-def trace_mpo(dst_blocs, mpo_blocs, index1, index2):
+def trace_mp(dst_blocs, mpo_blocs, index1, index2):
     for it in mpo_blocs.keys():
         dst_indices = tuple([_ for i, _ in enumerate(it) if i not in [index1, index2]])
         if dst_indices in dst_blocs.keys():
@@ -83,19 +83,19 @@ def indices_dst_mul_mpo(
 
     for left_index in left_indices:
         for right_index in right_indices:
-            if left_index[lind] == right_index[rind]:
+            if _np.all([left_index[lind[i]] == right_index[rind[i]] for i in range(len(lind))]):
                 about_indices_to_contract.append(
                     (
                         tuple(
                             [
                                 left_index[i]
                                 for i in range(len(left_index))
-                                if i is not lind
+                                if i not in lind
                             ]
                             + [
                                 right_index[i]
                                 for i in range(len(right_index))
-                                if i is not rind
+                                if i not in rind
                             ]
                         ),
                         left_index,
@@ -129,24 +129,12 @@ def multiply_mp(
             new_blocks[target] = _np.tensordot(
                 old_blocks1[it1],
                 old_blocks2[it2],
-                axes=(2, 0),
+                axes=(index1, index2),
             )
         else:
             new_blocks[target] += _np.tensordot(
                 old_blocks1[it1],
                 old_blocks2[it2],
-                axes=(2, 0),
+                axes=(index1, index2),
             )
 
-
-def trace_mp(
-    new_blocks: _Dict[tuple, _np.ndarray],
-    old_blocks1: _Dict[tuple, _np.ndarray],
-    old_blocks2: _Dict[tuple, _np.ndarray],
-    index1: int,
-    index2: int,
-) -> None:
-    """
-    This method is used for ED
-    """
-    pass
