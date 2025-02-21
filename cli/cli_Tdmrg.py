@@ -4,15 +4,20 @@
 import argparse
 import sys
 import os
+from pyfhmdot.dynamical import dynamical_dmps
 
 from pyfhmdot.general import (
     load_model_bdmrg_simulation,
     load_model_info_size,
     load_mps,
 )
+from pyfhmdot.utils.iotools import (
+    check_filename_and_extension_h5,
+    check_filename_and_extension_to_create_h5,
+)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="cli, create maximal entangled state")
+    parser = argparse.ArgumentParser(description="cli, run Tdmrg simulation")
     parser.add_argument(
         "-G",
         "--gates",
@@ -33,7 +38,23 @@ if __name__ == "__main__":
         "-o", "--output", type=str, action="store", help="output path", required=True
     )
 
-    arguments = parser.parse_args()
+    # arguments = parser.parse_args()
+    arguments = parser.parse_args(
+        ["-G", "/tmp/hamiltonian_gates.h5", "-M", "/tmp/2B_00.0000.h5", "-o", "/tmp"]
+    )
+
+    if not check_filename_and_extension_h5(arguments.gates):
+        sys.exit(
+            f"cli_Tdmrg.py: error: the hamiltonian path {arguments.gates} is not a valid path."
+        )
+    if not check_filename_and_extension_h5(arguments.dmps):
+        sys.exit(
+            f"cli_Tdmrg.py: error: the hamiltonian path {arguments.dmps} is not a valid path."
+        )
+    if not os.path.exists(os.path.dirname(arguments.output)):
+        sys.exit(
+            f"cli_Tdmrg.py: error: the output dirpath {os.path.dirname(arguments.output)} is not a valid directory path."
+        )
 
     size = load_model_info_size(arguments.gates)
     bdmrg_simulation_parameters = load_model_bdmrg_simulation(arguments.gates)
@@ -43,4 +64,4 @@ if __name__ == "__main__":
     for st in range(4):
         ggate.append(load_mps(arguments.gates, size - 1, folder=f"TEMP_GATE_{st:02g}"))
 
-    # dynamical_dmps(dmps,ggate,bdmrg_simulation_parameters)
+    dynamical_dmps(dmps, ggate, bdmrg_simulation_parameters)
