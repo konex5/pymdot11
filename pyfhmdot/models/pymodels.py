@@ -649,13 +649,13 @@ def _mpo_from_operators(id_bloc, on_site, nn_bond_left, nn_bond_right):
         blocks[(bl_dimL, idx[0], idx[1], bl_dimR)] = val.reshape(
             tuple([1] + list(val.shape) + [1])
         )
-
+    # on_site
     for idx, val in on_site[0].items():
         blocks[(bl_dimL, idx[0], idx[1], 0)] = 0.5 * val.reshape(
             tuple([1] + list(val.shape) + [1])
         )  # appear twice in the bulk
 
-    # bond
+    # nn_bond
     for i in range(1, bl_dimR, 1):
         for idxb, valb in nn_bond_right[i - 1].items():
             blocks[(i, idxb[0], idxb[1], 0)] = valb.reshape(
@@ -666,6 +666,54 @@ def _mpo_from_operators(id_bloc, on_site, nn_bond_left, nn_bond_right):
         for idxa, vala in nn_bond_left[i - 1].items():
             blocks[(bl_dimL, idxa[0], idxa[1], i)] = vala.reshape(
                 tuple([1] + list(vala.shape) + [1])
+            )
+
+    return blocks
+
+
+def _mpo_from_operators_left_border(id_bloc, on_site, nn_bond_right):
+    blocks = {}
+    bl_dimR = len(nn_bond_right) + 1
+
+    # id
+    for idx, val in id_bloc.items():
+        blocks[(0, idx[0], idx[1], bl_dimR)] = val.reshape(
+            tuple([1] + list(val.shape) + [1])
+        )
+
+    # on site
+    for idx, val in on_site[0].items():
+        blocks[(0, idx[0], idx[1], 0)] = val.reshape(tuple([1] + list(val.shape) + [1]))
+
+    # nn_bond
+    for i in range(1, bl_dimR, 1):
+        for idxa, vala in nn_bond_right[i - 1].items():
+            blocks[(0, idxa[0], idxa[1], i)] = vala.reshape(
+                tuple([1] + list(vala.shape) + [1])
+            )
+
+    return blocks
+
+
+def _mpo_from_operators_right_border(id_bloc, on_site, nn_bond_left):
+    blocks = {}
+    bl_dimL = len(nn_bond_left) + 1
+
+    # id
+    for idx, val in id_bloc.items():
+        blocks[(0, idx[0], idx[1], 0)] = val.reshape(tuple([1] + list(val.shape) + [1]))
+
+    # on site
+    for idx, val in on_site[0].items():
+        blocks[(bl_dimL, idx[0], idx[1], 0)] = val.reshape(
+            tuple([1] + list(val.shape) + [1])
+        )
+
+    # nn_bond
+    for i in range(1, bl_dimL, 1):
+        for idxb, valb in nn_bond_left[i - 1].items():
+            blocks[(i, idxb[0], idxb[1], 0)] = valb.reshape(
+                tuple([1] + list(valb.shape) + [1])
             )
 
     return blocks
@@ -703,11 +751,9 @@ def hamiltonian_obc(model_name, parameters, size):
 
     for site_i in range(size):
         if site_i == 0:
-            # mpo.append(_hamiltonian_mpo_leftborder(onsite[0], onbond[0], qn))
-            pass
+            mpo.append(_mpo_from_operators_left_border(id_bloc, on_site, nn_bond_right))
         elif site_i == size - 1:
-            # mpo.append(_hamiltonian_mpo_rightborder(onsite[L - 1], onbond[L - 2], qn))
-            pass
+            mpo.append(_mpo_from_operators_right_border(id_bloc, on_site, nn_bond_left))
         else:
             mpo.append(
                 _mpo_from_operators(id_bloc, on_site, nn_bond_left, nn_bond_right)

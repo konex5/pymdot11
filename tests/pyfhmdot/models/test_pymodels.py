@@ -41,4 +41,7 @@ def test_hamiltonian_obc():
     from pyfhmdot.models.pymodels import hamiltonian_obc
 
     mpo = hamiltonian_obc("sh_xxz-hz_u1", {"Jxy": 7, "Jz": -5, "hz": 3}, size=10)
+    assert mpo[0][(0, 1, 1, 4)][0, 0, 0, 0] == 1
     assert mpo[1][(0, 0, 0, 0)][0, 0, 0, 0] == 1
+    assert mpo[-1][(0, 1, 1, 0)][0, 0, 0, 0] == 1
+    assert mpo[-1][(4, 1, 1, 0)][0, 0, 0, 0] == 3
