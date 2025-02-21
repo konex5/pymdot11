@@ -1,6 +1,10 @@
 import pytest
 import numpy as np
-from pyfhmdot.contract import prepare_index_target_no_gate, multiply_blocs_no_gate
+from pyfhmdot.contract import (
+    prepare_index_target_no_gate,
+    multiply_blocs_no_gate,
+    multiply_blocs_with_gate,
+)
 
 
 lhs_indices = [
@@ -77,13 +81,36 @@ def mb():
     return b
 
 
+def mtheta():
+    t = np.ndarray((2, 2, 2, 2))
+    t.fill(0)
+    t[0, 0, 0, 0] = -2
+    t[1, 1, 0, 0] = -5
+    t[1, 0, 1, 0] = 3
+    t[1, 0, 0, 1] = -1
+    return t
+
+
 lhs_blocs = {(0, 0, 0): ma(), (0, 0, 1): ma(), (0, 1, 0): ma()}
 rhs_blocs = {(0, 1, 0): mb(), (1, 1, 0): mb()}
+theta_blocs = {
+    (0, 1, 0, 0): mtheta(),
+    (1, 1, 0, 0): mtheta(),
+    (1, 0, 1, 0): mtheta(),
+    (0, 1, 0, 1): mtheta(),
+}
 
 
 @pytest.mark.parametrize("lhs_blocs", [lhs_blocs])
 @pytest.mark.parametrize("rhs_blocs", [rhs_blocs])
-def test_prepare_index_target_with_gate(lhs_blocs, rhs_blocs):
-    dest_blocs = {}
-    multiply_blocs_no_gate(dest_blocs, lhs_blocs, rhs_blocs)
+def test_prepare_index_target_no_gate(lhs_blocs, rhs_blocs):
+    dest_blocs = multiply_blocs_no_gate(lhs_blocs, rhs_blocs)
+    assert dest_blocs[(0, 0, 1, 0)].shape == (3, 2, 2, 5)
+
+
+@pytest.mark.parametrize("lhs_blocs", [lhs_blocs])
+@pytest.mark.parametrize("rhs_blocs", [rhs_blocs])
+@pytest.mark.parametrize("theta_blocs", [theta_blocs])
+def test_prepare_index_target_with_gate(lhs_blocs, rhs_blocs, theta_blocs):
+    dest_blocs = multiply_blocs_with_gate(lhs_blocs, rhs_blocs, theta_blocs)
     assert dest_blocs[(0, 0, 1, 0)].shape == (3, 2, 2, 5)
