@@ -1,9 +1,13 @@
 from copy import deepcopy as _copy
 
-from pyfhmdot.intense.contract import contract_mps_mpo_mps_left_border as _contract_left_border
+from pyfhmdot.intense.contract import (
+    contract_mps_mpo_mps_left_border as _contract_left_border,
+)
 from pyfhmdot.intense.contract import contract_left_bloc_mps as _contract_left
 
-from pyfhmdot.intense.contract import contract_mps_mpo_mps_right_border as _contract_right_border
+from pyfhmdot.intense.contract import (
+    contract_mps_mpo_mps_right_border as _contract_right_border,
+)
 from pyfhmdot.intense.contract import contract_right_bloc_mps as _contract_right
 
 from pyfhmdot.intense.contract import contract_left_right_bloc as _contract_left_right
@@ -11,7 +15,7 @@ from pyfhmdot.intense.contract import contract_left_right_bloc as _contract_left
 
 def measure_mps_mpo_mps(mps_one, mpo, mps_two, position=-1):
     if position == -1:
-        position = len(mps_one)/2
+        position = len(mps_one) / 2
 
     tmp_left = {}
     _contract_left_border(tmp_left, mps_one[0], mpo[0], mps_two[0])
