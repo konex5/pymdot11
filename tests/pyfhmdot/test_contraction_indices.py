@@ -1,12 +1,11 @@
 import pytest
 
-from pyfhmdot.contract import (
-    indices_prepare_destination_without_gate,
-    indices_theta_prepare_conservation_for_gate,
-)
-
 
 def test_prepare_targets_two_mps_without_gate(lhs_indices, rhs_indices):
+    from pyfhmdot.indices import (
+        indices_prepare_destination_without_gate,
+    )
+
     destination_indices = indices_prepare_destination_without_gate(
         lhs_indices, rhs_indices, conserve_left_right=False
     )
@@ -35,6 +34,11 @@ def test_prepare_targets_two_mps_without_gate(lhs_indices, rhs_indices):
 
 
 def test_prepare_targets_two_mps_without_gate(lhs_indices, rhs_indices, gate_indices):
+    from pyfhmdot.indices import (
+        indices_prepare_destination_without_gate,
+        indices_theta_prepare_conservation_for_gate,
+    )
+
     dst_indices = indices_prepare_destination_without_gate(
         lhs_indices, rhs_indices, conserve_left_right=False
     )
