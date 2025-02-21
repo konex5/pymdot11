@@ -457,7 +457,7 @@ def sweep_eleven_times(
         dw_dict["dw_total"] += dw_dict["dw_one_serie"]
 
 
-def initialize_idmrg(
+def initialize_idmrg_even_size(
     dst_left_bloc,
     imps_left,
     dst_right_bloc,
