@@ -2,7 +2,8 @@ from pyfhmdot.algorithm import apply_mm_at, apply_gate_on_mm_at
 
 # from logging import makeLogRecord
 
-from pyfhmdot.intense.contract import contract_left_bloc_mps, contract_mps_mpo_mps_left_border, contract_mps_mpo_mps_right_border
+from pyfhmdot.intense.contract import contract_left_bloc_mps, contract_mps_mpo_mps_left_border, contract_mps_mpo_mps_right_border, contract_right_bloc_mps
+from pyfhmdot.routine.eig_routine import smallest_eigenvectors_from_scipy
 
 
 def sweep(size, *, from_site=None, to_site=None):
@@ -441,8 +442,20 @@ def initialize_idmrg(dst_imps_left, dst_imps_right, ham_left, ham_right, ham_sup
 
 
 def idmrg_minimize_two_sites(dst_left, dst_right, bloc_left, bloc_right, ham_mpo_left, ham_mpo_right, sim_dict):
+    # contract and permute
+    tmp = {}
+
     
-    pass
+    # minimize energy
+    #smallest_eigenvectors_from_scipy()
+    
+    
+    #
+    new_bloc_left = {}
+    new_bloc_right = {}
+    contract_left_bloc_mps(new_bloc_left, bloc_left, dst_left, ham_mpo_left, dst_left)
+    contract_right_bloc_mps(new_bloc_right, bloc_right, dst_right, ham_mpo_right, dst_right)
+    return new_bloc_left, new_bloc_right
 
 
 def idmrg_even(dst_imps_left, dst_imps_right, bloc_left, bloc_right, ham_mpo, idmrg_dict, iterations):
