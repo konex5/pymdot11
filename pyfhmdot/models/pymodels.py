@@ -637,100 +637,38 @@ def nn_bond_operators_from_hamiltonian(name, parameters, *, weight_on_left=None)
 """
 
 
-def _mpo_from_operators(id_bloc,on_site, nn_bond_left, nn_bond_right):
-    blocks = []
-    
+def _mpo_from_operators(id_bloc, on_site, nn_bond_left, nn_bond_right):
+    blocks = {}
+
     bl_dimL = len(nn_bond_left) + 1
     bl_dimR = len(nn_bond_right) + 1
 
     # id
     for idx, val in id_bloc.items():
-        blocks.append(
-            [
-                (0, idx[0], idx[1], 0),
-                val.reshape(tuple([1] + list(val.shape) + [1])),
-            ]
+        blocks[(0, idx[0], idx[1], 0)] = val.reshape(tuple([1] + list(val.shape) + [1]))
+        blocks[(bl_dimL, idx[0], idx[1], bl_dimR)] = val.reshape(
+            tuple([1] + list(val.shape) + [1])
         )
-        blocks.append(
-            [
-                (bl_dimL, idx[0], idx[1], bl_dimR),
-                val.reshape(tuple([1] + list(val.shape) + [1])),
-            ]
-        )
-    
-    tmpblocks = []
+
     for idx, val in on_site[0].items():
-        tmpblocks.append(
-            [
-                (bl_dimL, idx[0], idx[1], 0),
-                0.5*val.reshape(tuple([1] + list(val.shape) + [1])), # appear twice in the bulk
-            ]
-        )
+        blocks[(bl_dimL, idx[0], idx[1], 0)] = 0.5 * val.reshape(
+            tuple([1] + list(val.shape) + [1])
+        )  # appear twice in the bulk
 
     # bond
-    for i in range(1,bl_dimR,1):
-        for idxb, valb in nn_bond_right[i-1].items():
-            blocks.append(
-                [
-                    (i, idxb[0], idxb[1], 0),
-                    valb.reshape(tuple([1] + list(valb.shape) + [1])),
-                ]
+    for i in range(1, bl_dimR, 1):
+        for idxb, valb in nn_bond_right[i - 1].items():
+            blocks[(i, idxb[0], idxb[1], 0)] = valb.reshape(
+                tuple([1] + list(valb.shape) + [1])
             )
-    for i in range(1,bl_dimL,1):
-        for idxa, vala in nn_bond_left[i-1].items():
-            blocks.append(
-                [
-                    (bl_dimL, idxa[0], idxa[1], i),
-                    vala.reshape(tuple([1] + list(vala.shape) + [1])),
-                ]
+
+    for i in range(1, bl_dimL, 1):
+        for idxa, vala in nn_bond_left[i - 1].items():
+            blocks[(bl_dimL, idxa[0], idxa[1], i)] = vala.reshape(
+                tuple([1] + list(vala.shape) + [1])
             )
 
     return blocks
-
-
-def _hamiltonian_mpo_border(id_bloc,on_site, nn_bond_left, nn_bond_right,*,is_left_border=True):
-    if is_left_border:
-        bl_dim = len(nn_bond_left) + 1
-    else:
-        bl_dim = len(nn_bond_right) + 1
-    
-    blocks = {}
-    for idx, val in val:
-        blocks[
-                (0, idx[0], idx[1], 0)] = val.reshape(tuple([1] + list(val.shape) + [1])),
-
-    # on site
-    tmpblocks = {}
-    for param, name in site_M:
-        if isinstance(param, _ntype):
-            alpha, idval = operator(name, quantum_name)
-            for idx, val in idval:
-                tmpblocks.append(
-                    [
-                        (bl_dimL, idx[0], idx[1], 0),
-                        val.reshape(tuple([1] + list(val.shape) + [1])),
-                    ]
-                )
-    addblocks = onsite_fuse_for_mpo(tmpblocks)
-    for l in range(len(addblocks)):
-        blocks.append(addblocks.pop())
-
-    # bond
-    i = 0
-    for param, name in bond_L:
-        i += 1
-        (alpha, idvala), (beta, idvalb) = operator(name, quantum_name)
-        for idxb, valb in idvalb:
-            blocks.append(
-                
-                    (i, idxb[0], idxb[1], 0) :
-                    beta * valb.reshape(tuple([1] + list(valb.shape) + [1])),
-                
-            )
-
-    return blocks
-
-
 
 
 def onsite_fuse_for_mpo(tmpblocks):
@@ -747,29 +685,32 @@ def onsite_fuse_for_mpo(tmpblocks):
                     outblocks[-1][1] += tmpblocks[l][1]
     return outblocks
 
+
 def hamiltonian_obc(model_name, parameters, size):
     """
     qnmodel='sh_xxz-hz_no' or 'ru_ldxxz-hz_u1'
     """
     mpo = []
     head, _, tail = model_name.split("_")
-    id_bloc = single_operator(name=head+"_id_"+tail,coef=1.0)
+    id_bloc = single_operator(name=head + "_id_" + tail, coef=1.0)
     on_site = on_site_operators_from_hamiltonian(model_name, parameters)
     # fuse on_site
-    
+
     # fuse
     nn_bond = nn_bond_operators_from_hamiltonian(model_name, parameters)
     nn_bond_left = [_[0] for _ in nn_bond]
     nn_bond_right = [_[1] for _ in nn_bond]
-    
+
     for site_i in range(size):
         if site_i == 0:
-            pass #mpo.append(_hamiltonian_mpo_leftborder(onsite[0], onbond[0], qn))
+            # mpo.append(_hamiltonian_mpo_leftborder(onsite[0], onbond[0], qn))
+            pass
         elif site_i == size - 1:
-            pass #mpo.append(_hamiltonian_mpo_rightborder(onsite[L - 1], onbond[L - 2], qn))
+            # mpo.append(_hamiltonian_mpo_rightborder(onsite[L - 1], onbond[L - 2], qn))
+            pass
         else:
             mpo.append(
-                _mpo_from_operators(id_bloc,on_site, nn_bond_left, nn_bond_right)
+                _mpo_from_operators(id_bloc, on_site, nn_bond_left, nn_bond_right)
             )
     return mpo
 

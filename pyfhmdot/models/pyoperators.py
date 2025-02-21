@@ -293,8 +293,9 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
         left_name, right_name = name.split("-")
 
         if weight_on_left is None:
-            return single_operator(left_name, _np.sign(coef)*_np.sqrt(_np.abs(coef))), single_operator(
-                right_name, _np.sign(coef)*_np.sqrt(_np.abs(coef))
+            return (
+                single_operator(left_name, _np.sign(coef) * _np.sqrt(_np.abs(coef))),
+                single_operator(right_name, _np.sign(coef) * _np.sqrt(_np.abs(coef))),
             )
         elif weight_on_left:
             return single_operator(left_name, coef), single_operator(right_name, 1.0)
