@@ -110,7 +110,6 @@ def test_potential_middle(theta_blocs_large, theta_blocs_average, theta_blocs_sm
     assert middle_list == [0, 1]
 
 
-@pytest.mark.skip
 def test_find_degeneracy_in_theta(theta_blocs_large):
     from pyfhmdot.routine.indices import (
         degeneracy_in_theta,
@@ -119,16 +118,16 @@ def test_find_degeneracy_in_theta(theta_blocs_large):
 
     middle_list = potential_middle_indices(theta_blocs_large.keys())
     nondeg, degenerate = degeneracy_in_theta(
-        theta_blocs_large.keys(), middle_list, direction_right=True
+        theta_blocs_large.keys(), middle_list, direction_right=1
     )
     assert len(nondeg) == 0
-    assert len(degenerate) == 2
+    assert len(degenerate) == 3
     assert degenerate[0][-1][0] == (0, 0, 0, 0)
     assert degenerate[0][-1][1] == (0, 0, 0, 1)
     assert degenerate[0][-1][2] == (0, 0, 0, 2)
     assert degenerate[0][-1][-1] == (0, 0, 1, 4)
     assert degenerate[1][-1][0] == (0, 1, 0, 0)
-    assert degenerate[1][-1][2] == (0, 1, 0, 2)
+    assert degenerate[1][-1][2] == (0, 1, 1, 0)
 
 
 def test_find_degeneracy_in_theta_with_qcons(theta_blocs_small):
@@ -164,7 +163,6 @@ def test_check_slices_degenerate_blocs_dimone(theta_blocs_small):
     assert len(newsubsize) == 1
 
 
-@pytest.mark.skip
 def test_check_slices_degenerate_blocs_dimtwo(theta_blocs_large):
     from pyfhmdot.routine.indices import (
         degeneracy_in_theta,
@@ -174,8 +172,8 @@ def test_check_slices_degenerate_blocs_dimtwo(theta_blocs_large):
 
     middle_list = potential_middle_indices(theta_blocs_large.keys())
     nondeg, degenerate = degeneracy_in_theta(
-        theta_blocs_large.keys(), middle_list, direction_right=True
+        theta_blocs_large.keys(), middle_list, direction_right=1
     )
     newsubsize = []
     slices_degenerate_blocs(theta_blocs_large, degenerate, newsubsize)
-    assert len(newsubsize) == 2
+    assert len(newsubsize) == 3
