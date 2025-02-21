@@ -7,10 +7,13 @@ from pyfhmdot.initialize import finalize_idmrg_even_size
 
 from pyfhmdot.routine.eig_routine import minimize_theta_with_scipy as minimize_theta
 from pyfhmdot.routine.eig_routine import apply_eigenvalues
+from pyfhmdot.routine.indices import internal_qn_sub, internal_qn_sum
 from pyfhmdot.routine.interface import theta_to_mm
-from pyfhmdot.routine.minimize import minimize_and_move as _minimize_and_move
-
 from pyfhmdot.dmrg_contraction import create_env_blocs, update_left, update_right
+from pyfhmdot.routine.minimize import (
+    minimize_and_move as _minimize_and_move,
+    minimize_on_mm,
+)
 
 
 def sweep(size, *, from_site=None, to_site=None):
@@ -134,9 +137,9 @@ def sweep_eleven_times_hard(
             gate = ggate[1]
 
         if start_left:
-            direction_right = 1
+            direction_right = 2
         else:
-            direction_right = 3
+            direction_right = -2
 
         for l in sweep_on_layer(size, layer, start_left):
             if should_apply_gate(l, start_odd_bonds):
@@ -470,28 +473,20 @@ def dmrg_minimize_two_sites(
     env_bloc = create_env_blocs(bloc_left, ham_mpo_left, ham_mpo_right, bloc_right)
 
     for key in list(env_bloc.keys()):
-        shape = env_bloc[key].shape
-        if (
-            not (key[0] + key[1] in allowed_sector_left)
-            or not (key[3] - key[2] in allowed_sector_right)
-            or not (key[4] + key[5] in allowed_sector_left)
-            or not (key[7] - key[6] in allowed_sector_right)
+        if not (
+            internal_qn_sum(key[0], key[1]) in allowed_sector_left
+            and internal_qn_sum(key[0], key[1]) == internal_qn_sum(key[4], key[5])
+        ) or not (
+            internal_qn_sub(key[3], key[2]) in allowed_sector_right
+            and internal_qn_sub(key[3], key[2]) == internal_qn_sub(key[7], key[6])
         ):
             env_bloc.pop(key)  # quantum conserved is used here
-        elif not (
-            shape[0] * shape[1] * shape[2] * shape[3]
-            == shape[4] * shape[5] * shape[6] * shape[7]
-        ):
-            env_bloc.pop(key)  # non physical blocs
 
     # minimize energy
-    eigenvalues = {}
-    eigenvectors = {}
-    minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
-    apply_eigenvalues(eigenvalues, eigenvectors)
+    theta = minimize_on_mm(env_bloc, None, None, None, driver="scipy")
 
     theta_to_mm(
-        eigenvectors,
+        theta,
         dst_left,
         {},
         sim_dict,
@@ -502,7 +497,7 @@ def dmrg_minimize_two_sites(
         sim_dict["eps_truncation"],
     )
     theta_to_mm(
-        eigenvectors,
+        theta,
         {},
         dst_right,
         sim_dict,
@@ -621,6 +616,7 @@ def dmrg_sweep(
     mps,
     ham,
     left_right,
+    left_right_var,
     chi_max,
     normalize,
     eps,
@@ -635,7 +631,7 @@ def dmrg_sweep(
     size = len(mps)
 
     for layer in range(nb_sweeps):
-        print(f"dmrg sweep warmup {layer+1}/{nb_sweeps}")
+        print(f"dmrg sweep {layer+1}/{nb_sweeps}")
 
         if start_left:
             for l in range(1, size - 2, 1):
@@ -682,6 +678,7 @@ def dmrg_warmup(mps, ham, left_right, sim_dict, *, start_left):
         mps,
         ham,
         left_right,
+        None,
         chi_max=sim_dict["chi_max_warmup"],
         normalize=sim_dict["normalize"],
         eps=sim_dict["eps_truncation"],

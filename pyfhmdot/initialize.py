@@ -5,6 +5,7 @@ from numpy import sqrt as _sqrt
 from numpy import iscomplex as _iscomplex
 from numpy import imag as _imag
 from sys import exit as _exit
+from pyfhmdot.dmrg_contraction import create_env_blocs
 
 from pyfhmdot.models.pymodels import suzu_trotter_obc_exp
 from pyfhmdot.models.pymodels import hamiltonian_obc
@@ -30,6 +31,7 @@ from pyfhmdot.intense.mul_mp import multiply_mp
 from pyfhmdot.routine.eig_routine import minimize_theta_with_scipy as minimize_theta
 from pyfhmdot.routine.eig_routine import apply_eigenvalues
 from pyfhmdot.routine.interface import theta_to_mm
+from pyfhmdot.routine.minimize import minimize_on_mm
 
 
 def create_infinite_hamiltonian(model_name, parameters):
@@ -339,32 +341,22 @@ def finalize_idmrg_even_size(
     )
 
     # contract and permute
-    env_bloc = {}
-    contract_left_right_mpo_mpo_permute(
-        env_bloc, bloc_left, ham_mpo_left, ham_mpo_right, bloc_right
-    )
+    env_bloc = create_env_blocs(bloc_left, ham_mpo_left, ham_mpo_right, bloc_right)
     for key in list(env_bloc.keys()):
-        shape = env_bloc[key].shape
-        if (
-            not (internal_qn_sum(key[0], key[1]) in allowed_sector_left)
-            or not (internal_qn_sub(key[3], key[2]) in allowed_sector_right)
-            or not (internal_qn_sum(key[4], key[5]) in allowed_sector_left)
-            or not (internal_qn_sub(key[7], key[6]) in allowed_sector_right)
+        if not (
+            internal_qn_sum(key[0], key[1]) in allowed_sector_left
+            and internal_qn_sum(key[0], key[1]) == internal_qn_sum(key[4], key[5])
+        ) or not (
+            internal_qn_sub(key[3], key[2]) in allowed_sector_right
+            and internal_qn_sub(key[3], key[2]) == internal_qn_sub(key[7], key[6])
         ):
             env_bloc.pop(key)  # quantum conserved is used here
-        elif not (
-            shape[0] * shape[1] * shape[2] * shape[3]
-            == shape[4] * shape[5] * shape[6] * shape[7]
-        ):
-            env_bloc.pop(key)  # non physical blocs
 
     # minimize energy
-    eigenvalues, eigenvectors = {}, {}
-    minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
-    apply_eigenvalues(eigenvalues, eigenvectors)
+    theta = minimize_on_mm(env_bloc, None, None, None, driver="scipy")
 
     theta_to_mm(
-        eigenvectors,
+        theta,
         dst_left,
         dst_right,
         sim_dict,
