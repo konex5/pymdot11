@@ -11,7 +11,7 @@ from pyfhmdot.utils.general import (
 )
 from pyfhmdot.utils.iotools import check_filename_and_extension_h5
 
-from pyfhmdot.intense.interface import measure_dmps, measure_dmps_dmps, measure_mps_mps
+from pyfhmdot.intense.interface import measure_dmps_mpo_dmps
 
 
 if __name__ == "__main__":
@@ -41,7 +41,7 @@ if __name__ == "__main__":
         required=True,
     )
 
-    arguments = parser.parse_args()
+    arguments = parser.parse_args("-b /tmp/2B_00.0000.h5 -k /tmp/2B_00.0000.h5 -H /tmp/hamiltonian.h5".split(" "))
 
     if not check_filename_and_extension_h5(arguments.bra):
         sys.exit(
@@ -64,5 +64,6 @@ if __name__ == "__main__":
     bra_dmps = load_mps(arguments.bra, size, folder="QMP")
     ham_mpo = load_mps(arguments.hamiltonian, size, folder="MPO")
 
-    measure_hamiltonian(ket_dmps,ham_mpo,bra_dmps)
-    measure_hamiltonian_variance(ket_dmps,ham_mpo,bra_dmps)
+    energy = measure_dmps_mpo_dmps(ket_dmps,ham_mpo,bra_dmps)
+    print(f"<bra|H|ket>={energy}")
+    #measure_dmps_mpo_mpo_dmps(ket_dmps,ham_mpo,bra_dmps)

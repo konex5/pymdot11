@@ -23,3 +23,7 @@ echo "observables"
 ./script/cli_mbracket.py -b /tmp/2B_00.0000_sz_0005/t_00.0000.h5 -k /tmp/2B_00.0000.h5
 
 
+echo "energies"
+./script/cli_energy.py -b /tmp/2B_00.0000.h5 -k /tmp/2B_00.0000.h5 -H /tmp/hamiltonian.h5
+
+
