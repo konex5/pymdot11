@@ -1,6 +1,6 @@
-# A library that provides a golden project
+# A library that provides a dmrg toolbox
 # Copyright (C) 202X
-"""A library that provides a golden project"""
+"""A library that provides a dmrg toolbox"""
 
 # from .utils import iotools
 from .utils.iodicts import check_filename_and_extension
