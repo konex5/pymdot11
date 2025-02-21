@@ -39,16 +39,34 @@ def prepare_index_target_no_gate(
                 target_key12_zipped[2][l],
             )
         )
-        # something is missing, is it left or is it right moving or both? Currently no qnum.. :-()
     return tmp
 
 
 def prepare_index_target_with_gate(lhs_indices, rhs_indices, th_indices):
-    # not sure it will work...
     index_target_no_gate = prepare_index_target_no_gate(lhs_indices, rhs_indices)
-    # with the gate, one will need to add qnums?
-    # maybe not
+    pass
 
+
+def multiply_blocs_no_gate(dest_blocs, lhs_blocs, rhs_blocs):
+    index_target_no_gate = prepare_index_target_no_gate(
+        lhs_blocs.keys(), rhs_blocs.keys()
+    )
+    for new, target, it1, it2 in index_target_no_gate:
+        if new:
+            dest_blocs[target] = _np.tensordot(
+                lhs_blocs[it1],
+                rhs_blocs[it2],
+                axes=[2, 0],
+            )
+        else:
+            dest_blocs[target] += _np.tensordot(
+                lhs_blocs[it1],
+                rhs_blocs[it2],
+                axes=[2, 0],
+            )
+
+
+def multiply_blocs_with_gate():
     pass
 
 
@@ -113,14 +131,5 @@ def contract_arrays(new_blocks, old_blocks1, old_blocks2, index2contract, buildt
 
 
 def multiply_blocs(new_blocks, lhs_blocks, rhs_blocks, index2contract, buildtarget):
-    new_blocks = {}
     buildtarget = prepare_targets(lhs_blocks, rhs_blocks, index2contract)
     contract_arrays(new_blocks, lhs_blocks, rhs_blocks, index2contract, buildtarget)
-
-
-def multiply_blocs():
-    pass
-
-
-def multiply_blocs_with_gate():
-    pass
