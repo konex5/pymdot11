@@ -69,6 +69,8 @@ if __name__ == "__main__":
     ham_mpo = load_mps(arguments.hamiltonian, size, folder="MPO")
 
     energy = measure_dmps_mpo_dmps(ket_dmps, ham_mpo, bra_dmps)
-    print(f"<bra|H|ket>={energy}")
-    variance = measure_dmps_mpo_mpo_dmps(ket_dmps, ham_mpo, ham_mpo, bra_dmps)
-    print(f"<bra|H^2|ket>={variance}")
+    print(f"<bra|H|ket>= {energy}")
+    hsquare = measure_dmps_mpo_mpo_dmps(ket_dmps, ham_mpo, ham_mpo, bra_dmps)
+    print(f"<bra|H^2|ket>= {hsquare}")
+    print(f"<bra|(H-E)^2|ket>= {hsquare-energy**2}")
+    
