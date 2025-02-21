@@ -193,3 +193,11 @@ def split_four_dgate(model_name, dst_dgate, dgate):
             dst_dgate[
                 (key[4], key[6], key[0], key[2], key[1], key[3], key[5], key[7])
             ] = values.transpose(4, 6, 0, 2, 1, 3, 5, 7)
+
+
+def group_dmps(model_name, dst_dmp, mp):
+    reshape_and_group(model_name, dst_dmp, mp, [1, 2])
+
+
+def split_dmps(model_name, dst_mp, dmp):
+    reshape_and_split(model_name, dst_mp, dmp, 1)

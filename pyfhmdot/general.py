@@ -247,3 +247,10 @@ def create_maximal_entangled_state(size, model_name, in_group=False):
             sys.exit(f"The maximal entangled state does not exist for {operator_name}")
         dmps.append(new_blocs)
     return coef, dmps
+
+
+def change_right_index(mp, new_index):
+    dst_mp = {}
+    for key, value in mp.items():
+        dst_mp[(key[0], key[1], new_index)] = value
+    return dst_mp

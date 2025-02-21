@@ -8,13 +8,17 @@ from pyfhmdot.dynamical import dynamical_dmps
 
 from pyfhmdot.general import (
     load_model_bdmrg_simulation,
+    load_model_info_model_name,
     load_model_info_size,
     load_mps,
+    change_right_index,
 )
+from pyfhmdot.models.splitgroup import group_dmps, group_four_dgate
 from pyfhmdot.utils.iotools import (
     check_filename_and_extension_h5,
     check_filename_and_extension_to_create_h5,
 )
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="cli, run Tdmrg simulation")
@@ -57,9 +61,18 @@ if __name__ == "__main__":
         )
 
     size = load_model_info_size(arguments.gates)
+    model_name = load_model_info_model_name(arguments.gates)
     bdmrg_simulation_parameters = load_model_bdmrg_simulation(arguments.gates)
 
-    dmps = load_mps(arguments.dmps, size, folder="QMP")
+    tmp_dmps = load_mps(arguments.dmps, size, folder="QMP")
+    dmps = []
+    for i, tmp in enumerate(tmp_dmps):
+        _ = {}
+        group_dmps(model_name, _, tmp)
+        if i == size - 1:
+            _ = change_right_index(_, 2 * size)
+        dmps.append(_)
+
     ggate = []
     for st in range(4):
         ggate.append(load_mps(arguments.gates, size - 1, folder=f"TEMP_GATE_{st:02g}"))

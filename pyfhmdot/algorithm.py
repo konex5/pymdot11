@@ -203,7 +203,7 @@ def sweep_eleven_times(
         if (is_even and not start_odd_bonds) or (not is_even and start_odd_bonds):
             apply_mm_at(
                 mps,
-                size,
+                size - 1,
                 dw_dict,
                 chi_max,
                 normalize,
