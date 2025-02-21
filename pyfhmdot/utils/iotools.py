@@ -1,50 +1,53 @@
 import h5py as _h5
+import os
 
 
-def check_instance(filepath):
+def create_h5(filepath):
+    if os.path.exists(os.path.dirname(filepath)):
+        with _h5.File(filepath, "w") as _:
+            pass
+
+
+def check_instance_mp(filepath):
     if not _h5.is_hdf5(filepath):
         raise Exception(f" <HDF5> {filepath} is not a valid h5 file")
-    f = _h5.File(filepath, "r")
-    if not "/QMP" in f:
-        raise Exception(" <HDF5> MP is not a valid group in h5 file")
-    if not "/QMP/0001" in f:
-        raise Exception(" <HDF5> MP is void")
-    f.close()
+    with _h5.File(filepath, "r") as f:
+        if not "/QMP" in f:
+            raise Exception(" <HDF5> MP is not a valid group in h5 file")
+        if not "/QMP/0001" in f:
+            raise Exception(" <HDF5> MP is void")
 
 
 def add_dictionary(filepath, folder="INFO", dictionary={}):
-    f = _h5.File(filepath, "r+")
-    grp = f.create_group(folder)
-    for k, v in dictionary.items():
-        grp.create_dataset(k, data=v)
-    f.close()
+    with _h5.File(filepath, "r+") as f:
+        grp = f.create_group(folder)
+        for k, v in dictionary.items():
+            grp.create_dataset(k, data=v)
 
 
-def load_dictionary(filepath, folder="MODEL"):
-    f = _h5.File(filepath, "r")
-    grp = f[folder]
-    dictionary = dict()
-    for key in grp.keys():
-        dictionary[key] = grp[key].value
-    f.close()
-    return dictionary
+def load_dictionary(filepath, dictionary, folder="MODEL"):
+    with _h5.File(filepath, "r") as f:
+        grp = f[folder]
+        for key in grp.keys():
+            dictionary[key] = grp[key].value
 
 
 def write_save_mp(filepath, MP):
-    f = _h5.File(filepath, "w")
-    grpMP = f.create_group("MP")
-    for i in range(len(MP)):
-        grpMP.create_dataset(
-            "{0:04g}".format(i + 1), data=MP[i], compression="gzip", compression_opts=9
-        )
-    f.close()
+    with _h5.File(filepath, "w") as f:
+        grpMP = f.create_group("MP")
+        for i in range(len(MP)):
+            grpMP.create_dataset(
+                "{0:04g}".format(i + 1),
+                data=MP[i],
+                compression="gzip",
+                compression_opts=9,
+            )
 
 
 def load_generator_mp(filepath):
-    f = _h5.File(filepath, "r")
-    for m in f["/MP"].values():
-        yield m.value
-    f.close()
+    with _h5.File(filepath, "r") as f:
+        for m in f["/MP"].values():
+            yield m.value
 
 
 def writeIn_QMP_dict(QMP_dict, file_path, name="QMP", site=0):
