@@ -55,9 +55,7 @@ def test_multiply_blocs_sparse_with_qcons(
     lhs_blocs = make_single_blocs_mps(lhs_indices, lhs_chi_shapes, d=1)
     rhs_blocs = make_single_blocs_mps(rhs_indices, rhs_chi_shapes, d=1)
     dest_blocs = {}
-    mm_to_theta_no_gate(
-        dest_blocs, lhs_blocs, rhs_blocs, conserve_left_right=True
-    )
+    mm_to_theta_no_gate(dest_blocs, lhs_blocs, rhs_blocs, conserve_left_right=True)
     assert list(dest_blocs.keys())[0] == (0, 0, 0, 0)
     assert len(dest_blocs.keys()) == 3
     assert dest_blocs[(0, 0, 0, 0)].shape == (1, 1, 1, 2)
@@ -152,6 +150,7 @@ def test_multiply_blocs_sparse_with_gate_fake_with_qcons(
     assert len(dest_blocs.keys()) == 3
     return dest_blocs
 
+
 @pytest.mark.skip
 def test_multiply_blocs_sparse_with_gate_real(
     make_maximal_entangled_state_u1, make_single_dummy_dgate
@@ -178,6 +177,7 @@ def test_multiply_blocs_sparse_with_gate_real(
     assert len(dest_blocs.keys()) == 5
     #
     from pyfhmdot.routine import theta_to_mm
+
     dest_mps_left = {}
     dest_mps_right = {}
     theta_to_mm(
@@ -192,7 +192,7 @@ def test_multiply_blocs_sparse_with_gate_real(
             "normalize": True,
             "dw_one_serie": 0,
         },
-        is_um=True
+        is_um=True,
     )
     assert len(dest_mps_left.keys()) == 3
     assert len(dest_mps_right.keys()) == 5
@@ -214,7 +214,7 @@ def test_multiply_blocs_sparse_with_gate_real(
             "normalize": True,
             "dw_one_serie": 0,
         },
-        is_um=False
+        is_um=False,
     )
     assert len(dest_mps_left.keys()) == 5
     assert len(dest_mps_right.keys()) == 3

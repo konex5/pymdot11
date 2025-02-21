@@ -1,10 +1,10 @@
 import pytest
 
 
-
 @pytest.mark.skip
 def test_sweep_and_no_apply(make_maximal_entangled_state_u1):
     from pyfhmdot.algorithm import sweep_and_apply, apply_UM, apply_MV
+
     size = 7
     mps = make_maximal_entangled_state_u1(size)
 
@@ -59,6 +59,7 @@ def test_sweep_and_no_apply(make_maximal_entangled_state_u1):
 @pytest.mark.skip
 def test_sweep_and_apply(make_maximal_entangled_state_u1):
     from pyfhmdot.algorithm import sweep_and_apply, apply_UM, apply_MV
+
     size = 7
     mps = make_maximal_entangled_state_u1(size)
 

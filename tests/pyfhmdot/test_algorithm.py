@@ -1,11 +1,10 @@
 import pytest
-import numpy as np
-from scipy.linalg import svd as _svd
-
-# from pyfhmdot.algorithm import _svd_nondeg
 
 
 def test_svd_nondeg():
+    import numpy as np
+    from scipy.linalg import svd as _svd
+
     a = np.ndarray((1, 2, 2))
     a.fill(0)
     a[0, 0, 0] = 1

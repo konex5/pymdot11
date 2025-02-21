@@ -1,15 +1,10 @@
 import pytest
 
-from pyfhmdot.legacy import _sliceds
-import numpy as np
-
-
-# class theta_blocs:
-#     def __init__(self) -> None:
-#         self._blocks = [np.ndarray((2, 4, 4, 3)), np.ndarray((5, 2, 2, 4))]
-
 
 def test_sliceds():
+    import numpy as np
+    from pyfhmdot.legacy import _sliceds
+
     # theta = theta_blocs()
     # deg = [
     #     [

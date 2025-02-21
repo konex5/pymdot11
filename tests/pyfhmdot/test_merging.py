@@ -1,13 +1,9 @@
+import pytest
+
 from tests.pyfhmdot.test_multiply_blocs_with_gate import (
     test_multiply_blocs_sparse_with_gate_fake,
     test_multiply_blocs_sparse_with_gate_fake_onedir_qnum,
     test_multiply_blocs_sparse_with_gate_fake_with_qcons,
-)
-import pytest
-from pyfhmdot.indices import (
-    degeneracy_in_theta,
-    slices_degenerate_blocs,
-    potential_middle_indices,
 )
 
 
@@ -76,6 +72,10 @@ def theta_blocs_small(
 
 @pytest.mark.skip
 def test_potential_middle(theta_blocs_large, theta_blocs_average, theta_blocs_small):
+    from pyfhmdot.indices import (
+        potential_middle_indices,
+    )
+
     middle_list = potential_middle_indices(theta_blocs_large.keys())
     assert middle_list == [0, 1, 2, 3, 4]
     middle_list = potential_middle_indices(
@@ -112,6 +112,11 @@ def test_potential_middle(theta_blocs_large, theta_blocs_average, theta_blocs_sm
 
 @pytest.mark.skip
 def test_find_degeneracy_in_theta(theta_blocs_large):
+    from pyfhmdot.indices import (
+        degeneracy_in_theta,
+        potential_middle_indices,
+    )
+
     middle_list = potential_middle_indices(theta_blocs_large.keys())
     nondeg, degenerate = degeneracy_in_theta(
         theta_blocs_large.keys(), middle_list, direction_right=True
@@ -127,6 +132,11 @@ def test_find_degeneracy_in_theta(theta_blocs_large):
 
 
 def test_find_degeneracy_in_theta_with_qcons(theta_blocs_small):
+    from pyfhmdot.indices import (
+        degeneracy_in_theta,
+        potential_middle_indices,
+    )
+
     middle_list = potential_middle_indices(theta_blocs_small.keys())
     nondeg, degenerate = degeneracy_in_theta(theta_blocs_small.keys(), middle_list)
     assert len(nondeg) == 1
@@ -137,6 +147,12 @@ def test_find_degeneracy_in_theta_with_qcons(theta_blocs_small):
 
 
 def test_check_slices_degenerate_blocs_dimone(theta_blocs_small):
+    from pyfhmdot.indices import (
+        degeneracy_in_theta,
+        slices_degenerate_blocs,
+        potential_middle_indices,
+    )
+
     middle_list = potential_middle_indices(theta_blocs_small.keys())
     nondeg, degenerate = degeneracy_in_theta(theta_blocs_small.keys(), middle_list)
     newsubsize = []
@@ -146,6 +162,12 @@ def test_check_slices_degenerate_blocs_dimone(theta_blocs_small):
 
 @pytest.mark.skip
 def test_check_slices_degenerate_blocs_dimtwo(theta_blocs_large):
+    from pyfhmdot.indices import (
+        degeneracy_in_theta,
+        slices_degenerate_blocs,
+        potential_middle_indices,
+    )
+
     middle_list = potential_middle_indices(theta_blocs_large.keys())
     nondeg, degenerate = degeneracy_in_theta(
         theta_blocs_large.keys(), middle_list, direction_right=True
@@ -158,6 +180,7 @@ def test_check_slices_degenerate_blocs_dimtwo(theta_blocs_large):
 @pytest.mark.skip
 def test_mpsQ_svd_th2Um(theta_blocs_small):
     from pyfhmdot.routine import theta_to_mm
+
     lhs_blocs = {}
     rhs_blocs = {}
     theta_to_mm(
@@ -171,7 +194,7 @@ def test_mpsQ_svd_th2Um(theta_blocs_small):
             "normalize": True,
             "dw_one_serie": 0,
         },
-        is_um=True
+        is_um=True,
     )
     pass
 
@@ -179,6 +202,7 @@ def test_mpsQ_svd_th2Um(theta_blocs_small):
 @pytest.mark.skip
 def test_mpsQ_svd_th2mV(theta_blocs_small):
     from pyfhmdot.routine import theta_to_mm
+
     lhs_blocs = {}
     rhs_blocs = {}
     theta_to_mm(
@@ -192,6 +216,6 @@ def test_mpsQ_svd_th2mV(theta_blocs_small):
             "normalize": True,
             "dw_one_serie": 0,
         },
-        is_um=False
+        is_um=False,
     )
     pass
