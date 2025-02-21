@@ -71,6 +71,21 @@ def get_theta():
         (2, 2, 1, 1): array([[[[1.00780536, 0.0], [0.0, 0.99226175]]]]),
         (2, 2, 2, 2): array([[[[0.99483226]]]]),
     }
+
+    from pyfhmdot.create import create_hamiltonian_gates
+
+    new_theta = create_hamiltonian_gates(
+        "sh_xxz-hz_u1",
+        {"Jxy": 0.25, "Jz": 0.5, "hz": 1.5}, # 1/4.*1, 1/4.*2, 1/2.*3
+        3,
+        dbeta=0.025,
+        is_dgate=True,
+        in_group=True,
+    )[0][1]
+    old_theta = {}
+    for key in new_theta:
+        old_theta[key] = new_theta[key][::-1, ::-1, ::-1, ::-1]
+
     return old_theta, new_theta
 
 
@@ -132,7 +147,7 @@ def test_validation_theta_step_two_left():
     }
 
     for key in tmp_blocs.keys():
-        assert all(abs((mps[0][key] - old_results_mpsL[key])) < 1e-8)
+        assert all(abs((tmp_blocs[key] - old_results_theta_blocs[key])) < 1e-8)
 
     apply_gate_on_mm_at(
         mps,
@@ -165,8 +180,7 @@ def test_validation_theta_step_two_left():
     }
 
     for key in mps[0].keys():
-        # assert all(abs((mps[0][key] - old_results_mpsL[key])) < 1e-8)
-        pass
+        assert all(abs((mps[0][key] - old_results_mpsL[key])) < 1e-8)
 
     for key in mps[1].keys():
         assert all(abs(mps[1][key] - old_results_mpsR[key]) < 1e-8)
