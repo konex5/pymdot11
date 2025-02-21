@@ -179,26 +179,43 @@ def test_check_slices_degenerate_blocs_dimtwo(theta_blocs_large):
     assert len(newsubsize) == 3
     assert newsubsize[0][0] == 1
     assert newsubsize[0][1] == 34
-    assert newsubsize[0][2] == [(0,0)]
+    assert newsubsize[0][2] == [(0, 0)]
     assert newsubsize[0][3] == [0]
-    assert newsubsize[0][4] == [(1,1)]
-    assert newsubsize[0][5] == [(0, 0), (0, 1), (0, 2), (0, 4), (1, 0), (1, 1), (1, 2), (1, 4)]
+    assert newsubsize[0][4] == [(1, 1)]
+    assert newsubsize[0][5] == [
+        (0, 0),
+        (0, 1),
+        (0, 2),
+        (0, 4),
+        (1, 0),
+        (1, 1),
+        (1, 2),
+        (1, 4),
+    ]
     assert newsubsize[0][6] == [0, 2, 5, 9, 17, 19, 22, 26]
-    assert newsubsize[0][7] == [(1, 2), (1, 3), (1, 4), (1, 8), (1, 2), (1, 3), (1, 4), (1, 8)]
+    assert newsubsize[0][7] == [
+        (1, 2),
+        (1, 3),
+        (1, 4),
+        (1, 8),
+        (1, 2),
+        (1, 3),
+        (1, 4),
+        (1, 8),
+    ]
     assert newsubsize[1][0] == 4
     assert newsubsize[1][1] == 28
-    assert newsubsize[1][2] == [(0,1),(1,0)]
-    assert newsubsize[1][3] == [0,1]
+    assert newsubsize[1][2] == [(0, 1), (1, 0)]
+    assert newsubsize[1][3] == [0, 1]
     assert newsubsize[1][4] == [(1, 1), (3, 1)]
     assert newsubsize[1][5] == [(0, 0), (0, 1), (0, 3), (1, 0), (1, 1), (1, 2), (1, 4)]
     assert newsubsize[1][6] == [0, 2, 5, 11, 13, 16, 20]
     assert newsubsize[1][7] == [(1, 2), (1, 3), (1, 6), (1, 2), (1, 3), (1, 4), (1, 8)]
     assert newsubsize[2][0] == 3
     assert newsubsize[2][1] == 8
-    assert newsubsize[2][2] == [(1,1)]
+    assert newsubsize[2][2] == [(1, 1)]
     assert newsubsize[2][3] == [0]
-    assert newsubsize[2][4] == [(3,1)]
-    assert newsubsize[2][5] == [(0,0),(1,3)]
+    assert newsubsize[2][4] == [(3, 1)]
+    assert newsubsize[2][5] == [(0, 0), (1, 3)]
     assert newsubsize[2][6] == [0, 2]
-    assert newsubsize[2][7] == [(1,2),(1,6)]
-    
+    assert newsubsize[2][7] == [(1, 2), (1, 6)]
