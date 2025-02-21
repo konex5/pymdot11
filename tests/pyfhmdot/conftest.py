@@ -38,6 +38,27 @@ def rhs_indices():
     ]
 
 
+@pytest.fixture
+def lhs_chi_shapes():
+    return [(1, 1), (1, 1), (3, 4), (1, 2), (1, 2), (3, 5), (3, 4)]
+
+
+@pytest.fixture
+def rhs_chi_shapes():
+    return [
+        (1, 2),
+        (1, 2),
+        (5, 2),
+        (1, 3),
+        (1, 3),
+        (2, 4),
+        (5, 6),
+        (2, 8),
+        (2, 3),
+        (2, 3),
+    ]
+
+
 def theta_indices():
     return [
         (0, 0, 0, 0),
@@ -70,6 +91,33 @@ def make_single_dense_mps():
         return {(0, 0, 0): mps_out}
 
     return _make_single_dense_mps
+
+
+@pytest.fixture
+def make_single_blocs_mps():
+    import numpy as np
+
+    def _make_single_dense_mps(chiL=13, d=2, chiR=13, isreal=True):
+        if isreal:
+            mps = np.random.random(chiL * d * chiR)
+        else:
+            mps = (
+                np.random.random(chiL * d * chiR)
+                + np.random.random(chiL * d * chiR) * 1j
+            )
+        mps_out = mps.reshape(chiL, d, chiR) / np.sum(mps ** 2)
+
+        return mps_out
+
+    def _make_single_blocs_mps(indices, chi_shapes, d=2, isreal=True):
+        blocs_out = {}
+        for i in range(len(indices)):
+            blocs_out[indices[i]] = _make_single_dense_mps(
+                chi_shapes[i][0], d, chi_shapes[i][-1], isreal
+            )
+        return blocs_out
+
+    return _make_single_blocs_mps
 
 
 @pytest.fixture

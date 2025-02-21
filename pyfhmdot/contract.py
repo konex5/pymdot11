@@ -296,7 +296,7 @@ def multiply_blocs_with_gate_applied(
         rhs_blocs.keys(),
         conserve_left_right=conserve_left_right_before,
     )
-    tmp_blocs: _Dict = {}
+    tmp_blocs: _Dict[tuple, _np.ndarray] = {}
     multiply_arrays(tmp_blocs, lhs_blocs, rhs_blocs, tmp_indices)
     dest_indices = indices_theta_prepare_conservation_for_gate(
         tmp_blocs.keys(),
