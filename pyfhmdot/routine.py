@@ -88,10 +88,10 @@ def _svd_nondeg(
 
 
 def _svd_deg(thetaQ, deg, subnewsize, array_of_U, array_of_S, array_of_V) -> None:
-    if len(thetaQ._blocks.keys()) == 0:
+    if len(thetaQ.keys()) == 0:
         datatype = None
     else:
-        datatype = thetaQ._blocks.itervalues().next().dtype
+        datatype = list(thetaQ.values())[0].dtype
     for i in range(len(deg)):
         # construct the degenerated matrix
         thetaDeg = _np.zeros((subnewsize[i][0], subnewsize[i][1]), dtype=datatype)
@@ -105,7 +105,7 @@ def _svd_deg(thetaQ, deg, subnewsize, array_of_U, array_of_S, array_of_V) -> Non
             dimR = subnewsize[i][7][posR]
             sliceL = slice(offL, offL + dimL[0] * dimL[1])
             sliceR = slice(offR, offR + dimR[0] * dimR[1])
-            thetaDeg[sliceL, sliceR] = thetaQ._blocks[it].reshape(
+            thetaDeg[sliceL, sliceR] = thetaQ[it].reshape(
                 dimL[0] * dimL[1], dimR[0] * dimR[1]
             )
         try:
@@ -251,9 +251,6 @@ def _mult_deg_UM(
 
 
 def mpsQ_svd_th2Um(thetaQ, mpsL, mpsR, simdict):
-    lab = thetaQ.get_labels()
-    if len(lab) != 4:
-        raise (Exception("To svd, you should have a theta matrix form."))
 
     keys = list(thetaQ.keys())
     middle = potential_middle_indices(keys, direction_right=True)
@@ -265,17 +262,17 @@ def mpsQ_svd_th2Um(thetaQ, mpsL, mpsR, simdict):
     # norm_before = _np.sqrt(norm_before)
     # print('norm_before=',norm_before)
 
-    nondeg, deg = degeneracy_in_theta(keys, middle, True)
+    nondeg, deg = degeneracy_in_theta(keys, middle, direction_right=True)
 
     subnewsize_deg = []
     slices_degenerate_blocs(thetaQ, deg, subnewsize_deg)
-    nondeg_dims = [thetaQ._blocks[_[1]].shape for _ in nondeg]
+    nondeg_dims = [thetaQ[_[1]].shape for _ in nondeg]
 
     array_of_U = []
     array_of_S = []
     array_of_V = []
 
-    _svd_nondeg(thetaQ._blocks, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V)
+    _svd_nondeg(thetaQ, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V)
     _svd_deg(thetaQ, deg, subnewsize_deg, array_of_U, array_of_S, array_of_V)
 
     eps_truncation_error = simdict["eps_truncation_error"]
@@ -300,8 +297,8 @@ def mpsQ_svd_th2Um(thetaQ, mpsL, mpsR, simdict):
         array_of_V,
         deg,
         subnewsize_deg,
-        mpsL._blocks,
-        mpsR._blocks,
+        mpsL,
+        mpsR,
     )
     _mult_nondeg_UM(
         array_of_U,
@@ -310,15 +307,12 @@ def mpsQ_svd_th2Um(thetaQ, mpsL, mpsR, simdict):
         array_of_V,
         nondeg,
         nondeg_dims,
-        mpsL._blocks,
-        mpsR._blocks,
+        mpsL,
+        mpsR,
     )
 
 
 def mpsQ_svd_th2mV(thetaQ, mpsL, mpsR, simdict):
-    lab = thetaQ.get_labels()
-    if len(lab) != 4:
-        raise (Exception("To svd, you should have a theta matrix form."))
 
     keys = list(thetaQ.keys())
     middle = potential_middle_indices(keys, direction_right=False)

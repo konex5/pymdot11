@@ -1,3 +1,4 @@
+from pyfhmdot.routine import mpsQ_svd_th2Um
 from tests.pyfhmdot.test_multiply_blocs_with_gate import (
     test_multiply_blocs_sparse_with_gate,
     test_multiply_blocs_sparse_with_gate_onedir_qnum,
@@ -150,3 +151,20 @@ def test_check_slices_degenerate_blocs_dimtwo(theta_blocs_large):
     newsubsize = []
     slices_degenerate_blocs(theta_blocs_large, degenerate, newsubsize)
     assert len(newsubsize) == 2
+
+
+def test_mpsQ_svd_th2Um(theta_blocs_small):
+    mpsL = {}
+    mpsR = {}
+    mpsQ_svd_th2Um(
+        theta_blocs_small,
+        mpsL,
+        mpsR,
+        {
+            "eps_truncation_error": 1e-8,
+            "dw_Dmax": 800,
+            "dw_Dmax_tot": 900,
+            "normalize": True,
+            "dw_one_serie": 0,
+        },
+    )
