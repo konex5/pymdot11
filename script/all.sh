@@ -37,4 +37,5 @@ echo "energies"
 
 echo "ZERO TEMPERATURE"
 ./script/cli_idmrg.py -H /tmp/hamiltonian.h5 -o /tmp/2B_inf.h5
+./script/cli_dmrg.py -H /tmp/hamiltonian.h5 -i /tmp/2B_inf.h5 -o /tmp/2B_inf_01.h5
 

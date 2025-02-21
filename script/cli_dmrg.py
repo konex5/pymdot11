@@ -8,12 +8,13 @@ from pyfhmdot.entrypoint import variational_ground_state
 
 from pyfhmdot.utils.general import (
     add_model_info,
+    add_model_parameters,
     add_mps,
+    load_model_info_model_name,
+    load_model_parameters,
     load_model_state,
     load_model_zdmrg_simulation,
-    load_model_info_model_name,
     load_model_info_size,
-    load_model_parameters,
     load_mps,
 )
 from pyfhmdot.utils.iotools import (
@@ -58,6 +59,8 @@ if __name__ == "__main__":
         )
 
     size = load_model_info_size(arguments.hamiltonian)
+    model_name = load_model_info_model_name(arguments.hamiltonian)
+    parameters = load_model_parameters(arguments.hamiltonian)
     zdmrg_simulation_parameters = load_model_zdmrg_simulation(arguments.hamiltonian)
     mps = load_mps(arguments.imps, size, folder="QMP")
     ham = load_mps(arguments.hamiltonian, size, folder="MPO")
@@ -67,3 +70,8 @@ if __name__ == "__main__":
         ham,
         zdmrg_simulation_parameters,
     )
+
+    create_h5(arguments.output)
+    add_model_info(arguments.output, {"size": size, model_name: 0})
+    add_model_parameters(arguments.output, parameters)
+    add_mps(arguments.output, mps, folder="QMP")

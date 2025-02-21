@@ -79,8 +79,13 @@ def infinite_to_finite_ground_state(
 
 
 def variational_ground_state(mps, mpo, zdmrg_dict):
-    # left_bloc right_bloc
-    pass
+    # warmup
+    for i in range(zdmrg_dict["nb_warmup"]):
+        chi_max = max(zdmrg_dict["chi_max"] // 4, 1)
+
+    # converge
+    for i in range(zdmrg_dict["nb_sweeps"]):
+        pass
 
 
 def time_evolve_single(mps, ggate, sdmrg_dict):
