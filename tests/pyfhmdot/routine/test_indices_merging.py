@@ -137,8 +137,10 @@ def test_find_degeneracy_in_theta_with_qcons(theta_blocs_small):
         potential_middle_indices,
     )
 
-    middle_list = potential_middle_indices(theta_blocs_small.keys())
-    nondeg, degenerate = degeneracy_in_theta(theta_blocs_small.keys(), middle_list)
+    middle_list = potential_middle_indices(theta_blocs_small.keys(), direction_right=1)
+    nondeg, degenerate = degeneracy_in_theta(
+        theta_blocs_small.keys(), middle_list, direction_right=1
+    )
     assert len(nondeg) == 1
     assert nondeg[0][-1] == (0, 1, 0, 1)
     assert len(degenerate) == 1
@@ -153,8 +155,10 @@ def test_check_slices_degenerate_blocs_dimone(theta_blocs_small):
         potential_middle_indices,
     )
 
-    middle_list = potential_middle_indices(theta_blocs_small.keys())
-    nondeg, degenerate = degeneracy_in_theta(theta_blocs_small.keys(), middle_list)
+    middle_list = potential_middle_indices(theta_blocs_small.keys(), direction_right=1)
+    nondeg, degenerate = degeneracy_in_theta(
+        theta_blocs_small.keys(), middle_list, direction_right=1
+    )
     newsubsize = []
     slices_degenerate_blocs(theta_blocs_small, degenerate, newsubsize)
     assert len(newsubsize) == 1

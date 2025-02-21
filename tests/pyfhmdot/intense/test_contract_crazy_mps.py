@@ -23,9 +23,7 @@ def test_contract_right(make_single_blocs_mps, rhs_indices, rhs_chi_shapes):
 
     mpo_right = hamiltonian_obc("sh_xxz-hz_u1", {"Jxy": 0, "Jz": 0, "hz": 10}, 3)[-1]
 
-    from pyfhmdot.intense.contract import (
-        contract_mps_mpo_mps_right_border,
-    )
+    from pyfhmdot.intense.contract import contract_mps_mpo_mps_right_border
 
     right = {}
     contract_mps_mpo_mps_right_border(right, mps_down, mpo_right, mps_up)
