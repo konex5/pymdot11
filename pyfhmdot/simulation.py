@@ -452,7 +452,7 @@ def sweep_eleven_times(
         dw_dict["dw_total"] += dw_dict["dw_one_serie"]
 
 
-def dmrg_minimize_two_sites(
+def idmrg_minimize_two_sites(
     dst_left,
     dst_right,
     bloc_left,
@@ -516,7 +516,7 @@ def idmrg_even(
         tmp_imps_left = {}
         tmp_imps_right = {}
 
-        dmrg_minimize_two_sites(
+        idmrg_minimize_two_sites(
             tmp_imps_left,
             tmp_imps_right,
             bloc_left,
