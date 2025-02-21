@@ -100,9 +100,7 @@ def theta_to_mm(
     # norm_before = _np.sqrt(norm_before)
     # print('norm_before=',norm_before)
 
-    nondeg, deg = degeneracy_in_theta(
-        keys, middle, direction_right=direction_right
-    )
+    nondeg, deg = degeneracy_in_theta(keys, middle, direction_right=direction_right)
 
     subnewsize_deg: _List[_List] = []
     slices_degenerate_blocs(theta_blocs, deg, subnewsize_deg)

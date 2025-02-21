@@ -138,18 +138,20 @@ def should_apply_gate(position, start_odd_bonds):
     else:
         start_odd_bonds = 1
 
-    return ( position + start_odd_bonds) % 2 == 0 
-    
-def sweep_on_layer(size,layer,start_left):
+    return (position + start_odd_bonds) % 2 == 0
+
+
+def sweep_on_layer(size, layer, start_left):
     if start_left:
         start_left = 0
     else:
         start_left = 1
 
     if (layer + start_left % 2) == 0:
-        return sweep(size,from_site=0, to_site=size-2)
+        return sweep(size, from_site=0, to_site=size - 2)
     else:
-        return sweep(size,from_site=size-2, to_site=0)
+        return sweep(size, from_site=size - 2, to_site=0)
+
 
 def sweep_eleven_times(
     mps,
@@ -173,38 +175,38 @@ def sweep_eleven_times(
             gate = ggate[3]
         else:  # [1, 2, 3, 7, 8, 9]:
             gate = ggate[1]
-        
-        if start_left:
-            direction_right=1
-        else:
-            direction_right=3
 
-        for l in sweep_on_layer(size,layer,start_left):
-            if should_apply_gate(l,start_odd_bonds):
+        if start_left:
+            direction_right = 1
+        else:
+            direction_right = 3
+
+        for l in sweep_on_layer(size, layer, start_left):
+            if should_apply_gate(l, start_odd_bonds):
                 apply_gate_on_mm_at(
                     mps,
                     gate,
-                    l+1,
+                    l + 1,
                     dw_dict,
                     chi_max,
                     normalize,
                     eps,
                     is_um=start_left,
                     conserve_left_right_after_gate=False,
-                    direction_right=direction_right
+                    direction_right=direction_right,
                 )
             else:
                 apply_mm_at(
                     mps,
-                    l+1,
+                    l + 1,
                     dw_dict,
                     chi_max,
                     normalize,
                     eps,
                     is_um=start_left,
                     conserve_left_right_before=False,
-                    direction_right=direction_right
-                    )
+                    direction_right=direction_right,
+                )
 
         print("dw_one_serie", dw_dict["dw_one_serie"])
         dw_dict["dw_total"] += dw_dict["dw_one_serie"]
