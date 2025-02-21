@@ -475,7 +475,7 @@ def initialize_left_right(mps, ham, position):
     return left_blocs + right_blocs[::-1]
 
 
-def initialize_left_right_variance(mps, ham):
+def initialize_left_right_variance(mps, ham, position):
     left_blocs = []
     right_blocs = []
     tmp_dst = {}
@@ -486,7 +486,7 @@ def initialize_left_right_variance(mps, ham):
     right_blocs.append(_copy(tmp_dst))
     tmp_dst.clear()
 
-    for l in range(1, len(mps) - 1):
+    for l in range(1, position - 1):
         tmp_dst = {}
         contract_left_bloc_mps_mpo(
             tmp_dst, left_blocs[-1], mps[l], ham[l], ham[l], mps[l]
@@ -494,7 +494,7 @@ def initialize_left_right_variance(mps, ham):
         left_blocs.append(_copy(tmp_dst))
         tmp_dst.clear()
 
-    for l in range(len(mps) - 1, 1, -1):
+    for l in range(len(mps) - 1, position - 1, -1):
         tmp_dst = {}
         contract_right_bloc_mps_mpo(
             tmp_dst, right_blocs[-1], mps[l], ham[l], ham[l], mps[l]
@@ -502,4 +502,4 @@ def initialize_left_right_variance(mps, ham):
         right_blocs.append(_copy(tmp_dst))
         tmp_dst.clear()
 
-    return left_blocs, right_blocs[::-1]
+    return left_blocs + right_blocs[::-1]

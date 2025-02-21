@@ -502,17 +502,7 @@ def dmrg_minimize_two_sites(
     eigenvalues = {}
     eigenvectors = {}
     minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
-
-    # for key in list(eigenvectors.keys()):
-    #     if not (
-    #         key[1] in allowed_sector and key[2] in allowed_sector and key[1] == key[2]
-    #     ):
-    #         eigenvectors.pop(key)
-    #         eigenvalues.pop(key)
-    #         _warning("eigenvectors removed a posteriori.")
-    # select_lowest_blocs(eigenvalues, eigenvectors)
-    # select_quantum_sector(eigenvalues, eigenvectors)
-    apply_eigenvalues(eigenvalues, eigenvectors)
+    # apply_eigenvalues(eigenvalues, eigenvectors)
 
     theta_to_mm(
         eigenvectors,
@@ -614,6 +604,7 @@ def idmrg_even(
     dst_imps_left.append(_copy(tmp_imps_left))
     dst_imps_right.append(_copy(tmp_imps_right))
 
+
 def compress_mps(
     mps,
     chi_max,
@@ -634,7 +625,7 @@ def compress_mps(
                 apply_mm_at(
                     mps,
                     l,
-                    {"dw_one_serie":0},
+                    {"dw_one_serie": 0},
                     chi_max,
                     normalize,
                     eps,
@@ -648,7 +639,7 @@ def compress_mps(
                 apply_mm_at(
                     mps,
                     l,
-                    {"dw_one_serie":0},
+                    {"dw_one_serie": 0},
                     chi_max,
                     normalize,
                     eps,
@@ -659,7 +650,6 @@ def compress_mps(
                 print_double(size, l, "=B")
 
         start_left = not start_left
-
 
 
 def dmrg_sweep_lanczos(
@@ -717,7 +707,6 @@ def dmrg_sweep_lanczos(
                 )
                 print_double(size, l, "=B")
 
-
         start_left = not start_left
 
 
@@ -725,6 +714,7 @@ def dmrg_sweep_jacobi(
     mps,
     ham,
     left_right,
+    left_right_var,
     chi_max,
     normalize,
     eps,
@@ -776,7 +766,6 @@ def dmrg_sweep_jacobi(
                 )
                 print_double(size, l, "=B")
 
-
         start_left = not start_left
 
 
@@ -800,6 +789,7 @@ def dmrg_sweeps(mps, ham, left_right, left_right_var, sim_dict, *, start_left):
         mps,
         ham,
         left_right,
+        left_right_var,
         chi_max=sim_dict["chi_max"],
         normalize=sim_dict["normalize"],
         eps=sim_dict["eps_truncation"],
@@ -808,4 +798,3 @@ def dmrg_sweeps(mps, ham, left_right, left_right_var, sim_dict, *, start_left):
         nb_sweeps=sim_dict["nb_sweeps"],
         start_left=start_left,
     )
-
