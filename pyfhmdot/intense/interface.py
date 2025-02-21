@@ -1,93 +1,45 @@
 from copy import deepcopy as _copy
 
-
 from pyfhmdot.intense.contract import (
     contract_dmps_dmps_left_border as _contract_dmps_dmps_left_border,
-)
-from pyfhmdot.intense.contract import (
     contract_dmps_dmps_right_border as _contract_dmps_dmps_right_border,
-)
-from pyfhmdot.intense.contract import (
     contract_dmps_left_border as _contract_dmps_left_border,
-)
-from pyfhmdot.intense.contract import (
     contract_left_right_small_bloc as _contract_left_right_small_bloc,
-)
-from pyfhmdot.intense.contract import (
     contract_left_small_bloc_dmps as _contract_left_small_bloc_dmps,
-)
-from pyfhmdot.intense.contract import (
     contract_right_small_bloc_dmps as _contract_right_small_bloc_dmps,
 )
-
 from pyfhmdot.intense.contract import (
     contract_dmps_right_border as _contract_dmps_right_border,
-)
-from pyfhmdot.intense.contract import (
     contract_left_very_small_bloc_dmps as _contract_left_very_small_bloc_dmps,
-)
-from pyfhmdot.intense.contract import (
     contract_right_very_small_bloc_dmps as _contract_right_very_small_bloc_dmps,
-)
-from pyfhmdot.intense.contract import (
     contract_left_right_very_small_bloc as _contract_left_right_very_small_bloc,
 )
-
-
 from pyfhmdot.intense.contract import (
     contract_mps_mps_left_border as _contract_mps_mps_left_border,
-)
-from pyfhmdot.intense.contract import (
     contract_mps_mps_right_border as _contract_mps_mps_right_border,
-)
-from pyfhmdot.intense.contract import (
     contract_left_small_bloc_mps as _contract_left_small_bloc_mps,
-)
-from pyfhmdot.intense.contract import (
     contract_right_small_bloc_mps as _contract_right_small_bloc_mps,
-)
-from pyfhmdot.intense.contract import (
     contract_left_right_small_bloc as _contract_left_right_small_bloc,
 )
-
-
 from pyfhmdot.intense.contract import (
     contract_mps_mpo_mps_left_border as _contract_left_border,
-)
-from pyfhmdot.intense.contract import contract_left_bloc_mps as _contract_left
-
-from pyfhmdot.intense.contract import (
+    contract_left_bloc_mps as _contract_left,
     contract_mps_mpo_mps_right_border as _contract_right_border,
+    contract_right_bloc_mps as _contract_right,
+    contract_left_right_bloc as _contract_left_right,
 )
-from pyfhmdot.intense.contract import contract_right_bloc_mps as _contract_right
-
-from pyfhmdot.intense.contract import contract_left_right_bloc as _contract_left_right
-
 from pyfhmdot.intense.contract import (
     contract_dmps_mpo_dmps_left_border as _contract_left_border_big,
-)
-from pyfhmdot.intense.contract import (
     contract_dmps_mpo_dmps_right_border as _contract_right_border_big,
-)
-from pyfhmdot.intense.contract import contract_left_bloc_dmps as _contract_left_big
-from pyfhmdot.intense.contract import contract_right_bloc_dmps as _contract_right_big
-from pyfhmdot.intense.contract import (
+    contract_left_bloc_dmps as _contract_left_big,
+    contract_right_bloc_dmps as _contract_right_big,
     contract_left_right_bloc as _contract_left_right_big,
 )
-
 from pyfhmdot.intense.contract import (
     contract_dmps_mpo_mpo_dmps_left_border as _contract_left_border_very_big,
-)
-from pyfhmdot.intense.contract import (
     contract_dmps_mpo_mpo_dmps_right_border as _contract_right_border_very_big,
-)
-from pyfhmdot.intense.contract import (
     contract_left_very_big_bloc_dmps as _contract_left_very_big,
-)
-from pyfhmdot.intense.contract import (
     contract_right_very_big_bloc_dmps as _contract_right_very_big,
-)
-from pyfhmdot.intense.contract import (
     contract_left_right_very_big_bloc as _contract_left_right_very_big,
 )
 
