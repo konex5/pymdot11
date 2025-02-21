@@ -61,7 +61,13 @@ def mm_to_theta_with_gate(
     mul_theta_with_gate(dst_blocs, tmp_blocs, gate_blocs, dst_indices)
 
 
-def theta_to_um(theta_blocs, lhs_blocs, rhs_blocs, simdict, **kwargs):
+def theta_to_um(
+    theta_blocs: _Dict[tuple, _np.ndarray],
+    lhs_blocs: _Dict[tuple, _np.ndarray],
+    rhs_blocs: _Dict[tuple, _np.ndarray],
+    simdict: dict,
+    **kwargs
+) -> None:
 
     keys = list(theta_blocs.keys())
     middle = potential_middle_indices(keys, direction_right=True)
@@ -120,7 +126,13 @@ def theta_to_um(theta_blocs, lhs_blocs, rhs_blocs, simdict, **kwargs):
     )
 
 
-def theta_to_mv(theta_blocs, lhs_blocs, rhs_blocs, simdict, **kwargs):
+def theta_to_mv(
+    theta_blocs: _Dict[tuple, _np.ndarray],
+    lhs_blocs: _Dict[tuple, _np.ndarray],
+    rhs_blocs: _Dict[tuple, _np.ndarray],
+    simdict: dict,
+    **kwargs
+) -> None:
 
     keys = list(theta_blocs.keys())
     middle = potential_middle_indices(keys, direction_right=False)
