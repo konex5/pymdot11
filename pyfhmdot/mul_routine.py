@@ -59,8 +59,8 @@ def mul_mv_nondeg(
     array_V: _List[_np.ndarray],
     nondeg: _List,
     nondeg_dims: _List,
-    dst_lhs_blocs,
-    dst_rhs_blocs,
+    dst_lhs_blocs: _Dict[_Tuple[int, int, int], _np.ndarray],
+    dst_rhs_blocs: _Dict[_Tuple[int, int, int], _np.ndarray],
 ) -> None:
     i_Nb = len(nondeg)
     for i in range(i_Nb):  # reversed, and passed by pop.
@@ -68,9 +68,11 @@ def mul_mv_nondeg(
         if Dsi > 0:
             dims = nondeg_dims.pop()
             tmp_nondeg = nondeg.pop()
-            dst_lhs_blocs[(tmp_nondeg[1][0], tmp_nondeg[1][1], tmp_nondeg[0])] = _np.dot(
-                array_U.pop()[:, :Dsi], _np.diag(array_S.pop()[:Dsi])
-            ).reshape(dims[0], dims[1], Dsi)
+            dst_lhs_blocs[
+                (tmp_nondeg[1][0], tmp_nondeg[1][1], tmp_nondeg[0])
+            ] = _np.dot(array_U.pop()[:, :Dsi], _np.diag(array_S.pop()[:Dsi])).reshape(
+                dims[0], dims[1], Dsi
+            )
             dst_rhs_blocs[
                 (tmp_nondeg[0], tmp_nondeg[1][2], tmp_nondeg[1][3])
             ] = array_V.pop()[:Dsi, :].reshape(Dsi, dims[2], dims[3])
@@ -89,8 +91,8 @@ def mul_mv_deg(
     array_V: _List[_np.ndarray],
     deg: _List,
     subnewsize: _List,
-    dst_lhs_blocs,
-    dst_rhs_blocs,
+    dst_lhs_blocs: _Dict[_Tuple[int, int, int], _np.ndarray],
+    dst_rhs_blocs: _Dict[_Tuple[int, int, int], _np.ndarray],
 ) -> None:
     i_Nb = len(deg)  # index for deg and subnewsize.. we
     for i in range(i_Nb):  # reversed, and pop each value.
@@ -130,9 +132,9 @@ def mul_um_nondeg(
         Dsi = cut[i]
         if Dsi != 0:
             dims = nondeg_dims[i]
-            dst_lhs_blocs[(nondeg[i][1][0], nondeg[i][1][1], nondeg[i][0])] = array_U[i][
-                :, :Dsi
-            ].reshape(dims[0], dims[1], Dsi)
+            dst_lhs_blocs[(nondeg[i][1][0], nondeg[i][1][1], nondeg[i][0])] = array_U[
+                i
+            ][:, :Dsi].reshape(dims[0], dims[1], Dsi)
             dst_rhs_blocs[(nondeg[i][0], nondeg[i][1][2], nondeg[i][1][3])] = _np.dot(
                 _np.diag(array_S[i][:Dsi]), array_V[i][:Dsi, :]
             ).reshape(Dsi, dims[2], dims[3])
@@ -144,7 +146,9 @@ def mul_um_nondeg(
             nondeg.pop()
 
 
-def mul_um_deg(array_U, array_S, cut, array_V, deg, subnewsize, dst_lhs_blocs, dst_rhs_blocs):
+def mul_um_deg(
+    array_U, array_S, cut, array_V, deg, subnewsize, dst_lhs_blocs, dst_rhs_blocs
+):
     i_Nb = len(deg)
     for i in range(i_Nb):
         Dsi = cut.pop()
