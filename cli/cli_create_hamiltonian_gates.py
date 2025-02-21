@@ -13,6 +13,7 @@ from pyfhmdot.utils.iotools import (
 from pyfhmdot.utils.iodicts import check_filename_and_extension, read_dictionary
 
 from pyfhmdot.general import (
+    add_model_bdmrg_simulation,
     add_model_info,
     add_model_parameters,
     create_hamiltonian_gates,
@@ -62,12 +63,13 @@ if __name__ == "__main__":
     size = load_model_info_size(arguments.output)
 
     if is_beta_simulation:
-        Tdmrg_simulation = large_dictionary.pop("Tdmrg_simulation")
+        bdmrg_simulation_parameters = large_dictionary.pop("Tdmrg_simulation")
+        add_model_bdmrg_simulation(bdmrg_simulation_parameters)
         ham_mpo = create_hamiltonian_gates(
             model_name,
             parameters,
             size,
-            dbeta=Tdmrg_simulation["dbeta"],
+            dbeta=bdmrg_simulation_parameters["dtau"],
             is_dgate=False,
             in_group=False,
         )
@@ -76,12 +78,13 @@ if __name__ == "__main__":
                 add_single_mp(arguments.output, mp, i, folder=f"TEMP_GATE_{st:02g}")
 
     if is_time_simulation:
-        tdmrg_simulation = large_dictionary.pop("tdmrg_simulation")
+        tdmrg_simulation_parameters = large_dictionary.pop("tdmrg_simulation")
+        add_model_bdmrg_simulation(tdmrg_simulation_parameters)
         ham_mpo = create_hamiltonian_gates(
             model_name,
             parameters,
             size,
-            dbeta=tdmrg_simulation["dtime"] * 1j,
+            dbeta=tdmrg_simulation_parameters["dtau"] * 1j,
             is_dgate=False,
             in_group=False,
         )
