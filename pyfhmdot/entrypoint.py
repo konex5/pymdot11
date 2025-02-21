@@ -4,8 +4,11 @@ from pyfhmdot.simulation import initialize_idmrg, idmrg_even
 
 
 def infinite_to_finite_ground_state(
-    dst_imps, model_name, parameters, idmrg_dict, *, size
+    dst_imps, model_name, parameters, idmrg_dict, *, size, conserve_total
 ):
+    """
+    conserve is minimal at 0 and maximal at size by increment of 1.
+    """
     dst_imps_left = []
     dst_imps_right = []
     ham_left, ham_mpo, ham_right = create_infinite_hamiltonian(model_name, parameters)
@@ -15,9 +18,18 @@ def infinite_to_finite_ground_state(
     if size % 2 == 1:
         dst_imps_left.append(create_id_mp(model_name, 2, True)[1])
 
+    head=model_name.split("_")[0]
+    if head == 'sh':
+        d=2
+    elif head == 'so':
+        d=3
+    elif head == 'sf':
+        d=4
+
+
     imps_left, imps_right = {}, {}
     bloc_left, bloc_right = {}, {}
-    initialize_idmrg(bloc_left, imps_left, bloc_right, imps_right, ham_left, ham_right)
+    initialize_idmrg(bloc_left, imps_left, bloc_right, imps_right, ham_left, ham_right, position=1, size=size, conserve_total=conserve_total, d=d)
     dst_imps_left.append(imps_left)
     dst_imps_right.append(imps_right)
 
@@ -29,6 +41,7 @@ def infinite_to_finite_ground_state(
         ham_mpo,
         idmrg_dict,
         iterations=(size - len(dst_imps_left) - 1) // 2,
+        size=size, conserve_total=conserve_total, d=d
     )
 
     for i in range(len(dst_imps_left)):
