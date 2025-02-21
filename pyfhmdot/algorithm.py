@@ -7,16 +7,14 @@ def indices_and_discarded_weights(
     list_of_array: Array[float],
     eps_truncation_error: float = 10 ** -32,
     chi_max: int = 600,
-    chi_max_total: int = 8000,
 ):
     """
     epsilon = || forall bloc s_bloc ||_2^2
     :param: list_of_array, array of singular values 
     :param: eps_truncation_error > sum_{i>chi_max_tot} s_all,i^2
     :param: chi_max = max chi of bloc
-    :param: chi_max_tot = max chi of all blocs together XXXXXX DO NOT WORK PLEASE CORRECT IT!
 
-    :return: list_of_indices, discarded_weights
+    :return: list_of_indices, sum of discarded_weights
     """
     norm = _np.sqrt(_np.sum([_np.linalg.norm(arr) ** 2 for arr in list_of_array]))
     #
@@ -24,8 +22,6 @@ def indices_and_discarded_weights(
     index2cutA = _np.searchsorted(
         _np.cumsum(A ** 2), eps_truncation_error * norm ** 2, side="left"
     )
-    if len(A) - index2cutA > chi_max_total:
-        index2cutA = len(A) - chi_max_total
     #
     dw = _np.sum(A[:index2cutA] ** 2)
     maxcutvalue = A[index2cutA]
