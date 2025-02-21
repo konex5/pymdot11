@@ -177,18 +177,14 @@ def make_single_blocs_gate():
 @pytest.fixture
 def make_maximal_entangled_state_u1():
     def _make_maximal_entangled_state_u1(L, local_coef=1.0 / 2.0):
-        from pyfhmdot.models.pyoperators import single_operator
         import numpy as np
         dmps = []
         for l in range(L):
             dest_blocs = {}
-            id_blocs = single_operator("sh_id_u1", coef=local_coef)
-            #dest_blocs[(0, 0, 0)] = id_blocs[(0, 0)].reshape(1, 1, 1)
             if l == L-1:
-                dest_blocs[(0, 1, 2*L)] = np.array([1/2.,1/2.]).reshape(1, 2, 1)
+                dest_blocs[(0, 1, 2*L)] = np.array([1/np.sqrt(2),1/np.sqrt(2)]).reshape(1, 2, 1)
             else:
-                dest_blocs[(0, 1, 0)] = np.array([1/2.,1/2.]).reshape(1, 2, 1)
-            #dest_blocs[(0, 2, 0)] = id_blocs[(1, 1)].reshape(1, 1, 1)
+                dest_blocs[(0, 1, 0)] = np.array([1/np.sqrt(2),1/np.sqrt(2)]).reshape(1, 2, 1)
             dmps.append(dest_blocs)
 
         return dmps

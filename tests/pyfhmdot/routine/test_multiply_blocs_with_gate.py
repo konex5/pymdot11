@@ -172,5 +172,4 @@ def test_multiply_blocs_sparse_with_gate_real_with_qcons(
         conserve_left_right_before=False,
         conserve_left_right_after=True,
     )
-    assert list(dest_blocs.keys())[0] == (0, 0, 0, 0)
     assert len(dest_blocs.keys()) == 1

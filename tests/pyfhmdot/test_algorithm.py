@@ -1,31 +1,22 @@
 import pytest
 
 
-def test_svd_nondeg():
-    import numpy as np
-    from scipy.linalg import svd as _svd
+def test_should_apply_gate():
+    from pyfhmdot.algorithm import should_apply_gate
 
-    a = np.ndarray((1, 2, 2))
-    a.fill(0)
-    a[0, 0, 0] = 1
-    b = np.ndarray((2, 2, 4))
-    b.fill(0)
-    b[0, 0, 0] = 1
-    th = np.ndarray((2, 2, 2, 2))
-    th.fill(0)
-    th[0, 0, 0, 0] = 1
-    t = np.tensordot(np.tensordot(a, th, (1, 0)), b, ((2, 1), (1, 0)))
-    u, s, vd = _svd(
-        t.reshape(1 * 2, 2 * 4),
-        full_matrices=False,
-        compute_uv=True,
-        overwrite_a=False,
-        lapack_driver="gesvd",
-    )
-    # sweep right
-    U = u.reshape(1, 2, 2)  # should be orthogonal/hermitian
-    M = np.tensordot(np.diag(s), vd.reshape(2, 2, 4), (1, 0))
-    # or sweep left
-    M = np.tensordot(u.reshape(1, 2, 2), np.diag(s), (2, 0))
-    VD = vd.reshape(2, 2, 4)  # should be orthogonal/hermitian
-    pass
+    L = 11
+    layer = 0
+    assert not should_apply_gate(L, layer, 4, start_left=True, start_odd_bonds=True)
+    assert should_apply_gate(L, layer, 5, start_left=True, start_odd_bonds=True)
+    assert should_apply_gate(L, layer, 4, start_left=True, start_odd_bonds=False)
+    assert not should_apply_gate(L, layer, 5, start_left=True, start_odd_bonds=False)
+
+    L = 11
+    layer = 1
+    assert not should_apply_gate(L, 0, 10, start_left=True, start_odd_bonds=True)
+    # assert should_apply_gate(L,layer,10,start_left=False,start_odd_bonds=True)
+    # assert not should_apply_gate(L,layer,9,start_left=False,start_odd_bonds=True)
+    # assert should_apply_gate(L,layer,4,start_left=False,start_odd_bonds=True)
+    # assert not should_apply_gate(L,layer,5,start_left=False,start_odd_bonds=True)
+    # assert not should_apply_gate(L,layer,4,start_left=False,start_odd_bonds=False)
+    # assert should_apply_gate(L,layer,5,start_left=False,start_odd_bonds=False)
