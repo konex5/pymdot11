@@ -319,12 +319,11 @@ def contract_mps_mpo_mps_left_border(dst, mps_down, mpo, mps_up):
     # mps_down
     #    1|
     # 0 -|_|-2
-    multiply_mp(tmp, mps_down, mpo_left, [1], [1])
+    multiply_mp(tmp, mps_down, mpo_left, [1], [0])
     # tmp
     #     |2
     #    | |-3
     # 0 -|_|-1
-
     multiply_mp(dst, tmp, mps_down, [0, 2], [0, 1])
     # dst
     #    | |-2
