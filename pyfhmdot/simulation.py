@@ -1,7 +1,10 @@
 from pyfhmdot.algorithm import apply_mm_at, apply_gate_on_mm_at
+from pyfhmdot.create import create_id_mps
 
 # from logging import makeLogRecord
 
+from pyfhmdot.intense.contract import contract_left_bloc_mps,contract_right_bloc_mps
+from pyfhmdot.models.pyoperators import single_operator
 
 def sweep(size, *, from_site=None, to_site=None):
     if from_site is None:
@@ -417,3 +420,8 @@ def sweep_eleven_times(
         start_odd_bonds = not start_odd_bonds
         print("dw_one_serie", dw_dict["dw_one_serie"])
         dw_dict["dw_total"] += dw_dict["dw_one_serie"]
+
+
+def idmrg_even(dst_imps,model_name, idmrg_dict,*,size):
+    create_id_mp(size,model_name)
+    contract_left_bloc_mps()

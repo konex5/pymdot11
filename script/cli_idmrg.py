@@ -54,12 +54,12 @@ if __name__ == "__main__":
 
     left, ham, right = create_infinite_hamiltonian(model_name,parameters)
     
-    dst_imps = []
-    infinite_to_finite_ground_state(left,ham,right,dst_imps,idmrg_simulation_parameters)
+    imps = []
+    infinite_to_finite_ground_state(imps,left,ham,right,idmrg_simulation_parameters)
 
 
     create_h5(arguments.output)
     add_model_info(arguments.output, {"size": size, model_name: 0})
-    add_mps(arguments.output, dmps, folder="QMP")
+    add_mps(arguments.output, imps, folder="QMP")
 
     print("Maximal entangled state created successfully.")

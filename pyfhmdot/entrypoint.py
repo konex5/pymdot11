@@ -1,8 +1,13 @@
 from pyfhmdot.simulation import sweep_eleven_times as _sweep_eleven_times
+from pyfhmdot.simulation import idmrg as _idmrg_even
 
 
-def infinite_to_finite_ground_state(size,left, ham, right, imps, idmrg_dict):
-    pass
+def infinite_to_finite_ground_state(dst_imps,left, ham, right, idmrg_dict,*,size):
+    if size % 2 == 0:
+        _idmrg_even(dst_imps,left, ham, right, idmrg_dict,size=size)
+    else:
+        #_idmrg_odd(dst_imps,left, ham, right, idmrg_dict,size=size)
+        pass
 
 
 def variational_ground_state(mps, mpo, zdmrg_dict):
