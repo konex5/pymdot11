@@ -1,5 +1,6 @@
 import numpy as _np
 from typing import Dict as _Dict
+from typing import KeysView as _KeysView
 from typing import List as _List
 from typing import Tuple as _Tuple
 
@@ -147,8 +148,8 @@ def multiply_blocs_with_gate(lhs_blocs, rhs_blocs, theta_blocs):
 
 # Delete above
 def indices_prepare_destination_without_gate(
-    left_indices: _List[tuple],
-    right_indices: _List[tuple],
+    left_indices: _KeysView[tuple],
+    right_indices: _KeysView[tuple],
     *,
     conserve_left_right: bool = False
 ) -> _List[_Tuple[tuple, tuple, tuple]]:
@@ -180,8 +181,8 @@ def indices_prepare_destination_without_gate(
 
 
 def indices_theta_prepare_conservation_for_gate(
-    theta_indices: _List[tuple],
-    gate_indices: _List[tuple],
+    theta_indices: _KeysView[tuple],
+    gate_indices: _KeysView[tuple],
     *,
     conserve_left_right: bool = False
 ) -> _List[_Tuple[tuple, tuple, tuple]]:
@@ -295,7 +296,7 @@ def multiply_blocs_with_gate_applied(
         rhs_blocs.keys(),
         conserve_left_right=conserve_left_right_before,
     )
-    tmp_blocs = {}
+    tmp_blocs: _Dict = {}
     multiply_arrays(tmp_blocs, lhs_blocs, rhs_blocs, tmp_indices)
     dest_indices = indices_theta_prepare_conservation_for_gate(
         tmp_blocs.keys(),
