@@ -76,8 +76,15 @@ def test_multiply_blocs_sparse_with_gate_real(
 def test_routine_interface_minimize_theta():
     from pyfhmdot.create import create_infinite_hamiltonian, create_id_mp
     from pyfhmdot.simulation import initialize_idmrg
-
+    from pyfhmdot.intense.contract import contract_left_right_mpo_mpo_permute
+    from pyfhmdot.routine.interface import minimize_theta
     ham = create_infinite_hamiltonian("sh_xxz_u1", {"Jxy": 1, "Jz": -2, "hz": 3})
     mp_left = [create_id_mp("sh_xxz_u1", 1, True)[1]]
     mp_right = [create_id_mp("sh_xxz_u1", 1, False)[1]]
     left, right = initialize_idmrg(mp_left, mp_right, ham[0], ham[-1], [])
+    env_bloc = {}
+    contract_left_right_mpo_mpo_permute(env_bloc,left,right,ham[1][0],ham[1][1])
+    eigvals = {}
+    eigvecs = {}
+    minimize_theta(env_bloc,eigvals,eigvecs,10)
+    assert eigvecs[(0,0,0,0)][0,0,0,0] == 1
