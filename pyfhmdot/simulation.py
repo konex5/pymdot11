@@ -1,4 +1,5 @@
 from pyfhmdot.algorithm import apply_mm_at, apply_gate_on_mm_at
+from copy import deepcopy as _copy
 
 # from logging import makeLogRecord
 
@@ -9,8 +10,9 @@ from pyfhmdot.intense.contract import (
     contract_mps_mpo_mps_right_border,
     contract_right_bloc_mps,
 )
+from pyfhmdot.intense.mul_mp import multiply_mp, permute_blocs
 from pyfhmdot.routine.eig_routine import smallest_eigenvectors_from_scipy
-from pyfhmdot.routine.interface import minimize_theta, theta_to_mm
+from pyfhmdot.routine.interface import minimize_theta, select_lowest_blocs, theta_to_mm
 
 
 def sweep(size, *, from_site=None, to_site=None):
@@ -429,28 +431,56 @@ def sweep_eleven_times(
         dw_dict["dw_total"] += dw_dict["dw_one_serie"]
 
 
-def initialize_idmrg(imps_left, imps_right, ham_left, ham_right, ham_supp_left):
-    left_bloc = {}
-    right_bloc = {}
-    contract_mps_mpo_mps_left_border(left_bloc, imps_left[0], ham_left, imps_left[0])
-    for key in list(left_bloc.keys()):
-        if key[0] != key[2]:
-            left_bloc.pop(key)
-    contract_mps_mpo_mps_right_border(
-        right_bloc, imps_right[0], ham_right, imps_right[0]
-    )
-    for key in list(right_bloc.keys()):
-        if key[0] != key[2]:
-            right_bloc.pop(key)
-
-    if len(imps_left) == 2:
-        tmp = {}
-        contract_left_bloc_mps(
-            tmp, left_bloc, imps_left[1], ham_supp_left, imps_left[1]
+def initialize_idmrg(
+    dst_left_bloc, imps_left, dst_right_bloc, imps_right, ham_left, ham_right
+):
+    tmp_env_blocs = {}
+    multiply_mp(tmp_env_blocs, ham_left, ham_right, [3], [0])
+    # mpos
+    #    2| |4
+    # 0 -|___|- 5
+    #    1| |3
+    env_bloc = {}
+    for key in tmp_env_blocs.keys():
+        new_key = (0, key[1], key[3], 0, 0, key[2], key[4], 0)
+        tmp_shape = tmp_env_blocs[key].shape
+        new_shape = (1, tmp_shape[1], tmp_shape[3], 1, 1, tmp_shape[2], tmp_shape[4], 1)
+        env_bloc[new_key] = (
+            tmp_env_blocs[key].transpose([0, 1, 3, 2, 4, 5]).reshape(new_shape)
         )
-        left_bloc = tmp
 
-    return left_bloc, right_bloc
+    sim_dict = {
+        "dw_one_serie": 0,
+        "dw_total": 0,
+        "chi_max": 10,
+        "eps_truncation": 1e-20,
+    }
+    # minimize energy
+    eigenvalues = {}
+    eigenvectors = {}
+    minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
+    select_lowest_blocs(eigenvalues, eigenvectors)
+
+    theta_to_mm(
+        eigenvectors,
+        imps_left,
+        imps_right,
+        sim_dict,
+        sim_dict["chi_max"],
+        True,
+        None,
+        -1,
+        sim_dict["eps_truncation"],
+    )
+
+    contract_mps_mpo_mps_left_border(dst_left_bloc, imps_left, ham_left, imps_left)
+    contract_mps_mpo_mps_right_border(dst_right_bloc, imps_right, ham_right, imps_right)
+    # if len(imps_left) == 2:
+    #     tmp = {}
+    #     contract_left_bloc_mps(
+    #         tmp, left_bloc, imps_left[1], ham_supp_left, imps_left[1]
+    #     )
+    #     left_bloc = tmp
 
 
 def idmrg_minimize_two_sites(
@@ -485,11 +515,8 @@ def idmrg_minimize_two_sites(
     eigenvalues = {}
     eigenvectors = {}
     minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
-    # # remove blocks with too large values
-    # vals = sorted(_ for i,_ in enumerate(set(eigenvalues.values()) if i < sim_dict["nb_eigenvalues"]))
-    # for key in eigenvalues.keys():
-    #     if eigenvalues[key] not in vals:
-    #         eigenvectors.pop(key)
+    select_lowest_blocs(eigenvalues, eigenvectors)
+
     theta_to_mm(
         eigenvectors,
         dst_left,
@@ -537,14 +564,8 @@ def idmrg_even(
         bloc_left.clear()
         bloc_right.clear()
         bloc_left, bloc_right = new_bloc_left, new_bloc_right
-        for key in list(bloc_left.keys()):
-            if key[0] != key[2]:
-                bloc_left.pop(key)
-        for key in list(bloc_right.keys()):
-            if key[0] != key[2]:
-                bloc_right.pop(key)
 
-        dst_imps_left.append(tmp_imps_left)
-        dst_imps_right.append(tmp_imps_right)
+        dst_imps_left.append(_copy(tmp_imps_left))
+        dst_imps_right.append(_copy(tmp_imps_right))
         tmp_imps_left.clear()
         tmp_imps_right.clear()

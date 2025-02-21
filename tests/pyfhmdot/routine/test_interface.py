@@ -79,12 +79,14 @@ def test_routine_interface_minimize_theta():
     from pyfhmdot.intense.contract import contract_left_right_mpo_mpo_permute
     from pyfhmdot.routine.interface import minimize_theta
 
-    ham = create_infinite_hamiltonian("sh_xxz_u1", {"Jxy": 1, "Jz": -2, "hz": 3})
-    mp_left = [create_id_mp("sh_xxz_u1", 1, True)[1]]
-    mp_right = [create_id_mp("sh_xxz_u1", 1, False)[1]]
-    left, right = initialize_idmrg(mp_left, mp_right, ham[0], ham[-1], [])
+    ham = create_infinite_hamiltonian("sh_xxz-hz_u1", {"Jxy": 0, "Jz": 0, "hz": -6})
+    mp_left = {}
+    mp_right = {}
+    left = {}
+    right = {}
+    initialize_idmrg(left, mp_left, right, mp_right, ham[0], ham[-1])
     env_bloc = {}
-    contract_left_right_mpo_mpo_permute(env_bloc, left, right, ham[1][0], ham[1][1])
+    contract_left_right_mpo_mpo_permute(env_bloc, left, ham[1][0], ham[1][1], right)
     eigvals = {}
     eigvecs = {}
     minimize_theta(env_bloc, eigvals, eigvecs, 10)

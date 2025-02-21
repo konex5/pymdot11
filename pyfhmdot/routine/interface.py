@@ -88,7 +88,7 @@ def theta_to_mm(
     normalize: bool,
     is_um: _Optional[bool],
     direction_right: int,
-    eps: float = 10**-8,
+    eps: float = 10 ** -8,
 ) -> None:
 
     keys = list(theta_blocs.keys())
@@ -165,3 +165,14 @@ def minimize_theta(
         eigenvectors[(keys[0], keys[1], keys[2], keys[3])] = vec.reshape(
             (mat.shape[0], mat.shape[1], mat.shape[2], mat.shape[3])
         )
+
+
+def select_lowest_blocs(
+    eigenvalues: _Dict[tuple, float], eigenvectors: _Dict[tuple, _np.ndarray]
+):
+    # remove non minimal blocs
+    min_val = sorted(set(eigenvalues.values()))[0]
+    for key in list(eigenvalues.keys()):
+        if not abs(eigenvalues[key] - min_val) < 1e-8:
+            eigenvectors.pop(key)
+            eigenvalues.pop(key)

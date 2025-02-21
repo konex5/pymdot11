@@ -9,15 +9,18 @@ def infinite_to_finite_ground_state(
     dst_imps_left = []
     dst_imps_right = []
     ham_left, ham_mpo, ham_right = create_infinite_hamiltonian(model_name, parameters)
-    dst_imps_left.append(create_id_mp(model_name, 1, True)[1])
-    dst_imps_right.append(create_id_mp(model_name, 1, False)[1])
+    # dst_imps_left.append(create_id_mp(model_name, 1, True)[1])
+    # dst_imps_right.append(create_id_mp(model_name, 1, False)[1])
 
     if size % 2 == 1:
         dst_imps_left.append(create_id_mp(model_name, 2, True)[1])
 
-    bloc_left, bloc_right = initialize_idmrg(
-        dst_imps_left, dst_imps_right, ham_left, ham_right, ham_mpo[0]
-    )
+    imps_left, imps_right = {}, {}
+    bloc_left, bloc_right = {}, {}
+    initialize_idmrg(bloc_left, imps_left, bloc_right, imps_right, ham_left, ham_right)
+    dst_imps_left.append(imps_left)
+    dst_imps_right.append(imps_right)
+
     idmrg_even(
         dst_imps_left,
         dst_imps_right,
