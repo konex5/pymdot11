@@ -3,9 +3,9 @@ sh_xxz-hz_u1 = 0
 size = 10
 
 [parameters]
-Jxy = 1.0
-Jz = 2.0
-hz = 3.0
+Jxy = 0.25
+Jz = 0.5
+hz = 1.5
 
 [idmrg_simulation]
 chi_max = 30
@@ -25,7 +25,7 @@ normalize = 1
 
 [Tdmrg_simulation]
 chi_max = 100
-dtau = 0.0125
+dtau = 0.025
 dw_one_step = 0
 dw_total = 0
 eps_truncation = 1e-62
