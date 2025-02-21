@@ -402,7 +402,7 @@ def sweep_eleven_times(
                     normalize,
                     eps,
                     is_um=False,
-                    conserve_left_right_before=False,
+                    conserve_left_right_after_gate=False,
                     direction_right=3,
                 )
 
