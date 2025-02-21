@@ -1,4 +1,7 @@
 from numpy import sqrt as _sqrt
+from numpy import iscomplex as _iscomplex
+from numpy import imag as _imag
+
 import sys
 
 from pyfhmdot.models.pymodels import hamiltonian_obc, suzu_trotter_obc_exp
@@ -99,7 +102,17 @@ def get_hamiltonian(model_name, parameters, size, dbeta, dtime):
     return hamiltonian_obc(model_name, parameters, size)
 
 
-def get_hamiltonian_gates(model_name, parameters, size, dbeta, dtime):
+def get_hamiltonian_gates(model_name, parameters, size, *, dbeta, is_dgate, in_group):
+    """
+    To avoid problems, only the physical direction
+    e^-{i dbeta H} or e^{- dbeta H} will be selected.
+    Negative values are rejected.
+    """
+    if _iscomplex(dbeta):
+        db = abs(_imag(dbeta)) * 1j
+    else:
+        db = abs(dbeta)
+
     # suzuki trotter
     factor1 = 1.0 / ((4.0 - 4 ** (1.0 / 3.0)))
     factor2 = 1.0 - 4.0 * factor1
@@ -116,91 +129,32 @@ def get_hamiltonian_gates(model_name, parameters, size, dbeta, dtime):
     db1S = mdb * factor1
     db2F = mdb * (factor1 + factor2) / 2.0
     db2S = mdb * factor2
-    print("dgate suzuki_trotter imaginary time 4th order, serie 1/4")
+    print("dgate suzuki_trotter 4th order, serie 1/4")
     dgate_imaginary_time.append(
         suzu_trotter_obc_exp(
-            db1F, model_name, parameters, size, is_dgate=False, in_group=True
+            db1F, model_name, parameters, size, is_dgate=is_dgate, in_group=in_group
         )
     )
-    print("dgate suzuki_trotter imaginary time 4th order, serie 2/4")
+    print("dgate suzuki_trotter 4th order, serie 2/4")
     dgate_imaginary_time.append(
         suzu_trotter_obc_exp(
-            db1S, model_name, parameters, size, is_dgate=False, in_group=True
+            db1S, model_name, parameters, size, is_dgate=is_dgate, in_group=in_group
         )
     )
-    print("dgate suzuki_trotter imaginary time 4th order, serie 3/4")
+    print("dgate suzuki_trotter 4th order, serie 3/4")
     dgate_imaginary_time.append(
         suzu_trotter_obc_exp(
-            db2F, model_name, parameters, size, is_dgate=False, in_group=True
+            db2F, model_name, parameters, size, is_dgate=is_dgate, in_group=in_group
         )
     )
-    print("dgate suzuki_trotter imaginary time 4th order, serie 4/4\n")
+    print("dgate suzuki_trotter 4th order, serie 4/4\n")
     dgate_imaginary_time.append(
         suzu_trotter_obc_exp(
-            db2S, model_name, parameters, size, is_dgate=False, in_group=True
+            db2S, model_name, parameters, size, is_dgate=is_dgate, in_group=in_group
         )
     )
 
-    dgate_real_time = []
-    sgate_real_time = []
-
-    dt = abs(dtime)
-    mIdt = -1.0j * dt
-    dt1F = mIdt * factor1 / 2.0
-    dt1S = mIdt * factor1
-    dt2F = mIdt * (factor1 + factor2) / 2.0
-    dt2S = mIdt * factor2
-    print("dgate suzuki_trotter real time 4th order, serie 1/4")
-    dgate_real_time.append(
-        suzu_trotter_obc_exp(
-            dt1F, model_name, parameters, size, is_dgate=True, in_group=True
-        )
-    )
-    print("dgate suzuki_trotter real time 4th order, serie 2/4")
-    dgate_real_time.append(
-        suzu_trotter_obc_exp(
-            dt1S, model_name, parameters, size, is_dgate=True, in_group=True
-        )
-    )
-    print("dgate suzuki_trotter real time 4th order, serie 3/4")
-    dgate_real_time.append(
-        suzu_trotter_obc_exp(
-            dt2F, model_name, parameters, size, is_dgate=True, in_group=True
-        )
-    )
-    print("dgate suzuki_trotter real time 4th order, serie 4/4\n")
-    dgate_real_time.append(
-        suzu_trotter_obc_exp(
-            dt2S, model_name, parameters, size, is_dgate=True, in_group=True
-        )
-    )
-    #
-    print("sgate suzuki_trotter real time 4th order, serie 1/4")
-    sgate_real_time.append(
-        suzu_trotter_obc_exp(
-            dt1F, model_name, parameters, size, is_dgate=False, in_group=False
-        )
-    )
-    print("sgate suzuki_trotter real time 4th order, serie 2/4")
-    sgate_real_time.append(
-        suzu_trotter_obc_exp(
-            dt1S, model_name, parameters, size, is_dgate=False, in_group=False
-        )
-    )
-    print("sgate suzuki_trotter real time 4th order, serie 3/4")
-    sgate_real_time.append(
-        suzu_trotter_obc_exp(
-            dt2F, model_name, parameters, size, is_dgate=False, in_group=False
-        )
-    )
-    print("sgate suzuki_trotter real time 4th order, serie 4/4\n")
-    sgate_real_time.append(
-        suzu_trotter_obc_exp(
-            dt2S, model_name, parameters, size, is_dgate=False, in_group=False
-        )
-    )
-
-    return dgate_imaginary_time, sgate_real_time, dgate_real_time
+    return dgate_imaginary_time
 
 
 def create_maximal_entangled_state(size, spin_name, qn_name):
