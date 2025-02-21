@@ -223,7 +223,7 @@ def single_operator(name, coef):  # -> one bloc
 
 
 def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
-    
+
     bonds = [
         "sh_id_no-sh_id_no",
         "sh_sm_no-sh_sp_no",
