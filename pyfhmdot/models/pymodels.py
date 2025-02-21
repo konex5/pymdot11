@@ -2,7 +2,7 @@ import numpy as _np
 from scipy.linalg import expm as _expm
 
 from pyfhmdot.models.pyoperators import single_operator, two_sites_bond_operator
-from pyfhmdot.intense.splitgroup import group_four_dgate, reshape_and_group
+from pyfhmdot.intense.splitgroup import group_four_dgate as _group_four_dgate
 
 
 def pyhamiltonian(name):
@@ -1068,7 +1068,7 @@ def suzu_trotter_obc_exp(arg, model_name, parameters, size, is_dgate, in_group):
                 dense_d=dense_d,
             )
             tmp = {}
-            group_four_dgate(model_name, tmp, tmporary)
+            _group_four_dgate(model_name, tmp, tmporary)
         else:
             tmp = suzu_trotter_exp_to_blocs(
                 arg,
