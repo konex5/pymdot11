@@ -667,7 +667,6 @@ def dmrg_sweep_lanczos(
 
         if start_left:
             for l in range(2, size - 2, 1):
-                print_double(size, l, "A=")
                 minimize_lanczos(l, mps, ham, left, right, max_iteration, tolerance)
                 apply_mm_at(
                     mps,
@@ -680,10 +679,10 @@ def dmrg_sweep_lanczos(
                     conserve_left_right_before=False,
                     direction_right=direction_right,
                 )
-                left[l] = update_left(mps[l], ham[l], left[l-1])
+                left[l] = update_left(mps[l], ham[l], left[l - 1])
+                print_double(size, l, "A=")
         else:
             for l in range(size - 2, 2, -1):
-                print_double(size, l, "*B")
                 minimize_lanczos(l, mps, ham, left, right, max_iteration, tolerance)
                 apply_mm_at(
                     mps,
@@ -696,8 +695,8 @@ def dmrg_sweep_lanczos(
                     conserve_left_right_before=False,
                     direction_right=direction_right,
                 )
-                right[l] = update_right(mps[l], ham[l], right[l+1])
-
+                right[l] = update_right(mps[l], ham[l], right[l + 1])
+                print_double(size, l, "=B")
 
         start_left = not start_left
         print("dw_one_serie", dw_dict["dw_one_serie"])
