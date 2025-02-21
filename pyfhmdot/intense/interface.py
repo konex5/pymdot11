@@ -1,5 +1,5 @@
-from collections import defaultdict
-from copy import deepcopy as _copy
+
+from collections import defaultdict as _defaultdict
 from numpy import array as _array
 
 from pyfhmdot.intense.contract import (
@@ -196,7 +196,7 @@ def measure_dmps_mpo_dmps(dmps_one, mpo, dmps_two, position=-1):
         tmp, tmp_right = tmp_right, {}  # swap and clear
         _contract_right_big(tmp_right, tmp, dmps_one[l], mpo[l], dmps_two[l])
 
-    dst = {}
+    dst = _defaultdict(lambda: _array(0))
     _contract_left_right_big(dst, tmp_left, tmp_right)
 
     return dst[()][()]
@@ -230,25 +230,3 @@ def measure_dmps_mpo_mpo_dmps(dmps_one, mpo_one, mpo_two, dmps_two, position=-1)
     _contract_left_right_very_big(dst, tmp_left, tmp_right)
 
     return dst[()][()]
-
-# def apply_single_op_on_mp(dst,op,mp):
-#     tmp = {} #defaultdict(lambda: _array(0)) # outside bloc is zero 
-#     multiply_mp(tmp,op,mp,[1],[2])
-#     permute_blocs(dst,tmp,[(0,1,2,3),(1,2,0,3)])
-
-
-def measure_dmps_average_single_mpo_dmps(dmps_one, single_mpo, dmps_two):
-    average = []    
-    for position in range(len(dmps_one)-1):
-        #store_mp = _copy(dmps_two[position])
-        #replace_mp = {}#defaultdict(lambda: _array(0)) # outside bloc is zero 
-        #apply_single_op_on_mp(replace_mp,single_mpo,dmps_two[position])
-        #dmps_two[position] = replace_mp
-        average.append(measure_dmps_dmps(dmps_one,dmps_two,position))
-        #dmps_two[position] = store_mp # put the value back
-    
-    
-    average.append(measure_dmps_dmps(dmps_one,dmps_two,len(dmps_one)-2))
-
-
-    return average
