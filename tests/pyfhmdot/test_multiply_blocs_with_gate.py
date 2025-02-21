@@ -75,6 +75,7 @@ def test_multiply_blocs_sparse_with_gate(
     )
     assert list(dest_blocs.keys())[0] == (0, 0, 0, 0)
     assert len(dest_blocs.keys()) == 16
+    return dest_blocs
 
 
 def test_multiply_blocs_sparse_with_gate_onedir_qnum(
@@ -100,6 +101,7 @@ def test_multiply_blocs_sparse_with_gate_onedir_qnum(
     )
     assert list(dest_blocs.keys())[0] == (0, 0, 0, 0)
     assert len(dest_blocs.keys()) == 3
+    return dest_blocs
 
 
 def test_multiply_blocs_sparse_with_gate_with_qcons(
@@ -125,3 +127,4 @@ def test_multiply_blocs_sparse_with_gate_with_qcons(
     )
     assert list(dest_blocs.keys())[0] == (0, 0, 0, 0)
     assert len(dest_blocs.keys()) == 3
+    return dest_blocs
