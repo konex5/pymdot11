@@ -12,6 +12,6 @@ def test_idmrg_all():
         {"Jxy": 1, "Jz": 1, "hz": 0},
         {"chi_max": 10, "eps_truncation": 1e-8, "dw_total": 0, "dw_one_serie": 0},
         size=20,
-        conserve_total=20 // 2,
+        conserve_total=20,
     )
     pass
