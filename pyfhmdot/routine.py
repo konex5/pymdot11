@@ -14,7 +14,9 @@ from pyfhmdot.indices import (
 )
 
 
-def normalize_the_array(list_of_array: _List[_np.array], cut: _Optional[_List[int]]) -> None:
+def normalize_the_array(
+    list_of_array: _List[_np.array], cut: _Optional[_List[int]]
+) -> None:
     if isinstance(cut, list):
         norm = _np.sqrt(
             _np.sum(
@@ -36,7 +38,7 @@ def truncation_strategy(
     list_of_array: _List[_np.array],
     eps_truncation_error: float = 10 ** -32,
     chi_max: int = 600,
-) -> _Tuple[list,float]:
+) -> _Tuple[list, float]:
     #
     # epsilon = || forall bloc s_bloc ||_2^2
     # chi_max = max chi of bloc
