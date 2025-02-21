@@ -85,8 +85,8 @@ if __name__ == "__main__":
             parameters,
             size,
             dbeta=tdmrg_simulation_parameters["dtau"] * 1j,
-            is_dgate=False,
-            in_group=False,
+            is_dgate=True,
+            in_group=True,
         )
 
         for st, step in enumerate(ham_mpo):
