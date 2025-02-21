@@ -27,6 +27,7 @@ echo "observables"
 ./script/cli_maverage.py -b /tmp/2B_00.0500.h5 -k /tmp/2B_00.0500.h5 -n sh_sz_u1
 ./script/cli_maverage.py -b /tmp/2B_00.0500.h5 -k /tmp/2B_00.0500.h5 -n sh_sz_u1-sh_sz_u1
 
+echo "correlation"
 ./script/cli_maverage.py -b /tmp/2B_00.0250_sz_0005/t_00.0000.h5 -k /tmp/2B_00.0250.h5 -n sh_sz_u1
 
 echo "energies"
