@@ -108,7 +108,7 @@ def test_validation_theta_step_two():
     apply_gate_on_mm_at(
         mps,
         gate,
-        0,
+        1,
         {"dw_one_serie": 0},
         100,
         True,
@@ -117,4 +117,8 @@ def test_validation_theta_step_two():
         conserve_left_right_after_gate=False,
         direction_right=1,
     )
-    pass
+    for key in mps[0].keys():
+        assert all(mps[0][key] == old_results_mpsL[key])
+    
+    for key in mps[1].keys():
+        assert all(mps[1][key] == old_results_mpsR[key])
