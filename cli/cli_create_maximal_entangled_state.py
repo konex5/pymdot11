@@ -1,5 +1,5 @@
-# #!/usr/bin/env python
-# # -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import argparse
 import sys
@@ -8,7 +8,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 
-# from pyfhmdot.general import getargs_maximal_entangled_state, create_maximal_entangled_state
+from pyfhmdot.general import get_model_info, create_maximal_entangled_state
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="cli, create maximal entangled state")
@@ -35,19 +35,14 @@ if __name__ == "__main__":
             f"cli_create_maximal_entangled_state.py: error: the output dirpath {os.path.dirname(arguments.output)} is not a valid directory path."
         )
 
-    # coefsite, dmps, info, sim_TDMRG = create_maximal_entangled_state(size=size,qname='sh_id_no')
+    model_dict = get_model_info(arguments.hamiltonian)
+    coefsite, dmps = create_maximal_entangled_state(**model_dict)
 
     """
-    model_dict = get_model(arguments.hamiltonian)
-
-    coefsite, mpo, info, sim_TDMRG = main_create_maximal_entangled_state(
-        model_dict["qn"],model_dict["spin_length"], model_dict["size"]
-    )
-
     hdf5_create_mpo(output, mpo, coefsite, modeldict, info, sim_TDMRG, "TDMRG")
 
     if not os.path.exists(output.split("2B_")[0] + "2B.lock"):
         addlocker_write_beta(output)
 
-    print("Maximal entangled state created!")
     """
+    print("Maximal entangled state created successfully.")
