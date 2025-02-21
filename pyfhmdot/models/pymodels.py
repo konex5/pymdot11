@@ -1,8 +1,13 @@
-def hamiltonian(
+def hamiltonian_on_site():
+    pass
+
+
+
+def hamiltonian_list_names(
     all_terms, on_site, on_bond, special_on_site, special_on_bond, subhamiltonian
 ):
     ham_expr = []
-    hamiltonian(subhamiltonian)
+    hamiltonian_list_names(subhamiltonian)
 
 
 def model_info():
