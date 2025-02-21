@@ -182,8 +182,9 @@ def make_maximal_entangled_state_u1():
         dmps = []
         for l in range(L):
             dest_blocs = {}
-            dest_blocs[(0, 1, 0)] = np.array([1 / np.sqrt(2), 1 / np.sqrt(2)]
-            ).reshape(1, 2, 1)
+            dest_blocs[(0, 1, 0)] = np.array([1 / np.sqrt(2), 1 / np.sqrt(2)]).reshape(
+                1, 2, 1
+            )
             dmps.append(dest_blocs)
 
         return dmps
