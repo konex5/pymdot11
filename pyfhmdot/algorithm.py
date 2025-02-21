@@ -40,31 +40,6 @@ def apply_mm(
     return mps_left, mps_right
 
 
-def apply_mm_at(
-    mps,
-    position,
-    dw_dict,
-    chi_max,
-    normalize,
-    eps,
-    *,
-    is_um,
-    conserve_left_right_before=False,
-    direction_right=-1,
-):
-    mps[position - 1], mps[position] = apply_mm(
-        mps[position - 1],
-        mps[position],
-        dw_dict,
-        chi_max,
-        normalize,
-        eps,
-        is_um=is_um,
-        conserve_left_right_before=conserve_left_right_before,
-        direction_right=direction_right,
-    )
-
-
 def apply_gate_on_mm(
     mps_left,
     mps_right,
@@ -101,6 +76,31 @@ def apply_gate_on_mm(
         is_um=is_um,
     )
     return mps_left, mps_right
+
+
+def apply_mm_at(
+    mps,
+    position,
+    dw_dict,
+    chi_max,
+    normalize,
+    eps,
+    *,
+    is_um,
+    conserve_left_right_before=False,
+    direction_right=-1,
+):
+    mps[position - 1], mps[position] = apply_mm(
+        mps[position - 1],
+        mps[position],
+        dw_dict,
+        chi_max,
+        normalize,
+        eps,
+        is_um=is_um,
+        conserve_left_right_before=conserve_left_right_before,
+        direction_right=direction_right,
+    )
 
 
 def apply_gate_on_mm_at(
