@@ -2,9 +2,9 @@ def automation():
     return True
 
 
-def is_fmdot_available():
+def is_mdot_available():
     try:
-        import fmd_operators
+        import mdot_operators
     except:
         return False
     return True
