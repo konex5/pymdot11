@@ -8,7 +8,6 @@ from numbers import Number as _ntype
 from validity import quantum_name_model_from_qnmodel as _qn_model
 
 
-
 def _parameters2finalparameters(tupleMlist, parameters):
     """
     input (('M',7.,2),(Sz,1))
@@ -162,6 +161,7 @@ def finite_hamiltonian_terms(qnmodel, parameters, L):
 
     # print(onsiteHam,onbondHam)
     return onsiteHam, onbondHam
+
 
 def _hamiltonian_mpo_period2(site_M, bond_L, bond_R, quantum_name):
     bl_dimL = len(bond_L) + 1

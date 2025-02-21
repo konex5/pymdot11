@@ -91,10 +91,76 @@ def single_operator(name, coef):  # -> one bloc
         },
         # # rung: two spin half
         # 0 is |s1=1/2,mz1=+1/2>x|s2=1/2,mz2=+1/2>
-        # 1 is |s1=1/2,mz1=-1/2>x|s2=1/2,mz2=+1/2>, |s1=1/2,mz1=+1/2>x|s2=1/2,mz2=-1/2>
+        # 1 is |s1=1/2,mz1=+1/2>x|s2=1/2,mz2=-1/2>, |s1=1/2,mz1=-1/2>x|s2=1/2,mz2=+1/2>
         # 2 is |s1=1/2,mz1=-1/2>x|s2=1/2,mz2=-1/2>
         # works well for singlets and triplets
-
+        "ru_idid_no": {
+            (0, 0): coef
+            * _np.array(
+                [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], dtype=_real_t
+            )
+        },
+        "ru_idid_u1": {
+            (0, 0): coef * _np.array([[1]], dtype=_real_t),
+            (1, 1): coef * _np.array([[1, 0], [0, 1]], dtype=_real_t),
+            (2, 2): coef * _np.array([[1]], dtype=_real_t),
+        },
+        "ru_szid_no": {
+            (0, 0): coef
+            * _np.array(
+                [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, -1, 0], [0, 0, 0, -1]],
+                dtype=_real_t,
+            )
+        },
+        "ru_szid_u1": {
+            (0, 0): coef * _np.array([[1]], dtype=_real_t),
+            (1, 1): coef * _np.array([[1, 0], [0, -1]], dtype=_real_t),
+            (2, 2): coef * _np.array([[-1]], dtype=_real_t),
+        },
+        "ru_idsz_no": {
+            (0, 0): coef
+            * _np.array(
+                [[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, 1, 0], [0, 0, 0, -1]],
+                dtype=_real_t,
+            )
+        },
+        "ru_idsz_u1": {
+            (0, 0): coef * _np.array([[1]], dtype=_real_t),
+            (1, 1): coef * _np.array([[-1, 0], [0, 1]], dtype=_real_t),
+            (2, 2): coef * _np.array([[-1]], dtype=_real_t),
+        },
+        "ru_szsz_no": {
+            (0, 0): coef
+            * _np.array(
+                [[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]],
+                dtype=_real_t,
+            )
+        },
+        "ru_szsz_u1": {
+            (0, 0): coef * _np.array([[1]], dtype=_real_t),
+            (1, 1): coef * _np.array([[-1, 0], [0, -1]], dtype=_real_t),
+            (2, 2): coef * _np.array([[1]], dtype=_real_t),
+        },
+        "ru_spid_no": {
+            (0, 0): coef
+            * _np.array(
+                [[0, 0, 1, 0], [0, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0]], dtype=_real_t
+            )
+        },
+        "ru_spid_u1": {
+            (0, 1): coef * _np.array([[0, 1]], dtype=_real_t),
+            (1, 2): coef * _np.array([[1], [0]], dtype=_real_t),
+        },
+        "ru_idsp_no": {
+            (0, 0): coef
+            * _np.array(
+                [[0, 1, 0, 0], [0, 0, 0, 0], [0, 0, 0, 1], [0, 0, 0, 0]], dtype=_real_t
+            )
+        },
+        "ru_idsp_u1": {
+            (0, 1): coef * _np.array([[1, 0]], dtype=_real_t),
+            (1, 2): coef * _np.array([[0], [1]], dtype=_real_t),
+        },
     }
 
     return operators[name]
@@ -134,7 +200,8 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
             return single_operator(left_name, coef), single_operator(right_name, 1.0)
         else:
             return single_operator(left_name, 1.0), single_operator(right_name, coef)
-    
+
+
 """
     # ### ldsh=ladder spin half
     # # the numbers correspond to legs
