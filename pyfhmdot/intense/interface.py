@@ -35,7 +35,6 @@ from pyfhmdot.intense.contract import (
     contract_left_bloc_mps_mpo as _contract_left_bloc_mps,
     contract_right_bloc_mps_mpo as _contract_right_bloc_mps,
     contract_left_right_very_big_bloc as _contract_left_right_as_big,
-
 )
 
 from pyfhmdot.intense.contract import (

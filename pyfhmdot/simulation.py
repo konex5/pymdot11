@@ -669,11 +669,18 @@ def idmrg_minimize_two_sites(
             shape[0] * shape[1] * shape[2] * shape[3]
             == shape[4] * shape[5] * shape[6] * shape[7]
         ):
-            env_bloc.pop(key) # non physical blocs
-        elif not (key[1] in allowed_sector) or not (key[2] in allowed_sector) or not (key[5] in allowed_sector) or not (key[6] in allowed_sector): 
-            env_bloc.pop(key) # quantum conserved is used here
+            env_bloc.pop(key)  # non physical blocs
+        elif (
+            not (key[1] in allowed_sector)
+            or not (key[2] in allowed_sector)
+            or not (key[5] in allowed_sector)
+            or not (key[6] in allowed_sector)
+        ):
+            env_bloc.pop(key)  # quantum conserved is used here
         elif not (key[1] == key[2] and key[5] == key[6]):
-            env_bloc.pop(key) # quantum sum is preserved here (left sum is same as right sum)
+            env_bloc.pop(
+                key
+            )  # quantum sum is preserved here (left sum is same as right sum)
     # minimize energy
     eigenvalues = {}
     eigenvectors = {}
