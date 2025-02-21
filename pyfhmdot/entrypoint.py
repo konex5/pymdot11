@@ -66,7 +66,7 @@ def infinite_to_finite_ground_state(
         bloc_right,
         ham_mpo,
         idmrg_dict,
-        iterations=(size - len(dst_imps_left) - 1) // 2,
+        iterations=(size - len(dst_imps_left) - 3) // 2,
         size=size,
         conserve_total=conserve_total,
         d=d,

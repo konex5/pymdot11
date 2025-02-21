@@ -618,12 +618,23 @@ def initialize_idmrg_even_size(
     theta_to_mm(
         eigenvectors,
         imps_left,
+        {},
+        sim_dict,
+        sim_dict["chi_max"],
+        True,
+        True,
+        1,
+        sim_dict["eps_truncation"],
+    )
+    theta_to_mm(
+        eigenvectors,
+        {},
         imps_right,
         sim_dict,
         sim_dict["chi_max"],
         True,
-        None,
-        1,
+        False,
+        3,
         sim_dict["eps_truncation"],
     )
 
@@ -631,7 +642,98 @@ def initialize_idmrg_even_size(
     contract_mps_mpo_mps_right_border(dst_right_bloc, imps_right, ham_right, imps_right)
 
 
-def idmrg_minimize_two_sites(
+def dmrg_minimize_two_sites(
+    dst_left,
+    dst_right,
+    bloc_left,
+    bloc_right,
+    ham_mpo_left,
+    ham_mpo_right,
+    sim_dict,
+    *,
+    position,
+    size,
+    conserve_total,
+    d,
+):
+    # select_quantum_sector
+    diff = min(size - conserve_total, conserve_total)
+    if position < diff or position > size - diff:
+        allowed_sector = list(range(d))  # all
+    elif conserve_total <= size // 2:
+        allowed_sector = list(range(d - 1))  # inc
+    elif size - conserve_total <= size // 2:
+        allowed_sector = list(range(1, d))  # dec
+    else:
+        allowed_sector = []  # should never occur
+
+    # contract and permute
+    env_bloc = {}
+    contract_left_right_mpo_mpo_permute(
+        env_bloc, bloc_left, ham_mpo_left, ham_mpo_right, bloc_right
+    )
+    for key in list(env_bloc.keys()):
+        shape = env_bloc[key].shape
+        if not (
+            shape[0] * shape[1] * shape[2] * shape[3]
+            == shape[4] * shape[5] * shape[6] * shape[7]
+        ):
+            env_bloc.pop(key)  # non physical blocs
+        elif (
+            not (key[1] in allowed_sector)
+            or not (key[2] in allowed_sector)
+            or not (key[5] in allowed_sector)
+            or not (key[6] in allowed_sector)
+        ):
+            env_bloc.pop(key)  # quantum conserved is used here
+        elif not (
+            key[0] + key[1] - key[2] - key[3] == 0
+            and key[4] + key[5] - key[6] - key[7] == 0
+        ):
+            env_bloc.pop(
+                key
+            )  # quantum sum is preserved here (left sum is same as right sum)
+    # minimize energy
+    eigenvalues = {}
+    eigenvectors = {}
+    minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
+
+    # for key in list(eigenvectors.keys()):
+    #     if not (
+    #         key[1] in allowed_sector and key[2] in allowed_sector and key[1] == key[2]
+    #     ):
+    #         eigenvectors.pop(key)
+    #         eigenvalues.pop(key)
+    #         _warning("eigenvectors removed a posteriori.")
+    select_lowest_blocs(eigenvalues, eigenvectors)
+    # select_quantum_sector(eigenvalues, eigenvectors)
+    apply_eigenvalues(eigenvalues, eigenvectors)
+
+    theta_to_mm(
+        eigenvectors,
+        dst_left,
+        {},
+        sim_dict,
+        sim_dict["chi_max"],
+        True,
+        True,
+        1,
+        sim_dict["eps_truncation"],
+    )
+    theta_to_mm(
+        eigenvectors,
+        {},
+        dst_right,
+        sim_dict,
+        sim_dict["chi_max"],
+        True,
+        False,
+        3,
+        sim_dict["eps_truncation"],
+    )
+
+
+def finalize_idmrg_even_size(
     dst_left,
     dst_right,
     bloc_left,
@@ -706,7 +808,7 @@ def idmrg_minimize_two_sites(
         sim_dict["chi_max"],
         True,
         None,
-        1,
+        -1,
         sim_dict["eps_truncation"],
     )
 
@@ -728,7 +830,7 @@ def idmrg_even(
         tmp_imps_left = {}
         tmp_imps_right = {}
 
-        idmrg_minimize_two_sites(
+        dmrg_minimize_two_sites(
             tmp_imps_left,
             tmp_imps_right,
             bloc_left,
@@ -758,3 +860,19 @@ def idmrg_even(
         dst_imps_right.append(_copy(tmp_imps_right))
         tmp_imps_left.clear()
         tmp_imps_right.clear()
+
+    finalize_idmrg_even_size(
+        tmp_imps_left,
+        tmp_imps_right,
+        bloc_left,
+        bloc_right,
+        ham_mpo[0],
+        ham_mpo[1],
+        idmrg_dict,
+        position=(size - len(dst_imps_left) - 1) // 2,
+        size=size,
+        conserve_total=conserve_total,
+        d=d)
+
+    dst_imps_left.append(_copy(tmp_imps_left))
+    dst_imps_right.append(_copy(tmp_imps_right))
