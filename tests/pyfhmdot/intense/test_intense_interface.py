@@ -3,13 +3,16 @@ import pytest
 
 def test_measure_dmps():
     from pyfhmdot.general import create_maximal_entangled_state
-    from pyfhmdot.intense.interface import measure_dmps
+    from pyfhmdot.intense.interface import measure_dmps,measure_dmps_dmps
     import numpy as _np
 
     _, dmps = create_maximal_entangled_state(11, "sh_xxz_u1")
 
     val = measure_dmps(dmps)
-    assert _np.abs(val - _np.sqrt(2)) < 1e-8
+    assert _np.abs(val - _np.sqrt(2)**11) < 1e-8
+    val = measure_dmps_dmps(dmps,dmps)
+    assert _np.abs(val - 1) < 1e-8
+    
 
 
 def test_measure_dmps_dmps(make_maximal_entangled_state_u1):
