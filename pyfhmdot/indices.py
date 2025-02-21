@@ -6,7 +6,7 @@ from typing import Optional as _Optional
 from typing import Tuple as _Tuple
 
 
-def indices_prepare_destination_without_gate(
+def indices_dst_theta_no_gate(
     left_indices: _KeysView[tuple],
     right_indices: _KeysView[tuple],
     *,
@@ -39,7 +39,7 @@ def indices_prepare_destination_without_gate(
     return sorted(set(about_indices_to_contract))
 
 
-def indices_theta_prepare_conservation_for_gate(
+def indices_dst_theta_with_gate(
     theta_indices: _KeysView[tuple],
     gate_indices: _KeysView[tuple],
     *,

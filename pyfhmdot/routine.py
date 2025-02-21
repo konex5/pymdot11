@@ -4,8 +4,8 @@ from typing import Dict as _Dict
 
 from pyfhmdot.mul_routine import multiply_arrays, multiply_arrays_and_transpose
 from pyfhmdot.indices import (
-    indices_prepare_destination_without_gate,
-    indices_theta_prepare_conservation_for_gate,
+    indices_dst_theta_no_gate,
+    indices_dst_theta_with_gate,
 )
 
 
@@ -34,7 +34,7 @@ def mm_to_theta_no_gate(
     *,
     conserve_left_right: bool = False
 ) -> None:
-    dest_indices = indices_prepare_destination_without_gate(
+    dest_indices = indices_dst_theta_no_gate(
         lhs_blocs.keys(), rhs_blocs.keys(), conserve_left_right=conserve_left_right
     )
     multiply_arrays(dst_blocs, lhs_blocs, rhs_blocs, dest_indices)
@@ -50,13 +50,13 @@ def mm_to_theta_with_gate(
     conserve_left_right_after: bool = False
 ) -> None:
     tmp_blocs: _Dict[tuple, _np.ndarray] = {}
-    tmp_indices = indices_prepare_destination_without_gate(
+    tmp_indices = indices_dst_theta_no_gate(
         lhs_blocs.keys(),
         rhs_blocs.keys(),
         conserve_left_right=conserve_left_right_before,
     )
     multiply_arrays(tmp_blocs, lhs_blocs, rhs_blocs, tmp_indices)
-    dst_indices = indices_theta_prepare_conservation_for_gate(
+    dst_indices = indices_dst_theta_with_gate(
         tmp_blocs.keys(),
         gate_blocs.keys(),
         conserve_left_right=conserve_left_right_after,
