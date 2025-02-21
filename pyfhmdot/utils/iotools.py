@@ -2,6 +2,12 @@ import h5py as _h5
 import os
 
 
+def check_filename_and_extension_h5(filename: str) -> bool:
+    ext = os.path.splitext(filename)[-1]
+    valid_file = os.path.exists(filename) and (ext in [".h5"])
+    return valid_file
+
+
 def create_h5(filepath):
     if os.path.exists(os.path.dirname(filepath)):
         with _h5.File(filepath, "w") as _:

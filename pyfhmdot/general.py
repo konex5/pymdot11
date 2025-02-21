@@ -3,61 +3,62 @@ import sys
 
 from pyfhmdot.models.pymodels import hamiltonian_obc, suzu_trotter_obc_exp
 from pyfhmdot.models.pyoperators import single_operator
+from pyfhmdot.utils.iotools import add_dictionary, load_dictionary
 
 
-def translate_qn_name(qn_num):
-    if qn_num == 0:
-        return "no"
-    elif qn_num == 1:
-        return "u1"
+def translate_qn_name(model_name):
+    head, _, tail = model_name.split("_")
+    if head == "no":
+        qn_num = 0
+    elif head == "u1":
+        qn_num == 1
     else:
-        return ""
-
-
-def translate_spin_name(spin_num):
-    if spin_num == 0:
-        return "sh"
-    elif spin_num == 1:
-        return "so"
-    elif spin_num == 2:
-        return "sf"
-    elif spin_num == 3:
-        return "ldsh"
+        qn_num = -10
+    if tail == "sh":
+        spin_num = 0
+    elif tail == "so":
+        spin_num = 1
+    elif tail == "ru":
+        spin_num = 2
+    elif tail == "sf":
+        spin_num = 3
     else:
-        return ""
+        spin_num = -10
+    return 4 * qn_num + spin_num
 
 
-def get_model_name(hamiltonian_path):
-    return "hamiltonian description"
-
-
-def get_model_info(hamiltonian_path):
-    return {
-        "model_name" : "sh_xxz-hz_u1",
+def add_model_info(filepath, model_name: str, size):
+    """
+    {
+        "sh_xxz-hz_u1" : 0, # number is a unique identifiers for spin size (sh) and qn (u1)
         "size": 10,
-        "spin_name": 0,
-        "qn_name": 1,
-        "interaction_range": 2,
-        "periodicity": 2,
     }
+    """
+    add_dictionary(
+        filepath, "INFO", {model_name: translate_qn_name(model_name), "size": size}
+    )
 
 
-def get_model_parameters(hamiltonian_path):
-    return {"J": 1.0, "Jz": 2.0}
+def add_model_parameters(filepath, parameters):
+    """
+    {
+        "Jxy" : 2.0,
+        "hz": 3.4,
+    }
+    """
+    add_dictionary(filepath, "INFO_PARAMETERS", parameters)
 
 
-def get_details_zdmrg():
-    return {
+def add_model_simulation(filepath, parameters):
+    """TODO
+    {
         "eps_truncation": 10 ** -8,
         "chi_max": 600,
         "nb_warmup_sweep": 6,
         "nb_sweep": 6,
         "store_state": 2,
     }
-
-
-def get_details_tdmrg():
-    return {
+    {
         "discarded_weights": 0,
         "eps_truncation": 10 ** -8,
         "chi_max": 600,
@@ -65,15 +66,40 @@ def get_details_tdmrg():
         "store_state": 0.5,
         "stop_value": 4,
     }
-
-def get_all_details():
+    """
+    # add_dictionary(filepath,"INFO_SIM_0DMRG",parameters)
+    # add_dictionary(filepath,"INFO_SIM_TDMRG",parameters)
     pass
 
 
-def create_hamiltonian(model_name, parameters, size, dbeta, dtime):
+# def get_details_zdmrg():
+#     return
+#
+# def get_details_tdmrg():
+#     return
+#
+# def get_all_details():
+#     pass
+
+
+def load_model_info(filepath):
+    return load_dictionary(filepath, "INFO")
+
+
+def load_model_parameters(filepath):
+    return load_dictionary(filepath, "INFO_PARAMETERS")
+
+
+def load_model_simulation(filepath):
+    # return load_dictionary(filepath,"INFO_PARAMETERS")
+    pass
+
+
+def get_hamiltonian(model_name, parameters, size, dbeta, dtime):
     return hamiltonian_obc(model_name, parameters, size)
 
-def create_hamiltonian_gates(model_name, parameters, size, dbeta, dtime):
+
+def get_hamiltonian_gates(model_name, parameters, size, dbeta, dtime):
     # suzuki trotter
     factor1 = 1.0 / ((4.0 - 4 ** (1.0 / 3.0)))
     factor2 = 1.0 - 4.0 * factor1

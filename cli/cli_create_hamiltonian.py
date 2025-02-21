@@ -4,6 +4,10 @@
 import argparse
 import sys
 import os
+import toml
+
+from pyfhmdot.utils.iotools import *
+from pyfhmdot.utils.iodicts import *
 
 from pyfhmdot.general import create_model_info, create_hamiltonian
 
@@ -22,18 +26,21 @@ if __name__ == "__main__":
     )
     arguments = parser.parse_args()
 
-    if not os.path.exists(arguments.input):
+    if check_filename_and_extension(arguments.input):
         sys.exit(
             f"cli_create_hamiltonian.py: error: the hamiltonian path {arguments.input} is not a valid path."
         )
-    if not os.path.exists(os.path.dirname(arguments.output)):
+    if not check_filename_and_extension_h5(arguments.output):
         sys.exit(
             f"cli_create_hamiltonian.py: error: the output dirpath {os.path.dirname(arguments.output)} is not a valid directory path."
         )
 
-    info, parameters, info_sim = get_model_info(filepath)
-
-    ham_mpo, ggdgate_db, ggsgate_dt, ggdgate_dt = create_hamiltonian(info["model_name"],parameters,info["size"],info_sim["dbeta"],info_sim["dtime"])
+    large_dictionary = read_dictionary(arguments.input)
+    info = large_dictionary.pop("model")
+    parameters = large_dictionary.pop("parameters")
+    
+    # ham_mpo, ggdgate_db, ggsgate_dt, ggdgate_dt = create_hamiltonian(info["model_name"],parameters,info["size"],info_sim["dbeta"],info_sim["dtime"])
+    create_h5(arguments.output)
 
     """
     hdf5_create_mpo(output, mpo, coefsite, modeldict, info, sim_TDMRG, "TDMRG")
