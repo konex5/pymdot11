@@ -4,11 +4,13 @@ from pyfhmdot.algorithm import apply_mm_at, apply_gate_on_mm_at
 
 from pyfhmdot.intense.contract import (
     contract_left_bloc_mps,
+    contract_left_right_mpo_mpo_permute,
     contract_mps_mpo_mps_left_border,
     contract_mps_mpo_mps_right_border,
     contract_right_bloc_mps,
 )
 from pyfhmdot.routine.eig_routine import smallest_eigenvectors_from_scipy
+from pyfhmdot.routine.interface import minimize_theta, theta_to_mm
 
 
 def sweep(size, *, from_site=None, to_site=None):
@@ -449,11 +451,16 @@ def idmrg_minimize_two_sites(
     dst_left, dst_right, bloc_left, bloc_right, ham_mpo_left, ham_mpo_right, sim_dict
 ):
     # contract and permute
-    tmp = {}
-
+    env_bloc = {}
+    contract_left_right_mpo_mpo_permute(env_bloc,bloc_left,bloc_right,ham_mpo_left,ham_mpo_right)
     # minimize energy
-    # smallest_eigenvectors_from_scipy()
+    eigenvalues = {}
+    eigenvectors = {}
+    minimize_theta(env_bloc,eigenvalues,eigenvectors,sim_dict["chi_max"])
+    # remove blocks with too large values
 
+    #
+    theta_to_mm(eigenvectors,dst_left,dst_right,sim_dict,sim_dict["chi_max"],True,True,1,sim_dict["eps_truncation"])
     #
     new_bloc_left = {}
     new_bloc_right = {}
