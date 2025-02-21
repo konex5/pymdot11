@@ -24,11 +24,7 @@ let
 
     };
     pyfhmdot = python-self.callPackage ./derivation.nix {
-      inherit fhmdot;
-      src = ./.;
-    };
-    pyfhmdotapp = python-self.callPackage ./derivation-app.nix {
-      inherit fhmdot;
+      fhmdot = python-self.fhmdot;
       src = ./.;
     };
 

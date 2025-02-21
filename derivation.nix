@@ -1,12 +1,12 @@
-{ buildPythonPackage, fhmdot, src, click, decorator, jinja2, pyjson5, pytestCheckHook, toml }:
+{ buildPythonPackage, fhmdot, numpy, pytestCheckHook, scipy, src }:
 
 buildPythonPackage rec {
   pname = "pyfhmdot";
   version = "0.0";
   inherit src;
 
-  propagatedBuildInputs = [ click decorator fhmdot jinja2 pyjson5 toml ];
+  propagatedBuildInputs = [ fhmdot numpy ];
 
-  checkInputs = [ pytestCheckHook ];
+  checkInputs = [ pytestCheckHook scipy ];
   pytestFlagsArray = [ "tests" "-vv" ];
 }
