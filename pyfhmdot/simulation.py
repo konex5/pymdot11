@@ -13,11 +13,9 @@ from pyfhmdot.intense.contract import (
     contract_right_bloc_mps,
     filter_left_right,
 )
-from pyfhmdot.routine.interface import (
-    apply_eigenvalues,
-    minimize_theta,
-    theta_to_mm,
-)
+from pyfhmdot.routine.eig_routine import minimize_theta_with_scipy as minimize_theta
+from pyfhmdot.routine.eig_routine import apply_eigenvalues
+from pyfhmdot.routine.interface import theta_to_mm
 
 
 def sweep(size, *, from_site=None, to_site=None):

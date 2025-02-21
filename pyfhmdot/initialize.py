@@ -26,11 +26,10 @@ from pyfhmdot.intense.contract import (
 )
 
 from pyfhmdot.intense.mul_mp import multiply_mp
-from pyfhmdot.routine.interface import (
-    apply_eigenvalues,
-    minimize_theta,
-    theta_to_mm,
-)
+
+from pyfhmdot.routine.eig_routine import minimize_theta_with_scipy as minimize_theta
+from pyfhmdot.routine.eig_routine import apply_eigenvalues
+from pyfhmdot.routine.interface import theta_to_mm
 
 
 def create_infinite_hamiltonian(model_name, parameters):

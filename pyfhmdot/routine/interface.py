@@ -27,6 +27,7 @@ from pyfhmdot.routine.mul_routine import (
     mul_usv_deg,
 )
 from pyfhmdot.routine.eig_routine import minimize_theta_with_scipy as minimize_theta
+from pyfhmdot.routine.eig_routine import apply_eigenvalues
 
 
 def mm_to_theta_no_gate(
@@ -154,10 +155,3 @@ def theta_to_mm(
         rhs_blocs,
         is_um=is_um,
     )
-
-
-def apply_eigenvalues(
-    eigenvalues: _Dict[tuple, float], eigenvectors: _Dict[tuple, _np.ndarray]
-):
-    for key in list(eigenvalues.keys()):
-        eigenvectors[key] *= eigenvalues[key]

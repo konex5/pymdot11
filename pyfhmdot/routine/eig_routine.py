@@ -20,3 +20,10 @@ def minimize_theta_with_scipy(
         eigenvectors[(keys[0], keys[1], keys[2], keys[3])] = vec.reshape(
             (mat.shape[0], mat.shape[1], mat.shape[2], mat.shape[3])
         )
+
+
+def apply_eigenvalues(
+    eigenvalues: _Dict[tuple, float], eigenvectors: _Dict[tuple, _np.ndarray]
+):
+    for key in list(eigenvalues.keys()):
+        eigenvectors[key] *= eigenvalues[key]

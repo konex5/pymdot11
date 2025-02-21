@@ -77,7 +77,7 @@ def test_routine_interface_minimize_theta():
     from pyfhmdot.initialize import create_infinite_hamiltonian
     from pyfhmdot.initialize import initialize_idmrg_even_size
     from pyfhmdot.intense.contract import contract_left_right_mpo_mpo_permute
-    from pyfhmdot.routine.interface import minimize_theta
+    from pyfhmdot.routine.eig_routine import minimize_theta_with_scipy as minimize_theta
 
     ham = create_infinite_hamiltonian("sh_xxz-hz_u1", {"Jxy": 0, "Jz": 0, "hz": -6})
     mp_left = {}

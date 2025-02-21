@@ -49,7 +49,7 @@ def test_contract_dmrg(make_single_blocs_mps):
     env_bloc = {}
     contract_left_right_mpo_mpo_permute(env_bloc, new_left, mpo[0], mpo[1], new_right)
 
-    from pyfhmdot.routine.interface import minimize_theta
+    from pyfhmdot.routine.eig_routine import minimize_theta_with_scipy as minimize_theta
 
     eigval = {}
     eigvec = {}
