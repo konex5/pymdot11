@@ -4,6 +4,7 @@ from numbers import Number as _ntype
 
 import pyfhmdot.pymodels as _models
 
+
 def _parameters2finalparameters(tupleMlist, parameters):
     """
     input (('M',7.,2),(Sz,1))
@@ -77,8 +78,6 @@ def words_terms(model, parameters):
     return finalhamlistreturned
 
 
-
-
 def operator(name, quantum_name):
     if name in _models.operators.iterkeys():
         if _models.operators[name]["nb_site"] == 1:
@@ -92,8 +91,6 @@ def operator(name, quantum_name):
             matb = _models.operators[_models.operators[name][1]]["qBasis"][quantum_name]
             return (alpha, mata), (beta, matb)
     raise "Unknown in manybody.matrices.operator"
-
-
 
 
 def onsite_fuse_for_mpo(tmpblocks):
@@ -111,8 +108,7 @@ def onsite_fuse_for_mpo(tmpblocks):
     return outblocks
 
 
-
-def infinite_hamiltonian_terms(model,parameters):
+def infinite_hamiltonian_terms(model, parameters):
     pass
 
 

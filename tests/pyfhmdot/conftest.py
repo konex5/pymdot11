@@ -177,7 +177,7 @@ def make_single_blocs_gate():
 @pytest.fixture
 def make_maximal_entangled_state_u1():
     def _make_maximal_entangled_state_u1(L, local_coef=1.0 / 2.0):
-        from pyfhmdot.pyoperators import single_operator
+        from pyfhmdot.models.pyoperators import single_operator
 
         dmps = []
         for l in range(L):

@@ -4,7 +4,7 @@ _real_t = "float64"
 _cplx_t = "complex128"
 
 
-def single_operator(name, coef): # -> one bloc
+def single_operator(name, coef):  # -> one bloc
 
     operators = {
         "sh_id_no": {(0, 0): coef * _np.array([[1, 0], [0, 1]], dtype=_real_t)},
@@ -40,7 +40,8 @@ def single_operator(name, coef): # -> one bloc
 
     return operators[name]
 
-def two_sites_bond_operator(name, coef, weight_on_left=None): # -> two blocs
+
+def two_sites_bond_operator(name, coef, weight_on_left=None):  # -> two blocs
     bonds = [
         "sh_id_no-sh_id_no",
         "sh_sm_no-sh_sp_no",
@@ -51,18 +52,19 @@ def two_sites_bond_operator(name, coef, weight_on_left=None): # -> two blocs
         "sh_id_u1-sh_id_u1",
         "sh_sm_u1-sh_sp_u1",
         "sh_sp_u1-sh_sm_u1",
-        "sh_sz_u1-sh_sz_u1"
+        "sh_sz_u1-sh_sz_u1",
     ]
     if name in bonds:
-        left_name, right_name = name.split('-')
+        left_name, right_name = name.split("-")
 
         if weight_on_left is None:
-            return single_operator(left_name,_np.sqrt(coef)), single_operator(right_name,_np.sqrt(coef))
+            return single_operator(left_name, _np.sqrt(coef)), single_operator(
+                right_name, _np.sqrt(coef)
+            )
         elif weight_on_left:
-            return single_operator(left_name,coef), single_operator(right_name,1.)
+            return single_operator(left_name, coef), single_operator(right_name, 1.0)
         else:
-            return single_operator(left_name,1.), single_operator(right_name,coef)
-
+            return single_operator(left_name, 1.0), single_operator(right_name, coef)
 
     """
     # the above is ill defined with QN conservation
