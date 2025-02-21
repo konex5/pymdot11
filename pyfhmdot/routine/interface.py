@@ -54,8 +54,8 @@ def mm_to_theta_with_gate(
     )
     mul_mm_blocs(tmp_blocs, lhs_blocs, rhs_blocs, tmp_indices)
     dst_indices = indices_dst_theta_with_gate(
-        tmp_blocs.keys(),
-        gate_blocs.keys(),
+        theta_indices=tmp_blocs.keys(),
+        gate_indices=gate_blocs.keys(),
         conserve_left_right=conserve_left_right_after,
     )
     mul_theta_with_gate(dst_blocs, tmp_blocs, gate_blocs, dst_indices)
