@@ -32,7 +32,6 @@ def load_dictionary(filepath, folder="MODEL"):
 
 def write_save_mp(filepath, MP):
     f = _h5.File(filepath, "w")
-    # f.create_dataset('CHI',data=float('inf'))
     grpMP = f.create_group("MP")
     for i in range(len(MP)):
         grpMP.create_dataset(
@@ -50,9 +49,7 @@ def load_generator_mp(filepath):
 
 def writeIn_QMP_dict(QMP_dict, file_path, name="QMP", site=0):
     if not _h5.is_hdf5(file_path):
-        raise Exception(
-            " <HDF5> {file} is not a valid hdf5 file".format(file=file_path)
-        )
+        raise Exception(f" <HDF5> {file_path} is not a valid hdf5 file")
     f = _h5.File(file_path, "r+")
     grp = f.create_group(name + "/{0:04g}".format(site))
     for it, val in QMP_dict.items():
@@ -67,9 +64,7 @@ def writeIn_QMP_dict(QMP_dict, file_path, name="QMP", site=0):
 
 def readIn_generator_QMP(file_path, rootname="QMP", coefsite=False, conjugate=False):
     if not _h5.is_hdf5(file_path):
-        raise Exception(
-            " <HDF5> {file} is not a valid hdf5 file".format(file=file_path)
-        )
+        raise Exception(f" <HDF5> {file_path} is not a valid hdf5 file")
     f = _h5.File(file_path, "r")
     if coefsite:
         coefonsite_gen = (_ for _ in f["/" + rootname + "_coefsite"].value)
