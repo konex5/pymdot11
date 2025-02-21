@@ -1,29 +1,8 @@
 import pytest
 
-@pytest.mark.skip(msg="module fhmdot not ready yet")
-def test_example():
-    from example import view_nocopy
 
-    assert "import example worked!" == "import example worked!"
-
-
-def test_numpy():
-    import numpy
-
-    assert "import numpy worked!" == "import numpy worked!"
-
-
-def test_scipy():
-    import scipy
-
-    assert "import numpy worked!" == "import numpy worked!"
-
-
-@pytest.mark.skip(msg="matplotlib is needed for visualizing benchmarks")
-def test_scipy():
-    import matplotlib.pyplot
-
-    assert "import matplotlib worked!" == "import matplotlib worked!"
+def test_conftest(make_test):
+    make_test()
 
 
 def test_automation_import():
@@ -31,5 +10,28 @@ def test_automation_import():
 
     automation()
 
-def test_conftest(make_test):
-    make_test()
+
+@pytest.mark.skip(msg="module fhmdot not ready yet")
+def test_fhmdot():
+    import fmd_operators
+
+    assert True
+
+
+def test_numpy():
+    import numpy
+
+    assert True
+
+
+def test_scipy():
+    import scipy
+
+    assert True
+
+
+@pytest.mark.skip(msg="matplotlib is needed for visualizing benchmarks")
+def test_scipy():
+    import matplotlib.pyplot
+
+    assert True
