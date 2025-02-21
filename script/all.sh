@@ -7,6 +7,8 @@
 ./script/cli_tdmrg.py -G /tmp/hamiltonian_gates.h5 -M /tmp/2B_00.0250.h5 -o /tmp/
 mkdir -p /tmp/2B_00.0250_sz_0005/
 ./script/cli_combine_operator.py -k /tmp/2B_00.0250.h5 -i 5 -n sh_sz_u1 -o /tmp/2B_00.0250_sz_0005/t_00.0000.h5
+mkdir -p /tmp/2B_00.0000_sz_0005/
+./script/cli_combine_operator.py -k /tmp/2B_00.0000.h5 -i 5 -n sh_sz_u1 -o /tmp/2B_00.0000_sz_0005/t_00.0000.h5
 ./script/cli_tdmrg.py -G /tmp/hamiltonian_gates.h5 -M /tmp/2B_00.0250_sz_0005/t_00.0000.h5 -o /tmp/2B_00.0250_sz_0005/
 
 ./script/cli_mbracket.py -b /tmp/2B_00.0000.h5 -k /tmp/2B_00.0250.h5
@@ -18,5 +20,6 @@ echo "2B_00.0500"
 
 echo "observables"
 ./script/cli_mbracket.py -b /tmp/2B_00.0250_sz_0005/t_00.0000.h5 -k /tmp/2B_00.0250_sz_0005/t_00.0000.h5
+./script/cli_mbracket.py -b /tmp/2B_00.0000_sz_0005/t_00.0000.h5 -k /tmp/2B_00.0000.h5
 
 
