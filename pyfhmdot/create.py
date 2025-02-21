@@ -9,13 +9,12 @@ from pyfhmdot.models.pymodels import hamiltonian_obc
 from pyfhmdot.models.pyoperators import single_operator
 
 
-
 def create_infinite_hamiltonian(model_name, parameters):
     """
     qnmodel='sh_xxz-hz_no' or 'ru_ldxxz-hz_u1'
     """
     ham = hamiltonian_obc(model_name, parameters, 4)
-    return ham[0], (ham[1],ham[2]), ham[3]
+    return ham[0], (ham[1], ham[2]), ham[3]
 
 
 def create_hamiltonian(model_name, parameters, size):
@@ -104,10 +103,11 @@ def create_maximal_entangled_state(size, model_name, in_group=False):
         dmps.append(new_blocs)
     return coef, dmps
 
-def create_id_mp(model_name,position,is_left):
+
+def create_id_mp(model_name, position, is_left):
     from numpy import eye
     from numpy import array
-    
+
     head, _, tail = model_name.split("_")
 
     operator_name = head + "_id_" + tail
@@ -115,44 +115,45 @@ def create_id_mp(model_name,position,is_left):
     if operator_name == "sh_id_no":
         if is_left:
             new_blocs = {
-                (0, 0, 0): coef*eye(2**position).reshape(2**(position-1), 2, 2**position),
+                (0, 0, 0): coef
+                * eye(2 ** position).reshape(2 ** (position - 1), 2, 2 ** position),
             }
         else:
             new_blocs = {
-                (0, 0, 0): coef*eye(2**position).reshape(2**position, 2, 2**(position-1)),
+                (0, 0, 0): coef
+                * eye(2 ** position).reshape(2 ** position, 2, 2 ** (position - 1)),
             }
     elif operator_name == "sh_id_u1":
         if is_left and position == 1:
-                new_blocs = {
-                    (0, 0, 0): array([coef*1.]).reshape(1, 1, 1),
-                    (0, 1, 1): array([coef*1.]).reshape(1, 1, 1),
-                }
+            new_blocs = {
+                (0, 0, 0): array([coef * 1.0]).reshape(1, 1, 1),
+                (0, 1, 1): array([coef * 1.0]).reshape(1, 1, 1),
+            }
         elif not is_left and position == 1:
-                new_blocs = {
-                    (0, 0, 0): array([coef*1.]).reshape(1, 1, 1),
-                    (1, 1, 0): array([coef*1.]).reshape(1, 1, 1),
-                }
+            new_blocs = {
+                (0, 0, 0): array([coef * 1.0]).reshape(1, 1, 1),
+                (1, 1, 0): array([coef * 1.0]).reshape(1, 1, 1),
+            }
         elif is_left and position == 2:
-                new_blocs = {
-                    (0, 0, 0): array([coef*1.]).reshape(1, 1, 1),
-                    (0, 1, 1): array([coef*1.]).reshape(1, 1, 1),
-                    (1, 0, 1): array([coef*1.]).reshape(1, 1, 1),
-                    (1, 1, 2): array([coef*1.]).reshape(1, 1, 1),
-                }
+            new_blocs = {
+                (0, 0, 0): array([coef * 1.0]).reshape(1, 1, 1),
+                (0, 1, 1): array([coef * 1.0]).reshape(1, 1, 1),
+                (1, 0, 1): array([coef * 1.0]).reshape(1, 1, 1),
+                (1, 1, 2): array([coef * 1.0]).reshape(1, 1, 1),
+            }
         elif not is_left and position == 2:
-                new_blocs = {
-                    (0, 0, 0): array([coef*1.]).reshape(1, 1, 1),
-                    (1, 1, 0): array([coef*1.]).reshape(1, 1, 1),
-                    (1, 0, 1): array([coef*1.]).reshape(1, 1, 1),
-                    (2, 1, 1): array([coef*1.]).reshape(1, 1, 1),
-                }
+            new_blocs = {
+                (0, 0, 0): array([coef * 1.0]).reshape(1, 1, 1),
+                (1, 1, 0): array([coef * 1.0]).reshape(1, 1, 1),
+                (1, 0, 1): array([coef * 1.0]).reshape(1, 1, 1),
+                (2, 1, 1): array([coef * 1.0]).reshape(1, 1, 1),
+            }
         else:
             sys.exit(f"The identity mp is usefull for borders only.")
     else:
         sys.exit(f"The identity mp does not exist for {operator_name}.")
-        
+
     return coef, new_blocs
-    
 
 
 def change_right_index(mp, new_index):

@@ -2,7 +2,12 @@ from pyfhmdot.algorithm import apply_mm_at, apply_gate_on_mm_at
 
 # from logging import makeLogRecord
 
-from pyfhmdot.intense.contract import contract_left_bloc_mps, contract_mps_mpo_mps_left_border, contract_mps_mpo_mps_right_border, contract_right_bloc_mps
+from pyfhmdot.intense.contract import (
+    contract_left_bloc_mps,
+    contract_mps_mpo_mps_left_border,
+    contract_mps_mpo_mps_right_border,
+    contract_right_bloc_mps,
+)
 from pyfhmdot.routine.eig_routine import smallest_eigenvectors_from_scipy
 
 
@@ -45,12 +50,10 @@ def should_apply(site_i, start_odd_bonds):
 def sweep_move(size, *, start_position, end_position, apply_UM, apply_MV, **kwargs):
     if start_position < end_position:
         for site_i in sweep(size, from_site=start_position, to_site=end_position):
-            apply_UM(kwargs["mps_left"][site_i - 1],
-                     kwargs["mps_right"][site_i])
+            apply_UM(kwargs["mps_left"][site_i - 1], kwargs["mps_right"][site_i])
     else:
         for site_i in sweep(size, from_site=start_position, to_site=end_position):
-            apply_MV(kwargs["mps_left"][site_i - 1],
-                     kwargs["mps_right"][site_i])
+            apply_MV(kwargs["mps_left"][site_i - 1], kwargs["mps_right"][site_i])
 
 
 def should_go_left(size, layer, position, start_left):
@@ -424,47 +427,65 @@ def sweep_eleven_times(
         dw_dict["dw_total"] += dw_dict["dw_one_serie"]
 
 
-def initialize_idmrg(dst_imps_left, dst_imps_right, ham_left, ham_right, ham_supp_left):
+def initialize_idmrg(imps_left, imps_right, ham_left, ham_right, ham_supp_left):
     left_bloc = {}
     right_bloc = {}
-    contract_mps_mpo_mps_left_border(
-        left_bloc, dst_imps_left[0], ham_left, dst_imps_left[0])
+    contract_mps_mpo_mps_left_border(left_bloc, imps_left[0], ham_left, imps_left[0])
     contract_mps_mpo_mps_right_border(
-        right_bloc, dst_imps_right[0], ham_right, dst_imps_right[0])
+        right_bloc, imps_right[0], ham_right, imps_right[0]
+    )
 
-    if len(dst_imps_left) == 2:
+    if len(imps_left) == 2:
         tmp = {}
         contract_left_bloc_mps(
-            tmp, left_bloc, dst_imps_left[1], ham_supp_left, dst_imps_left[1])
+            tmp, left_bloc, imps_left[1], ham_supp_left, imps_left[1]
+        )
         left_bloc = tmp
 
     return left_bloc, right_bloc
 
 
-def idmrg_minimize_two_sites(dst_left, dst_right, bloc_left, bloc_right, ham_mpo_left, ham_mpo_right, sim_dict):
+def idmrg_minimize_two_sites(
+    dst_left, dst_right, bloc_left, bloc_right, ham_mpo_left, ham_mpo_right, sim_dict
+):
     # contract and permute
     tmp = {}
 
-    
     # minimize energy
-    #smallest_eigenvectors_from_scipy()
-    
-    
+    # smallest_eigenvectors_from_scipy()
+
     #
     new_bloc_left = {}
     new_bloc_right = {}
     contract_left_bloc_mps(new_bloc_left, bloc_left, dst_left, ham_mpo_left, dst_left)
-    contract_right_bloc_mps(new_bloc_right, bloc_right, dst_right, ham_mpo_right, dst_right)
+    contract_right_bloc_mps(
+        new_bloc_right, bloc_right, dst_right, ham_mpo_right, dst_right
+    )
     return new_bloc_left, new_bloc_right
 
 
-def idmrg_even(dst_imps_left, dst_imps_right, bloc_left, bloc_right, ham_mpo, idmrg_dict, iterations):
+def idmrg_even(
+    dst_imps_left,
+    dst_imps_right,
+    bloc_left,
+    bloc_right,
+    ham_mpo,
+    idmrg_dict,
+    iterations,
+):
     for _ in range(iterations):
         tmp_imps_left = {}
         tmp_imps_right = {}
 
         bloc_left, bloc_right = idmrg_minimize_two_sites(
-            tmp_imps_left, tmp_imps_right, bloc_left, bloc_right, ham_mpo[0], ham_mpo[1],idmrg_dict)
+            tmp_imps_left,
+            tmp_imps_right,
+            bloc_left,
+            bloc_right,
+            ham_mpo[0],
+            ham_mpo[1],
+            idmrg_dict,
+        )
 
         dst_imps_left.append(tmp_imps_left)
         dst_imps_right.append(tmp_imps_right)

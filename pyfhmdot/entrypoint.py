@@ -1,29 +1,41 @@
 from pyfhmdot.create import create_id_mp, create_infinite_hamiltonian
 from pyfhmdot.simulation import sweep_eleven_times as _sweep_eleven_times
-from pyfhmdot.simulation import initialize_idmrg,idmrg_even
+from pyfhmdot.simulation import initialize_idmrg, idmrg_even
 
 
-
-def infinite_to_finite_ground_state(dst_imps,model_name, parameters, idmrg_dict,*,size):
+def infinite_to_finite_ground_state(
+    dst_imps, model_name, parameters, idmrg_dict, *, size
+):
     dst_imps_left = []
     dst_imps_right = []
-    ham_left, ham_mpo, ham_right = create_infinite_hamiltonian(model_name,parameters)
-    dst_imps_left.append(create_id_mp(model_name,1,True))
-    dst_imps_right.append(create_id_mp(model_name,1,False))
+    ham_left, ham_mpo, ham_right = create_infinite_hamiltonian(model_name, parameters)
+    dst_imps_left.append(create_id_mp(model_name, 1, True))
+    dst_imps_right.append(create_id_mp(model_name, 1, False))
 
     if size % 2 == 1:
-        dst_imps_left.append(create_id_mp(model_name,2,True))
-    
-    bloc_left, bloc_right = initialize_idmrg(dst_imps_left,dst_imps_right, ham_left,ham_right,ham_mpo[0])
-    idmrg_even(dst_imps_left,dst_imps_right, bloc_left, bloc_right, ham_mpo, idmrg_dict, iterations=size//2)
-    
-    #dst_imps.append
+        dst_imps_left.append(create_id_mp(model_name, 2, True))
 
-def infinite_to_finite_ground_state(dst_imps,left, ham, right, idmrg_dict,*,size):
+    bloc_left, bloc_right = initialize_idmrg(
+        dst_imps_left, dst_imps_right, ham_left, ham_right, ham_mpo[0]
+    )
+    idmrg_even(
+        dst_imps_left,
+        dst_imps_right,
+        bloc_left,
+        bloc_right,
+        ham_mpo,
+        idmrg_dict,
+        iterations=size // 2,
+    )
+
+    # dst_imps.append
+
+
+def infinite_to_finite_ground_state(dst_imps, left, ham, right, idmrg_dict, *, size):
     if size % 2 == 0:
-        _idmrg_even(dst_imps,left, ham, right, idmrg_dict,size=size)
+        _idmrg_even(dst_imps, left, ham, right, idmrg_dict, size=size)
     else:
-        #_idmrg_odd(dst_imps,left, ham, right, idmrg_dict,size=size)
+        # _idmrg_odd(dst_imps,left, ham, right, idmrg_dict,size=size)
         pass
 
 

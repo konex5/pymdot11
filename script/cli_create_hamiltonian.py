@@ -36,8 +36,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "-o", "--output", type=str, action="store", help="output path", required=True
     )
-    #arguments = parser.parse_args()
-    arguments = parser.parse_args(["-i", "./tests/example/model.toml", "-o", "/tmp/hamiltonian.h5"])
+    # arguments = parser.parse_args()
+    arguments = parser.parse_args(
+        ["-i", "./tests/example/model.toml", "-o", "/tmp/hamiltonian.h5"]
+    )
 
     if not check_filename_and_extension(arguments.input):
         sys.exit(
@@ -51,7 +53,6 @@ if __name__ == "__main__":
     large_dictionary = read_dictionary(arguments.input)
     is_idmrg_simulation = "idmrg_simulation" in large_dictionary.keys()
     is_zdmrg_simulation = "zdmrg_simulation" in large_dictionary.keys()
-
 
     info = large_dictionary.pop("model")
     parameters = large_dictionary.pop("parameters")
@@ -68,7 +69,7 @@ if __name__ == "__main__":
     if is_zdmrg_simulation:
         zdmrg_simulation_parameters = large_dictionary.pop("zdmrg_simulation")
         add_model_zdmrg_simulation(arguments.output, zdmrg_simulation_parameters)
-    
+
     ham_mpo = create_hamiltonian(model_name, parameters, size)
     add_mps(arguments.output, ham_mpo, folder="MPO")
 

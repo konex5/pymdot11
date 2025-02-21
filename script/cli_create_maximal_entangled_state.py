@@ -32,7 +32,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-o", "--output", type=str, action="store", help="output path", required=True
     )
-    
+
     arguments = parser.parse_args()
 
     if not check_filename_and_extension_h5(arguments.hamiltonian):

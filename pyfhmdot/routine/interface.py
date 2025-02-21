@@ -2,6 +2,7 @@ import numpy as _np
 from typing import Dict as _Dict
 from typing import List as _List
 from typing import Optional as _Optional
+from pyfhmdot.routine.eig_routine import smallest_eigenvectors_from_scipy
 
 from pyfhmdot.routine.svd_routine import (
     normalize_the_array,
@@ -145,3 +146,22 @@ def theta_to_mm(
         rhs_blocs,
         is_um=is_um,
     )
+
+
+def minimize_theta(
+    env_blocs: _Dict[tuple, _np.ndarray],
+    eigenvalues: _Dict[tuple, float],
+    eigenvectors: _Dict[tuple, _np.ndarray],
+    chi_max: int,
+) -> None:
+    for keys in env_blocs.keys():
+        mat = env_blocs[keys][:chi_max, :, :, :chi_max, :chi_max, :, :, :chi_max]
+        new_shape = (
+            mat.shape[0] * mat.shape[1] * mat.shape[2] * mat.shape[3],
+            mat.shape[4] * mat.shape[5] * mat.shape[6] * mat.shape[7],
+        )
+        E, vec = smallest_eigenvectors_from_scipy(mat.reshape(new_shape))
+        eigenvalues[(keys[0], keys[1], keys[2], keys[3])] = E
+        eigenvectors[(keys[0], keys[1], keys[2], keys[3])] = vec.reshape(
+            (mat.shape[0], mat.shape[1], mat.shape[2], mat.shape[3])
+        )

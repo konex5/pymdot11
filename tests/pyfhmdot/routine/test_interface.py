@@ -71,3 +71,13 @@ def test_multiply_blocs_sparse_with_gate_real(
     )
     assert len(dest_mps_left.keys()) == 5
     assert len(dest_mps_right.keys()) == 3
+
+
+def test_routine_interface_minimize_theta():
+    from pyfhmdot.create import create_infinite_hamiltonian, create_id_mp
+    from pyfhmdot.simulation import initialize_idmrg
+
+    ham = create_infinite_hamiltonian("sh_xxz_u1", {"Jxy": 1, "Jz": -2, "hz": 3})
+    mp_left = [create_id_mp("sh_xxz_u1", 1, True)[1]]
+    mp_right = [create_id_mp("sh_xxz_u1", 1, False)[1]]
+    left, right = initialize_idmrg(mp_left, mp_right, ham[0], ham[-1], [])
