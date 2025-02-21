@@ -3,6 +3,10 @@ from typing import Dict as _Dict
 
 
 from pyfhmdot.mul_routine import multiply_arrays, multiply_arrays_and_transpose
+from pyfhmdot.indices import (
+    indices_prepare_destination_without_gate,
+    indices_theta_prepare_conservation_for_gate,
+)
 
 
 def multiply_blocs_no_gate_applied(
