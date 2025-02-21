@@ -200,30 +200,87 @@ def indices_theta_prepare_conservation_for_gate(
 
     return sorted(set(destination_indices))
 
-# HERE!
-def multiply_blocs_no_gate_applied(dst_blocs, lhs_blocs,rhs_blocs,*,conserve_left_right=False):
-    dest_indices = indices_prepare_destination_without_gate(lhs_blocs.keys(),rhs_blocs.keys(),conserve_left_right=conserve_left_right)
-    contract_arrays(dst_blocs, lhs_blocs,rhs_blocs,(2,0),dest_indices)
-
-
-def multiply_blocs_with_gate_applied(dst_blocs, lhs_blocs,rhs_blocs,gate_blocs,*,conserve_left_right_before=False,conserve_left_right_after=False):
-    tmp_indices = indices_prepare_destination_without_gate(lhs_blocs.keys(),rhs_blocs.keys(),conserve_left_right=conserve_left_right_before)
-    tmp_blocs = {}
-    contract_arrays(tmp_blocs, lhs_blocs,rhs_blocs,(2,0),tmp_indices)
-    dest_indices = indices_theta_prepare_conservation_for_gate(tmp_blocs.keys(),gate_blocs.keys(),conserve_left_right=conserve_left_right_after)
-    #contract_arrays_and_transpose(dst_blocs, tmp_blocs,gate_blocs,([1,2],[2,3]),dest_indices) # todo
-    
-
 
 def list_degenerate_indices(destination_indices):
     list_degenerate = []
-    for l in range(len(destination_indices[0])):
-        if destination_indices[0].index(destination_indices[0][l]) == l:
+    for l in range(len(destination_indices)):
+        if destination_indices.index(destination_indices[l]) == l:
             is_degenerate = True
         else:
             is_degenerate = False
         list_degenerate.append(is_degenerate)
     return list_degenerate
+
+
+def multiply_arrays(new_blocks, old_blocks1, old_blocks2, buildtarget):
+    list_isnew = list_degenerate_indices([_[0] for _ in buildtarget])
+    for new, it in zip(list_isnew, buildtarget):
+        target, it1, it2 = it[0], it[1], it[2]
+        if new:
+            new_blocks[target] = _np.tensordot(
+                old_blocks1[it1],
+                old_blocks2[it2],
+                axes=(2, 0),
+            )
+        else:
+            new_blocks[target] += _np.tensordot(
+                old_blocks1[it1],
+                old_blocks2[it2],
+                axes=(2, 0),
+            )
+
+
+def multiply_blocs_no_gate_applied(
+    dst_blocs, lhs_blocs, rhs_blocs, *, conserve_left_right=False
+):
+    dest_indices = indices_prepare_destination_without_gate(
+        lhs_blocs.keys(), rhs_blocs.keys(), conserve_left_right=conserve_left_right
+    )
+    multiply_arrays(dst_blocs, lhs_blocs, rhs_blocs, dest_indices)
+
+
+def multiply_arrays_and_transpose(new_blocks, old_blocks1, old_blocks2, buildtarget):
+    list_isnew = list_degenerate_indices([_[0] for _ in buildtarget])
+    for new, it in zip(list_isnew, buildtarget):
+        target, it1, it2 = it[0], it[1], it[2]
+        if new:
+            new_blocks[target] = _np.tensordot(
+                old_blocks1[it1],
+                old_blocks2[it2],
+                axes=([1, 2], [2, 3]),
+            ).transpose(0, 2, 3, 1)
+        else:
+            new_blocks[target] += _np.tensordot(
+                old_blocks1[it1],
+                old_blocks2[it2],
+                axes=([1, 2], [2, 3]),
+            ).transpose(0, 2, 3, 1)
+
+
+def multiply_blocs_with_gate_applied(
+    dst_blocs,
+    lhs_blocs,
+    rhs_blocs,
+    gate_blocs,
+    *,
+    conserve_left_right_before=False,
+    conserve_left_right_after=False
+):
+    tmp_indices = indices_prepare_destination_without_gate(
+        lhs_blocs.keys(),
+        rhs_blocs.keys(),
+        conserve_left_right=conserve_left_right_before,
+    )
+    tmp_blocs = {}
+    multiply_arrays(tmp_blocs, lhs_blocs, rhs_blocs, tmp_indices)
+    dest_indices = indices_theta_prepare_conservation_for_gate(
+        tmp_blocs.keys(),
+        gate_blocs.keys(),
+        conserve_left_right=conserve_left_right_after,
+    )
+    multiply_arrays_and_transpose(
+        dst_blocs, tmp_blocs, gate_blocs, dest_indices
+    )  # todo
 
 
 def prepare_targets(old_blocks1, old_blocks2, index2contract):
