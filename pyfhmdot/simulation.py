@@ -615,54 +615,6 @@ def idmrg_even(
     dst_imps_right.append(_copy(tmp_imps_right))
 
 
-def compress_mps(
-    mps,
-    dw_dict,
-    chi_max,
-    normalize,
-    eps,
-    *,
-    start_left=True,
-):
-    size = len(mps)
-    for _ in range(2):
-        if start_left:
-            direction_right = 2
-        else:
-            direction_right = -3
-
-        if start_left:
-            for l in range(1, size, 1):
-                apply_mm_at(
-                    mps,
-                    l,
-                    dw_dict,
-                    chi_max,
-                    normalize,
-                    eps,
-                    is_um=True,
-                    conserve_left_right_before=False,
-                    direction_right=direction_right,
-                )
-                print_double(size, l, "A=")
-        else:
-            for l in range(size - 1, 0, -1):
-                apply_mm_at(
-                    mps,
-                    l,
-                    dw_dict,
-                    chi_max,
-                    normalize,
-                    eps,
-                    is_um=False,
-                    conserve_left_right_before=False,
-                    direction_right=direction_right,
-                )
-                print_double(size, l, "=B")
-
-        start_left = not start_left
-
-
 def dmrg_sweep_lanczos(
     mps,
     ham,
@@ -723,7 +675,7 @@ def dmrg_sweep_lanczos(
                     tolerance,
                     chi_max,
                     eps,
-                    direction_right=-3,
+                    direction_right=1,
                     is_um=True,
                 )
                 left_right[l - 1] = update_left(

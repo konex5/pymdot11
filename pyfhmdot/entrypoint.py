@@ -8,7 +8,6 @@ from pyfhmdot.initialize import (
 from pyfhmdot.intense.contract import filter_left_right
 
 from pyfhmdot.simulation import (
-    compress_mps,
     dmrg_sweeps as _dmrg_sweeps,
     dmrg_warmup as _dmrg_warmup,
     sweep_eleven_times as _sweep_eleven_times,
