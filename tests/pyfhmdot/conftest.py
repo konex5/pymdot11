@@ -194,7 +194,7 @@ def make_maximal_entangled_state_u1():
 
 
 @pytest.fixture
-def make_single_ab_before():
+def single_ab_before():
     import numpy as np
 
     mp_left = {}
@@ -206,6 +206,33 @@ def make_single_ab_before():
     mp_right[(0, 1, 0)] = np.array([[[0.70710678], [0.70710678]]])
     return mp_left, mp_right
 
+
+
+@pytest.fixture
+def single_tmp_theta():
+    import numpy as np
+    theta = {}
+    theta[(0, 0, 2, 0)] = np.array([[[[ 2.60403588e-03]]],
+       [[[-2.40741243e-35]]]])
+    theta[(0, 1, 1, 0)] = np.array([[[[-4.89744369e-01],
+         [-5.02604036e-01]],
+
+        [[-5.02604036e-01],
+         [-5.05208072e-01]]],
+
+
+       [[[-3.84471971e-17],
+         [-3.94562107e-17]],
+
+        [[ 3.94562107e-17],
+         [ 3.96611692e-17]]]])
+
+    theta[(0, 2, 0, 0)]  = np.array([[[[ 2.60403588e-03]]],
+
+
+       [[[-2.40741243e-35]]]])
+
+    return theta
 
 @pytest.fixture
 def make_single_dummy_dgate():
@@ -237,7 +264,7 @@ def make_single_dummy_dgate():
 
 
 @pytest.fixture
-def make_single_ab_after():
+def single_ab_after():
     import numpy as np
 
     mp_left = {}
