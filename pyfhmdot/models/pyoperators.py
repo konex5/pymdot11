@@ -304,6 +304,9 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
 
 
 def operator_mpo(name, coef, position, *, size):
+    """
+    position start at 1 and end at size (or size-1)
+    """
     def with_additional_dimension(op):
         out = {}
         for key in op.keys():
