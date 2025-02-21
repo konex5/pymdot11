@@ -1,3 +1,4 @@
+from copy import deepcopy as _copy
 from numpy import sqrt as _sqrt
 from numpy import iscomplex as _iscomplex
 from numpy import imag as _imag
