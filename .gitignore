@@ -180,3 +180,4 @@ tests/sandbox.py
 docs/build*
 docs/content/_build
 result*
+.trash*
