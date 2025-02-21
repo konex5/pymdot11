@@ -4,7 +4,8 @@ import pytest
 def test_mapping():
     from pyfhmdot.models.splitgroup import splitgroup_mapping
 
-    assert splitgroup_mapping("sh_xxz-hz_u1", section="deg")[0] == 2
+    assert splitgroup_mapping("sh_xxz-hz_u1", section="deg")[0] == 1
+    assert splitgroup_mapping("sh_xxz-hz_no", section="deg")[0] == 2
 
 
 def test_reshape_group(make_maximal_entangled_state_u1):
