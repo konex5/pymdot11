@@ -20,11 +20,11 @@ def test_read_write_params(tmpdir):
     }
     tmp_toml = tmpdir + "/test.toml"
     tmp_json = tmpdir + "/test.json"
-    from pyfhmdot.models.parser import write_filename, read_filename
+    from pyfhmdot.utils.iodicts import write_dictionary, read_dictionary
 
-    write_filename(tmp_toml, params)
-    write_filename(tmp_json, params)
-    params_toml = read_filename(tmp_toml)
-    params_json = read_filename(tmp_json)
+    write_dictionary(tmp_toml, params)
+    write_dictionary(tmp_json, params)
+    params_toml = read_dictionary(tmp_toml)
+    params_json = read_dictionary(tmp_json)
     assert params_toml["xy"]["c_LIST"][-1] == 6
     assert params_json["xy"]["c_LIST"][-1] == 6
