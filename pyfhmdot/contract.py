@@ -153,7 +153,7 @@ def indices_prepare_destination_without_gate(
                 if (not conserve_left_right) or (
                     conserve_left_right
                     and (
-                        left_index[0] + left_index[1] == right_index[1] + right_index[2]
+                        left_index[0] + left_index[1] + right_index[1] == right_index[2]
                     )
                 ):
                     about_indices_to_contract.append(
@@ -182,7 +182,7 @@ def indices_theta_prepare_conservation_for_gate(
                 if (not conserve_left_right) or (
                     conserve_left_right
                     and (
-                        theta_index[0] + gate_index[0] == gate_index[1] + theta_index[3]
+                        theta_index[0] + gate_index[0] + gate_index[1] == theta_index[3]
                     )
                 ):
                     destination_indices.append(
@@ -199,6 +199,17 @@ def indices_theta_prepare_conservation_for_gate(
                     )
 
     return sorted(set(destination_indices))
+
+
+def list_degenerate_indices(destination_indices):
+    list_degenerate = []
+    for l in range(len(destination_indices[0])):
+        if destination_indices[0].index(destination_indices[0][l]) == l:
+            is_degenerate = True
+        else:
+            is_degenerate = False
+        list_degenerate.append(is_degenerate)
+    return list_degenerate
 
 
 def prepare_targets(old_blocks1, old_blocks2, index2contract):
@@ -245,22 +256,22 @@ def prepare_targets(old_blocks1, old_blocks2, index2contract):
     return tmp
 
 
-def contract_arrays(new_blocks, old_blocks1, old_blocks2, index2contract, buildtarget):
+def contract_arrays(new_blocks, old_blocks1, old_blocks2, axes2multiply, buildtarget):
     for new, target, it1, it2 in buildtarget:
         if new:
             new_blocks[target] = _np.tensordot(
                 old_blocks1[it1],
                 old_blocks2[it2],
-                axes=[index2contract[0], index2contract[1]],
+                axes=[axes2multiply[0], axes2multiply[1]],
             )
         else:
             new_blocks[target] += _np.tensordot(
                 old_blocks1[it1],
                 old_blocks2[it2],
-                axes=[index2contract[0], index2contract[1]],
+                axes=[axes2multiply[0], axes2multiply[1]],
             )
 
 
-def multiply_blocs(new_blocks, lhs_blocks, rhs_blocks, index2contract, buildtarget):
-    buildtarget = prepare_targets(lhs_blocks, rhs_blocks, index2contract)
-    contract_arrays(new_blocks, lhs_blocks, rhs_blocks, index2contract, buildtarget)
+def multiply_blocs(new_blocks, lhs_blocks, rhs_blocks, axes2multiply, buildtarget):
+    buildtarget = prepare_targets(lhs_blocks, rhs_blocks, axes2multiply)
+    contract_arrays(new_blocks, lhs_blocks, rhs_blocks, axes2multiply, buildtarget)
