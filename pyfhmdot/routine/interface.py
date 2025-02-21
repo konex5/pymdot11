@@ -71,15 +71,10 @@ def mm_to_theta_with_gate(
     conserve_left_right_after: bool = False
 ) -> None:
     tmp_blocs: _Dict[tuple, _np.ndarray] = {}
-    tmp_indices_new, tmp_indices_snd = split_degenerate_indices(
-        indices_dst_theta_no_gate(
-            lhs_blocs.keys(),
-            rhs_blocs.keys(),
-            conserve_left_right=conserve_left_right_before,
-        )
+    mm_to_theta_no_gate(
+        tmp_blocs, lhs_blocs, rhs_blocs, conserve_left_right=conserve_left_right_before
     )
-    mul_mm_blocs_new(tmp_blocs, lhs_blocs, rhs_blocs, tmp_indices_new)
-    mul_mm_blocs_snd(tmp_blocs, lhs_blocs, rhs_blocs, tmp_indices_snd)
+
     dst_indices_new, dst_indices_snd = split_degenerate_indices(
         indices_dst_theta_with_gate(
             theta_indices=tmp_blocs.keys(),
@@ -100,7 +95,7 @@ def theta_to_mm(
     normalize: bool,
     is_um: _Optional[bool],
     direction_right: int,
-    eps: float = 10 ** -8,
+    eps: float = 10**-8,
 ) -> None:
 
     keys = list(theta_blocs.keys())
