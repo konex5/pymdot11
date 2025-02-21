@@ -1,7 +1,11 @@
-from typing import List, Optional, Tuple
+import numpy as _np
+from typing import Dict as _Dict
+from typing import List as _List
+from typing import Optional as _Optional
+from typing import Tuple as _Tuple
 
 
-def map_indices_slices_according_to_qnum(qname):
+def merge_map_indices_slices_according_to_qnum(qname):
     basis = {  #
         "sh-None": {
             "zero": [(0,)],
@@ -124,12 +128,13 @@ def internal_qn_sub(lhs: int, rhs: int) -> int:
 
 
 def potential_middle_indices(
-    theta_indices: List[tuple], *, direction_right: Optional[bool] = None
+    theta_indices: _List[_Tuple], *, direction_right: _Optional[bool] = None
 ):
     middle_indices = []
     if direction_right or direction_right is None:
         for theta_index in theta_indices:
-            middle_indices.append(internal_qn_sum(theta_index[0], theta_index[1]))
+            middle_indices.append(internal_qn_sum(
+                theta_index[0], theta_index[1]))
     if not direction_right or direction_right is None:
         for theta_index in theta_indices:
             val = internal_qn_sub(
@@ -141,8 +146,11 @@ def potential_middle_indices(
 
 
 def degeneracy_in_theta(
-    keys, middle: List[int], *, direction_right: Optional[bool] = None
-):
+    keys: _List[_Tuple[int, int, int, int]],
+    middle: _List[int],
+    *,
+    direction_right: _Optional[bool] = None
+) -> _Tuple[_List[_Tuple[int, _Tuple[int, int, int, int]]], _List[_Tuple[int, _List[_Tuple[int, int, int, int]]]]]:
     nondeg = []
     degenerate = []
 
@@ -184,19 +192,27 @@ def degeneracy_in_theta(
     return nondeg, degenerate
 
 
-def slices_degenerate_blocs(thetaQ, degenerate_list, subnewsize):
+def slices_degenerate_blocs(
+    thetaQ: _Dict[_Tuple, _np.ndarray],
+    degenerate_list: _List[_Tuple[int, _List[_Tuple[int, int, int, int]]]],
+    subnewsize: _List[_List],
+) -> None:
     for i in range(len(degenerate_list)):  # for each deg global block
         # define a local basis
-        left__loc_basis = sorted(set([(it[0], it[1]) for it in degenerate_list[i][1]]))
-        right_loc_basis = sorted(set([(it[2], it[3]) for it in degenerate_list[i][1]]))
+        left__loc_basis = sorted(
+            set([(it[0], it[1]) for it in degenerate_list[i][1]]))
+        right_loc_basis = sorted(
+            set([(it[2], it[3]) for it in degenerate_list[i][1]]))
         # find the local dim corresponding to left_loc_basis and right_loc_basis
         left__loc_dim = len(left__loc_basis) * [(0, 0)]
         right_loc_dim = len(right_loc_basis) * [(0, 0)]
         # for each local_index
         for it in degenerate_list[i][1]:
             dims = thetaQ[it].shape
-            left__loc_dim[left__loc_basis.index((it[0], it[1]))] = (dims[0], dims[1])
-            right_loc_dim[right_loc_basis.index((it[2], it[3]))] = (dims[2], dims[3])
+            left__loc_dim[left__loc_basis.index(
+                (it[0], it[1]))] = (dims[0], dims[1])
+            right_loc_dim[right_loc_basis.index(
+                (it[2], it[3]))] = (dims[2], dims[3])
         # find the totdim
         total_left__dim = sum([d[0] * d[1] for d in left__loc_dim])
         total_right_dim = sum([d[0] * d[1] for d in right_loc_dim])
