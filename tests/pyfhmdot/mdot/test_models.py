@@ -54,11 +54,11 @@ def test_fhmdot_operators():
             # "ru_smid_u1",
         ]:
             op_python = single_operator(op_name)
-            if "sy" in op_name:    
+            if "sy" in op_name:
                 op_mdot = single_operator_cplx(op_name)
             else:
                 op_mdot = single_operator_real(op_name)
-            
-            if "sp" not in op_name and "sm" not in op_name: # need to fix
+
+            if "sp" not in op_name and "sm" not in op_name:  # need to fix
                 for key in op_python.keys():
                     assert all(op_python[key] == op_mdot[key])
