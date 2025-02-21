@@ -616,7 +616,6 @@ def idmrg_even(
 
 def compress_mps(
     mps,
-    dw_dict,
     chi_max,
     normalize,
     eps,
@@ -635,7 +634,7 @@ def compress_mps(
                 apply_mm_at(
                     mps,
                     l,
-                    dw_dict,
+                    {"dw_one_serie":0},
                     chi_max,
                     normalize,
                     eps,
@@ -649,7 +648,7 @@ def compress_mps(
                 apply_mm_at(
                     mps,
                     l,
-                    dw_dict,
+                    {"dw_one_serie":0},
                     chi_max,
                     normalize,
                     eps,
@@ -667,7 +666,6 @@ def dmrg_sweep_lanczos(
     mps,
     ham,
     left_right,
-    dw_dict,
     chi_max,
     normalize,
     eps,
@@ -680,34 +678,6 @@ def dmrg_sweep_lanczos(
     from pyfhmdot.routine.minimize import minimize_lanczos_and_move, minimize_lanczos
 
     size = len(mps)
-
-    # this is to ensure we do not reach borders
-    # if start_left:
-    #    apply_mm_at(
-    #            mps,
-    #            1,
-    #            dw_dict,
-    #            chi_max,
-    #            normalize,
-    #            eps,
-    #            is_um=True,
-    #            conserve_left_right_before=False,
-    #            direction_right=1,
-    #        )
-    #    print_double(size, 1, sym="A*")
-    # else:
-    #    apply_mm_at(
-    #            mps,
-    #            size-1,
-    #            dw_dict,
-    #            chi_max,
-    #            normalize,
-    #            eps,
-    #            is_um=False,
-    #            conserve_left_right_before=False,
-    #            direction_right=3,
-    #    )
-    #    print_double(size, size - 1, sym="*B")
 
     for layer in range(nb_sweeps):
         print(f"dmrg sweep {layer+1}/{nb_sweeps}")
@@ -723,6 +693,7 @@ def dmrg_sweep_lanczos(
                     max_iteration,
                     tolerance,
                     chi_max,
+                    normalize,
                     eps,
                     direction_right=1,
                     is_um=True,
@@ -739,6 +710,7 @@ def dmrg_sweep_lanczos(
                     max_iteration,
                     tolerance,
                     chi_max,
+                    normalize,
                     eps,
                     direction_right=-1,
                     is_um=False,
@@ -754,7 +726,6 @@ def dmrg_warmup(mps, ham, left_right, sim_dict, *, start_left):
         mps,
         ham,
         left_right,
-        sim_dict,
         chi_max=sim_dict["chi_max_warmup"],
         normalize=sim_dict["normalize"],
         eps=sim_dict["eps_truncation"],

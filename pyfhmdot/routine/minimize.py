@@ -18,19 +18,20 @@ def minimize_lanczos_and_move(
     max_iteration,
     tolerance,
     chi_max,
+    normalize,
     eps,
     *,
     direction_right,
     is_um
 ):
     if direction_right==1:
-        apply_mm_at(mps,l,{"dw_one_serie":0},chi_max,True,eps,is_um=True,direction_right=1)
+        apply_mm_at(mps,l,{"dw_one_serie":0},chi_max,normalize,eps,is_um=True,direction_right=1)
         if l==1:
             left_right[l-1] = update_left(mps[l-1], ham[l-1], [None], True)
         else:
             left_right[l-1] = update_left(mps[l - 1], ham[l - 1], left_right[l - 2], False)
     else:
-        apply_mm_at(mps,l+2,{"dw_one_serie":0},chi_max,True,eps,is_um=False,direction_right=-1)
+        apply_mm_at(mps,l+2,{"dw_one_serie":0},chi_max,normalize,eps,is_um=False,direction_right=-1)
         if l==len(mps)-3:
             left_right[l + 1] = update_right(mps[l+2], ham[l+2], [None], True)
         else:
@@ -71,8 +72,8 @@ def minimize_lanczos_and_move(
         rhs_blocs=mps[l+1],
         dw_dict={"dw_one_serie": 0},
         chi_max=chi_max,
-        normalize=True,
-        direction_right=direction_right,
+        normalize=normalize,
+        direction_right=0,
         eps=eps,
         is_um=is_um,
     )

@@ -12,8 +12,8 @@ def test_idmrg_all():
         "sh_xxz-hz_u1",
         {"Jxy": 1, "Jz": 1, "hz": 0},
         {"chi_max": 10, "eps_truncation": 1e-8, "dw_total": 0, "dw_one_serie": 0},
-        size=10,
-        conserve_total=5,
+        size=12,
+        conserve_total=6,
     )
 
     from pyfhmdot.entrypoint import variational_ground_state
