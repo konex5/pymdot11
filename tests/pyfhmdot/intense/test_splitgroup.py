@@ -25,7 +25,7 @@ def test_reshape_group(make_maximal_entangled_state_u1):
 
 def test_mpos_group():
     from pyfhmdot.models.pymodels import hamiltonian_obc
-    from pyfhmdot.intense.contract import multiply_mp
+    from pyfhmdot.intense.mul_mp import multiply_mp
     from pyfhmdot.intense.splitgroup import group_mpos
 
     h = hamiltonian_obc("sh_xxz-hz_u1", {"Jxy": 2, "Jz": 3, "hz": 2}, 10)
