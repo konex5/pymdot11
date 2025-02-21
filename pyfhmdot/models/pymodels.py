@@ -1,3 +1,6 @@
+from pyfhmdot.models.pyoperators import single_operator, two_sites_bond_operator
+
+
 def pyhamiltonian(name):
     models = {
         "skeleton": {
@@ -80,6 +83,34 @@ def pyhamiltonian(name):
     append_sub_model(models, name, hamiltonian)
 
     return hamiltonian
+
+
+def on_site_operators_from_hamiltonian(name, parameters):
+    hamiltonian = pyhamiltonian(name)
+
+    single_operators = []
+    for on_site in hamiltonian["on_site"]:
+        single_operators.append(
+            single_operator(name=on_site[-1], coef=parameters[on_site[0]] * on_site[1])
+        )
+
+    return single_operators
+
+
+def nn_bond_operators_from_hamiltonian(name, parameters, *, weight_on_left=None):
+    hamiltonian = pyhamiltonian(name)
+
+    two_sites_bond_operators = []
+    for on_site in hamiltonian["nn_bond"]:
+        two_sites_bond_operators.append(
+            two_sites_bond_operator(
+                name=on_site[-1],
+                coef=parameters[on_site[0]] * on_site[1],
+                weight_on_left=weight_on_left,
+            )
+        )
+
+    return two_sites_bond_operators
 
 
 """
