@@ -8,6 +8,7 @@ from pyfhmdot.dynamical import dynamical_dmps
 
 from pyfhmdot.general import (
     add_model_bdmrg_simulation,
+    add_model_info,
     add_mps,
     load_model_bdmrg_simulation,
     load_model_info_model_name,
@@ -80,5 +81,6 @@ if __name__ == "__main__":
 
     output_path = arguments.output + "/2B_00.0250_00.0125.h5"
     create_h5(output_path)
+    add_model_info(output_path,{model_name:0,"size":size})
     add_model_bdmrg_simulation(output_path, bdmrg_simulation_parameters)
     add_mps(output_path, dmps, folder="QMP")
