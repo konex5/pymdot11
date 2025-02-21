@@ -76,7 +76,7 @@ def get_theta():
 
     new_theta = create_hamiltonian_gates(
         "sh_xxz-hz_u1",
-        {"Jxy": 0.25, "Jz": 0.5, "hz": 1.5}, # 1/4.*1, 1/4.*2, 1/2.*3
+        {"Jxy": 0.25, "Jz": 0.5, "hz": 1.5},  # 1/4.*1, 1/4.*2, 1/2.*3
         3,
         dbeta=0.025,
         is_dgate=True,
@@ -257,5 +257,5 @@ def test_validation_theta_step_one_right():
         conserve_left_right_after_gate=False,
         direction_right=1,
     )
-    # found the problem, the gate is wrong at border in the new code!! 
+    # found the problem, the gate is wrong at border in the new code!!
     pass
