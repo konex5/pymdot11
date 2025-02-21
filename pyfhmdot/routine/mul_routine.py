@@ -2,6 +2,7 @@ import numpy as _np
 from typing import Dict as _Dict
 from typing import List as _List
 from typing import Tuple as _Tuple
+from typing import Optional as _Optional
 
 from pyfhmdot.routine.indices import list_degenerate_indices
 
@@ -62,14 +63,24 @@ def mul_usv_nondeg(
     dst_lhs_blocs: _Dict[_Tuple[int, int, int], _np.ndarray],
     dst_rhs_blocs: _Dict[_Tuple[int, int, int], _np.ndarray],
     *,
-    is_um: bool = False,
+    is_um: _Optional[bool] = False,
 ) -> None:
     for i in range(len(nondeg)):  # reversed, and passed by pop.
         Dsi = cut.pop()
         if Dsi > 0:
             dims = nondeg_dims.pop()
             tmp_nondeg = nondeg.pop()
-            if is_um:
+            if is_um is None:
+                diag_sqrt = _np.diag(_np.sqrt(array_S.pop()[:Dsi]))
+                # M
+                mat_left = _np.dot(
+                    array_U.pop()[:, :Dsi], diag_sqrt
+                ).reshape(dims[0], dims[1], Dsi)
+                # M
+                mat_right = _np.dot(
+                    diag_sqrt, array_V[i][:Dsi, :]
+                ).reshape(Dsi, dims[2], dims[3])
+            elif is_um:
                 # U
                 mat_left = array_U[i][:, :Dsi].reshape(dims[0], dims[1], Dsi)
                 # M
@@ -108,12 +119,21 @@ def mul_usv_deg(
     dst_lhs_blocs: _Dict[_Tuple[int, int, int], _np.ndarray],
     dst_rhs_blocs: _Dict[_Tuple[int, int, int], _np.ndarray],
     *,
-    is_um: bool = False,
+    is_um: _Optional[bool] = False,
 ) -> None:
     for i in range(len(deg)):  # reversed, and pop each value.
         Dsi = cut.pop()
         if Dsi > 0:
-            if is_um:
+            if is_um is None:
+                diag_sqrt = _np.diag(_np.sqrt(array_S.pop()[:Dsi]))
+                # M
+                mat_left = _np.dot(
+                    array_U.pop()[:, :Dsi], diag_sqrt
+                )
+                # M
+                mat_right = _np.dot(
+                    diag_sqrt, array_V.pop()[:Dsi, :])
+            elif is_um:
                 # U
                 mat_left = array_U.pop()  # [:,:Dsi]
                 # M

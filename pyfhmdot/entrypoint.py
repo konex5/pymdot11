@@ -9,11 +9,11 @@ def infinite_to_finite_ground_state(
     dst_imps_left = []
     dst_imps_right = []
     ham_left, ham_mpo, ham_right = create_infinite_hamiltonian(model_name, parameters)
-    dst_imps_left.append(create_id_mp(model_name, 1, True))
-    dst_imps_right.append(create_id_mp(model_name, 1, False))
+    dst_imps_left.append(create_id_mp(model_name, 1, True)[1])
+    dst_imps_right.append(create_id_mp(model_name, 1, False)[1])
 
     if size % 2 == 1:
-        dst_imps_left.append(create_id_mp(model_name, 2, True))
+        dst_imps_left.append(create_id_mp(model_name, 2, True)[1])
 
     bloc_left, bloc_right = initialize_idmrg(
         dst_imps_left, dst_imps_right, ham_left, ham_right, ham_mpo[0]
@@ -25,18 +25,10 @@ def infinite_to_finite_ground_state(
         bloc_right,
         ham_mpo,
         idmrg_dict,
-        iterations=size // 2,
+        iterations=(size-len(dst_imps_left)-1) // 2,
     )
-
-    # dst_imps.append
-
-
-def infinite_to_finite_ground_state(dst_imps, left, ham, right, idmrg_dict, *, size):
-    if size % 2 == 0:
-        _idmrg_even(dst_imps, left, ham, right, idmrg_dict, size=size)
-    else:
-        # _idmrg_odd(dst_imps,left, ham, right, idmrg_dict,size=size)
-        pass
+    
+    dst_imps = dst_imps_left + [_ for _ in dst_imps_left]
 
 
 def variational_ground_state(mps, mpo, zdmrg_dict):

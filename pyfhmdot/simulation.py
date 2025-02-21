@@ -457,18 +457,20 @@ def idmrg_minimize_two_sites(
     env_bloc = {}
     contract_left_right_mpo_mpo_permute(
         env_bloc, bloc_left, bloc_right, ham_mpo_left, ham_mpo_right)
+    for key in list(env_bloc.keys()):
+        if not (key[0] == key[4] and key[1]==key[5] and key[2] == key[6] and key[3] == key[7]):
+            env_bloc.pop(key)
     # minimize energy
     eigenvalues = {}
     eigenvectors = {}
     minimize_theta(env_bloc, eigenvalues, eigenvectors, sim_dict["chi_max"])
-    # remove blocks with too large values
-    vals = sorted(set(eigenvalues.values()))
-    for key in eigenvalues.keys():
-        if eigenvalues[key] not in vals:
-            eigenvectors.pop(key)
-    #
+    # # remove blocks with too large values
+    # vals = sorted(_ for i,_ in enumerate(set(eigenvalues.values()) if i < sim_dict["nb_eigenvalues"]))
+    # for key in eigenvalues.keys():
+    #     if eigenvalues[key] not in vals:
+    #         eigenvectors.pop(key)
     theta_to_mm(eigenvectors, dst_left, dst_right, sim_dict,
-                sim_dict["chi_max"], True, True, 1, sim_dict["eps_truncation"])
+                sim_dict["chi_max"], True, None, -1, sim_dict["eps_truncation"])
     #
     new_bloc_left = {}
     new_bloc_right = {}

@@ -29,6 +29,18 @@ def permute_blocs(new_blocks, old_blocks, map_old2new):
             ]
         )
 
+def rm_border_mpo(dst_blocs, mpo_blocs, is_left):
+    for it in mpo_blocs.keys():
+        if is_left:
+            dst_indices = (it[1],it[2],it[3])
+            tmp = mpo_blocs[it].shape
+            dst_shape = (tmp[1],tmp[2],tmp[3])
+        else:
+            dst_indices = (it[0],it[1],it[2])
+            tmp = mpo_blocs[it].shape
+            dst_shape = (tmp[0],tmp[1],tmp[2])
+        dst_blocs[dst_indices] = mpo_blocs[it].reshape(dst_shape)
+
 
 def fuse_mp(dst_blocs, mpo_blocs, index):
     """
@@ -54,11 +66,6 @@ def fuse_mp(dst_blocs, mpo_blocs, index):
             + [_ for i, _ in enumerate(tmp) if i > index + 1]
         )
         dst_blocs[dst_indices] = mpo_blocs[it].reshape(dst_shape)
-
-
-def split_mpo():
-    pass
-
 
 def trace_mp(dst_blocs, mpo_blocs, index1, index2):
     for it in mpo_blocs.keys():

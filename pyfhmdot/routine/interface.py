@@ -86,7 +86,7 @@ def theta_to_mm(
     dw_dict: dict,
     chi_max: int,
     normalize: bool,
-    is_um: bool,
+    is_um: _Optional[bool],
     direction_right: int,
     eps: float = 10 ** -8,
 ) -> None:
@@ -161,7 +161,7 @@ def minimize_theta(
             mat.shape[4] * mat.shape[5] * mat.shape[6] * mat.shape[7],
         )
         E, vec = smallest_eigenvectors_from_scipy(mat.reshape(new_shape))
-        eigenvalues[(keys[0], keys[1], keys[2], keys[3])] = E
+        eigenvalues[(keys[0], keys[1], keys[2], keys[3])] = E[0]
         eigenvectors[(keys[0], keys[1], keys[2], keys[3])] = vec.reshape(
             (mat.shape[0], mat.shape[1], mat.shape[2], mat.shape[3])
         )

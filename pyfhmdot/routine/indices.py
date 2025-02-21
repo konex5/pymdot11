@@ -212,10 +212,20 @@ def potential_middle_indices(
     theta_indices: _List[_Tuple], *, direction_right: int = -1
 ):
     middle_indices = []
-    if direction_right == -1:  # take from left sum
+    if direction_right == -2:  # take from left sum
         for theta_index in theta_indices:
             middle_indices.append(internal_qn_sum(theta_index[0], theta_index[1]))
             val = internal_qn_sub(theta_index[3], theta_index[2])
+            if val >= 0:
+                middle_indices.append(val)
+            else:
+                _warning(
+                    "warning,qnum problem could arises with substraction of qnums..."
+                )
+    elif direction_right == -1:  # take from left sum
+        for theta_index in theta_indices:
+            middle_indices.append(internal_qn_sum(theta_index[0], theta_index[1]))
+            val = internal_qn_sum(theta_index[3], theta_index[2])
             if val >= 0:
                 middle_indices.append(val)
             else:
@@ -254,6 +264,18 @@ def degeneracy_in_theta(
     degenerate = []
 
     if direction_right == -1:  # conserve right and left qnum
+        for j in range(len(middle)):
+            tmp = []
+            for it in keys:
+                if (middle[j] == internal_qn_sum(it[0], it[1])) and (
+                    middle[j] == internal_qn_sum(it[3], it[2])
+                ):
+                    tmp.append(it)
+            if len(tmp) > 1:
+                degenerate.append((j, tmp))
+            elif len(tmp) == 1:
+                nondeg.append((j, tmp[0]))
+    elif direction_right == -2:  # conserve right and left qnum
         for j in range(len(middle)):
             tmp = []
             for it in keys:
