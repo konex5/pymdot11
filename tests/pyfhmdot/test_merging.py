@@ -168,6 +168,7 @@ def test_mpsQ_svd_th2Um(theta_blocs_small):
             "dw_one_serie": 0,
         },
     )
+    pass
 
 
 def test_mpsQ_svd_th2mV(theta_blocs_small):

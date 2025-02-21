@@ -1,88 +1,52 @@
 import numpy as _np
 
 _real_t = "float64"
-_cmpx_t = "complex128"
+_cplx_t = "complex128"
 
 
 def single_operator_dense(name, coef):
 
-    operators = (
-        {
-            "sh_id_no": [((0, 0), coef * _np.array([[1, 0], [0, 1]], dtype=_real_t))],
-            "sh_id_u1": [
-                ((1, 1), coef * _np.array([[1]], dtype=_real_t)),
-                ((0, 0), coef * _np.array([[1]], dtype=_real_t)),
-            ],
-            "sh_sp_no": [[(0, 0), _np.array([[0, 1], [0, 0]], dtype=_real_t)]],
-            "sh_sp_u1": [[(1, 0), _np.array([[1]], dtype=_real_t)]],
-        },
-    )
+    operators = {
+        "sh_id_no": [{(0, 0): coef * _np.array([[1, 0], [0, 1]], dtype=_real_t)}],
+        "sh_id_u1": [
+            ((1, 1), coef * _np.array([[1]], dtype=_real_t)),
+            ((0, 0), coef * _np.array([[1]], dtype=_real_t)),
+        ],
+        "sh_sp_no": [{(0, 0): coef * _np.array([[0, 1], [0, 0]], dtype=_real_t)}],
+        "sh_sp_u1": [{(1, 0): coef * _np.array([[1]], dtype=_real_t)}],
+        "sh_sm_no": [{(0, 0): coef * _np.array([[0, 0], [1, 0]], dtype=_real_t)}],
+        "sh_sm_u1": [{(0, 1): coef * _np.array([[1]], dtype=_real_t)}],
+        "sh_sx_no": [{(0, 0): coef * _np.array([[0, 1], [1, 0]], dtype=_real_t)}],
+        "sh_sx_u1": [
+            {
+                (1, 0): coef * _np.array([[1]], dtype=_real_t),
+                (0, 1): coef * _np.array([[1]], dtype=_real_t),
+            }
+        ],
+        "sh_sz_no": [{(0, 0): coef * _np.array([[1, 0], [0, -1]], dtype=_real_t)}],
+        "sh_sz_u1": [
+            {
+                (0, 0): coef * _np.array([[1]], dtype=_real_t),
+                (1, 1): coef * _np.array([[-1]], dtype=_real_t),
+            }
+        ],
+        "sh_id_cplx_no": [{(0, 0): coef * _np.array([[1, 0], [0, 1]], dtype=_cplx_t)}],
+        "sh_id_cplx_u1": [
+            {(1, 1): coef * _np.array([[1]], dtype=_cplx_t)},
+            {(0, 0): coef * _np.array([[1]], dtype=_cplx_t)},
+        ],
+        "sh_sy_no": [{(0, 0): coef * _np.array([[0, -1j], [1j, 0]], dtype=_cplx_t)}],
+        "sh_sy_u1": [
+            {
+                (1, 0): coef * _np.array([[-1]], dtype=_cplx_t),
+                (0, 1): coef * _np.array([[1j]], dtype=_cplx_t),
+            }
+        ],
+    }
+
+    return operators[name]
+
     """
-    },
-    "sh-Sm": {  # ok
-        "nb_site": 1,
-        "coef": float(1),
-        "qBasis": {
-            "sh-None": [[(0, 0), _np.array([[0, 1], [0, 0]], dtype=_real_t)]],
-            "sh-U1": [[(0, 1), _np.array([[1]], dtype=_real_t)]],
-            "sh-SU2": [[(0, 1), _np.array([[1]], dtype=_real_t)]],
-        },
-        "qchange": {"sh-None": [(0,)], "sh-U1": [(-1,)], "sh-SU2": [(0, -1)]},
-    },
-    "sh-Sz": {  # ok
-        "nb_site": 1,
-        "coef": (1 / _np.sqrt(2)),
-        "qBasis": {
-            "sh-None": [
-                [
-                    (0, 0),
-                    _np.array(
-                        [[-1 / _np.sqrt(2), 0], [0, +1 / _np.sqrt(2)]], dtype=_real_t
-                    ),
-                ]
-            ],
-            "sh-U1": [
-                [(1, 1), _np.array([[+1 / _np.sqrt(2)]], dtype=_real_t)],
-                [(0, 0), _np.array([[-1 / _np.sqrt(2)]], dtype=_real_t)],
-            ],
-            "sh-SU2": [
-                [(1, 1), _np.array([[+1 / _np.sqrt(2)]], dtype=_real_t)],
-                [(0, 0), _np.array([[-1 / _np.sqrt(2)]], dtype=_real_t)],
-            ],
-        },
-        "qchange": {"sh-None": [(0,)], "sh-U1": [(0,)], "sh-SU2": [(0, 0)]},
-    },
-    ### the below is ill defined with QN conservation
-    "sh-Sx": {
-        "nb_site": 1,
-        "qchange": [[0, (+1, -1)]],
-        "coef": (1 / _np.sqrt(2)),
-        "qBasis": {
-            "sh-None": [
-                [
-                    (0, 0),
-                    _np.array(
-                        [[0, +1 / _np.sqrt(2)], [+1 / _np.sqrt(2), 0]], dtype=_real_t
-                    ),
-                ]
-            ]
-        },
-    },
-    "sh-Sy": {
-        "nb_site": 1,
-        "qchange": [[0, (+1, -1)]],
-        "coef": (1 / _np.sqrt(2)),
-        "qBasis": {
-            "sh-None": [
-                [
-                    (0, 0),
-                    _np.array(
-                        [[0, +1j / _np.sqrt(2)], [-1j / _np.sqrt(2), 0]], dtype=_cmpx_t
-                    ),
-                ]
-            ]
-        },
-    },
     ### the above is ill defined with QN conservation
     "sh-SzoSz": {  # ok
         "nb_site": 2,
