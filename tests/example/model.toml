@@ -8,21 +8,20 @@ Jz = 0.5
 hz = 1.5
 
 [idmrg_simulation]
-chi_max = 30
-conserve_total = 10
+chi_max=30
+conserve_total = 5
 dw_one_serie = 0
 dw_total = 0
 eps_truncation = 1e-8
 normalize = 1
 
 [zdmrg_simulation]
-chi_max = 30
-conserve_total = 10
-dw_one_step = 0
-dw_total = 0
+chi_max_warmup = 30
+nb_sweeps_warmup = 30
+max_iteration = 30
+tolerance = 1e-6
+conserve_total = 5
 eps_truncation = 1e-8
-nb_sweeps = 3
-nb_warmup = 6
 normalize = 1
 
 [Tdmrg_simulation]

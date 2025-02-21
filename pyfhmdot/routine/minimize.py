@@ -35,11 +35,11 @@ def minimize_lanczos_and_move(
     #     if _all(th_blocs[key] == 0):
     #         th_blocs.pop(key)
 
-    for key in list(env_blocs.keys()):
-        fst_key = (key[0], key[1], key[2], key[3])
-        snd_key = (key[4], key[5], key[6], key[7])
-        if fst_key not in th_blocs.keys() and snd_key not in th_blocs.keys():
-            env_blocs.pop(key)
+    # for key in list(env_blocs.keys()):
+    #     fst_key = (key[0], key[1], key[2], key[3])
+    #     snd_key = (key[4], key[5], key[6], key[7])
+    #     if fst_key not in th_blocs.keys() and snd_key not in th_blocs.keys():
+    #         env_blocs.pop(key)
 
     new_th_blocs = minimize_lanczos_on_mm(env_blocs, th_blocs, max_iteration, tolerance)
     mps[l - 1].clear()

@@ -723,7 +723,7 @@ def dmrg_sweep_lanczos(
                     tolerance,
                     chi_max,
                     eps,
-                    direction_right=2,
+                    direction_right=-3,
                     is_um=True,
                 )
                 left_right[l - 1] = update_left(
@@ -743,7 +743,7 @@ def dmrg_sweep_lanczos(
                     tolerance,
                     chi_max,
                     eps,
-                    direction_right=-3,
+                    direction_right=2,
                     is_um=False,
                 )
                 left_right[l - 1] = update_right(
@@ -764,7 +764,7 @@ def dmrg_warmup(mps, ham, left_right, sim_dict, *, start_left):
         sim_dict,
         chi_max=sim_dict["chi_max_warmup"],
         normalize=sim_dict["normalize"],
-        eps=sim_dict["eps"],
+        eps=sim_dict["eps_truncation"],
         max_iteration=sim_dict["max_iteration"],
         tolerance=sim_dict["tolerance"],
         nb_sweeps=sim_dict["nb_sweeps_warmup"],
