@@ -5,7 +5,7 @@ def test_multiply_blocs_sparse_with_gate_real(
     make_maximal_entangled_state_u1, make_single_dummy_dgate
 ):
     import numpy as np
-    from pyfhmdot.routine import (
+    from pyfhmdot.routine.interface import (
         mm_to_theta_with_gate,
     )
 
@@ -25,7 +25,7 @@ def test_multiply_blocs_sparse_with_gate_real(
     assert list(dest_blocs.keys())[0] == (0, 0, 0, 0)
     assert len(dest_blocs.keys()) == 5
     #
-    from pyfhmdot.routine import theta_to_mm
+    from pyfhmdot.routine.interface import theta_to_mm
 
     dest_mps_left = {}
     dest_mps_right = {}

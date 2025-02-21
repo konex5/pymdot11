@@ -1,4 +1,4 @@
-from pyfhmdot.routine import (
+from pyfhmdot.routine.interface import (
     mm_to_theta_no_gate,
     mm_to_theta_with_gate,
     theta_to_mm,

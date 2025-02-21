@@ -2,7 +2,7 @@ import pytest
 
 
 def test_multiply_blocs_dense(make_single_dense_mps):
-    from pyfhmdot.routine import (
+    from pyfhmdot.routine.interface import (
         mm_to_theta_no_gate,
     )
 
@@ -16,7 +16,7 @@ def test_multiply_blocs_dense(make_single_dense_mps):
 
 
 def test_multiply_blocs_dense_with_gate(make_single_dense_mps, make_single_dense_gate):
-    from pyfhmdot.routine import (
+    from pyfhmdot.routine.interface import (
         mm_to_theta_with_gate,
     )
 
@@ -32,7 +32,7 @@ def test_multiply_blocs_dense_with_gate(make_single_dense_mps, make_single_dense
 def test_multiply_blocs_sparse(
     make_single_blocs_mps, lhs_indices, lhs_chi_shapes, rhs_indices, rhs_chi_shapes
 ):
-    from pyfhmdot.routine import (
+    from pyfhmdot.routine.interface import (
         mm_to_theta_no_gate,
     )
 
@@ -48,7 +48,7 @@ def test_multiply_blocs_sparse(
 def test_multiply_blocs_sparse_with_qcons(
     make_single_blocs_mps, lhs_indices, lhs_chi_shapes, rhs_indices, rhs_chi_shapes
 ):
-    from pyfhmdot.routine import (
+    from pyfhmdot.routine.interface import (
         mm_to_theta_no_gate,
     )
 
@@ -70,7 +70,7 @@ def test_multiply_blocs_sparse_with_gate_fake(
     rhs_chi_shapes,
     gate_indices,
 ):
-    from pyfhmdot.routine import (
+    from pyfhmdot.routine.interface import (
         mm_to_theta_with_gate,
     )
 
@@ -100,7 +100,7 @@ def test_multiply_blocs_sparse_with_gate_fake_onedir_qnum(
     rhs_chi_shapes,
     gate_indices,
 ):
-    from pyfhmdot.routine import (
+    from pyfhmdot.routine.interface import (
         mm_to_theta_with_gate,
     )
 
@@ -130,7 +130,7 @@ def test_multiply_blocs_sparse_with_gate_fake_with_qcons(
     rhs_chi_shapes,
     gate_indices,
 ):
-    from pyfhmdot.routine import (
+    from pyfhmdot.routine.interface import (
         mm_to_theta_with_gate,
     )
 
@@ -155,7 +155,7 @@ def test_multiply_blocs_sparse_with_gate_real_with_qcons(
     make_maximal_entangled_state_u1, make_single_dummy_dgate
 ):
     import numpy as np
-    from pyfhmdot.routine import (
+    from pyfhmdot.routine.interface import (
         mm_to_theta_with_gate,
     )
 

@@ -1,4 +1,3 @@
-from pyfhmdot.algorithm import sweep
 import pytest
 
 

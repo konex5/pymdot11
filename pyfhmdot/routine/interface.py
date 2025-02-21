@@ -2,7 +2,7 @@ import numpy as _np
 from typing import Dict as _Dict
 from typing import Optional as _Optional
 
-from pyfhmdot.svd_routine import (
+from pyfhmdot.routine.svd_routine import (
     normalize_the_array,
     truncation_strategy,
     svd_nondeg,
@@ -15,7 +15,7 @@ from pyfhmdot.indices import (
     potential_middle_indices,
     slices_degenerate_blocs,
 )
-from pyfhmdot.mul_routine import (
+from pyfhmdot.routine.mul_routine import (
     mul_mm_blocs,
     mul_theta_with_gate,
     mul_usv_nondeg,
