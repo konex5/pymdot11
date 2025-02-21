@@ -2,7 +2,7 @@ import pytest
 
 
 def test_pretty():
-    from golden.project import Hello
+    from pyfhmdot.project import Hello
 
     msg = Hello.pretty("visitor")
     assert msg == "hello visitor"

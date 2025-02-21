@@ -2,7 +2,7 @@ import pytest
 
 
 def test_silver():
-    from golden.project import Bye
+    from pyfhmdot.project import Bye
 
     msg = Bye()
     msg += "visitor"
