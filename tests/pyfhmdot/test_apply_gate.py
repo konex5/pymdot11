@@ -57,7 +57,7 @@ def test_apply_gate_previous_code(
         dw_dict={"dw_one_serie": 0},
         chi_max=100,
         normalize=True,
-        conserve_direction_left=True,
+        direction_right=1,
         eps=10 ** -10,
         is_um=True,
     )
