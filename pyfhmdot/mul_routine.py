@@ -53,8 +53,15 @@ def mul_theta_with_gate(
 
 
 def mul_mv_nondeg(
-    array_U, array_S, cut, array_V, nondeg, nondeg_dims, dict_left, dict_right
-):
+    array_U: _List[_np.ndarray],
+    array_S: _List[_np.array],
+    cut: list,
+    array_V: _List[_np.ndarray],
+    nondeg: _List,
+    nondeg_dims: _List,
+    dict_left,
+    dict_right,
+) -> None:
     i_Nb = len(nondeg)
     for i in range(i_Nb):  # reversed, and passed by pop.
         Dsi = cut.pop()
@@ -75,7 +82,16 @@ def mul_mv_nondeg(
             nondeg.pop()
 
 
-def mul_mv_deg(array_U, array_S, cut, array_V, deg, subnewsize, dict_left, dict_right):
+def mul_mv_deg(
+    array_U: _List[_np.ndarray],
+    array_S: _List[_np.array],
+    cut: list,
+    array_V: _List[_np.ndarray],
+    deg: _List,
+    subnewsize: _List,
+    dict_left,
+    dict_right,
+) -> None:
     i_Nb = len(deg)  # index for deg and subnewsize.. we
     for i in range(i_Nb):  # reversed, and pop each value.
         Dsi = cut.pop()
