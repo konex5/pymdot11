@@ -339,7 +339,7 @@ def initialize_idmrg_even_size(
         "dw_total": 0,
         "chi_max": 10,
         "eps_truncation": 1e-20,
-        "normalize":True
+        "normalize": True,
     }
     # minimize energy
     eigenvalues = {}

@@ -107,10 +107,38 @@ def variational_ground_state(mps, ham, zdmrg_dict):
     _dmrg_sweeps(mps, ham, left_right, left_right_var, zdmrg_dict, start_left=True)
 
 
-def time_evolve_single(mps, ggate, sdmrg_dict):
-    # while
-    # dynamical_mps(mps, ggate, sdmrg_dict)
-    pass
+def time_evolve_single(mps, ggate, sim_dict):
+    """
+    sim_dict["tau_max"]
+    sim_dict["dtau"]
+    sim_dict["eps"]
+    sim_dict["dw_total"]
+    sim_dict["dw_one_serie"]
+    sim_dict["chi_max"]
+    sim_dict["normalize"]
+    sim_dict["start_left"]
+    sim_dict["start_odd_bonds"]
+    sim_dict["save_every"]
+    info_dict["central_matrix"]
+    info_dict["chi_middle_chain"]
+    """
+
+    dw_dict = {"dw_one_serie": 0, "dw_total": sim_dict["dw_total"]}
+    _sweep_eleven_times(
+        mps,
+        ggate,
+        dw_dict=dw_dict,
+        chi_max=sim_dict["chi_max"],
+        normalize=sim_dict["normalize"],
+        eps=sim_dict["eps_truncation"],
+        strategy=0,  # conservation of qnum
+        start_left=sim_dict["start_left"],
+        start_odd_bonds=sim_dict["start_odd_bonds"],
+    )
+    sim_dict["dw_one_serie"] = dw_dict["dw_one_serie"]
+    sim_dict["dw_total"] += dw_dict["dw_total"]
+    print("discarded weight in one step :", sim_dict["dw_one_serie"])
+    print("discarded weight accumulate  :", sim_dict["dw_total"])
 
 
 def dynamical_dmps(dmps, dggate, sim_dict):
