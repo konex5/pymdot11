@@ -199,16 +199,16 @@ def measure_dmps_mpo_dmps(dmps_one, mpo, dmps_two, position=-1):
 
     tmp_left = {}
     _contract_left_border_big(tmp_left, dmps_one[0], mpo[0], dmps_two[0])
+    tmp = {}
     for l in range(1, position, 1):
-        tmp = _copy(tmp_left)  # swap
-        tmp_left.clear()
+        tmp, tmp_left = tmp_left, tmp  # swap
         _contract_left_big(tmp_left, tmp, dmps_one[l], mpo[l], dmps_two[l])
 
     tmp_right = {}
-    _contract_right_border_big(tmp_right, dmps_one[0], mpo[0], dmps_two[0])
+    _contract_right_border_big(tmp_right, dmps_one[-1], mpo[-1], dmps_two[-1])
+    tmp = {}
     for l in range(len(dmps_one) - 2, position, -1):
-        tmp = _copy(tmp_right)  # swap
-        tmp_right.clear()
+        tmp, tmp_right = tmp_right, tmp  # swap
         _contract_right_big(tmp_right, tmp, dmps_one[l], mpo[l], dmps_two[l])
 
     dst = {}

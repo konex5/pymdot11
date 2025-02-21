@@ -1,6 +1,5 @@
 from pyfhmdot.intense.mul_mp import (
     multiply_mp,
-    fuse_mp,
     permute_blocs,
     rm_border_mpo,
     trace_mp,
@@ -187,45 +186,42 @@ def contract_right_small_bloc_mps(dst, right_bloc, mps_down, mps_up):
     #  0-|_|
 
 
-def contract_dmps_mpo_dmps_left_border(dst, mps_down, mpo, mps_up):
+def contract_dmps_mpo_dmps_left_border(dst, dmps_down, mpo, dmps_up):
     mpo_left = {}
-    fuse_mp(mpo_left, mpo, 0)
+    rm_border_mpo(mpo_left, mpo, is_left=True)
     tmp = {}
     # mps_down
     #    2|
     # 0 -|_|-3
     #    1|
-    multiply_mp(tmp, mps_down, mpo_left, [2], [0])
+    multiply_mp(tmp, dmps_down, mpo_left, [2], [0])
     # tmp
     #    3|
     #    | |-4
-    #    | |
     # 0 -|_|-2
     #    1|
-    multiply_mp(dst, tmp, mps_up, [0, 1, 3], [0, 2, 1])
+    multiply_mp(dst, tmp, dmps_up, [0, 1, 3], [0, 2, 1])
     # dst
     #    | |-2
     #    | |-1
     #    |_|-0
 
 
-def contract_dmps_mpo_dmps_right_border(dst, mps_down, mpo, mps_up):
-    mpo_left = {}
-    fuse_mp(mpo_left, mpo, 2)
-    tmp = {}
-    # mps_down
+def contract_dmps_mpo_dmps_right_border(dst, dmps_down, mpo, dmps_up):
+    mpo_right = {}
+    rm_border_mpo(mpo_right, mpo, is_left=False)
+    # dmps_down
     #    2|
     # 0 -|_|-3
     #    1|
-    multiply_mp(tmp, mps_down, mpo_left, [2], [1])
+    tmp = {}
+    multiply_mp(tmp, dmps_down, mpo_right, [2], [1])
     # tmp
     #    4|
     # 3 -| |
-    #    | |
     # 0 -|_|-2
     #    1|
-    # tmp_left_bloc = {}
-    multiply_mp(dst, tmp, mps_up, [1, 2, 4], [2, 3, 1])
+    multiply_mp(dst, tmp, dmps_up, [1, 2, 4], [2, 3, 1])
     # dst
     # 2 -| |
     # 1 -| |
