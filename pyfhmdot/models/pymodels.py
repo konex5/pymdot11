@@ -659,19 +659,24 @@ def _mpo_from_operators_right_border(id_bloc, on_site, nn_bond_left):
     return blocks
 
 
-def onsite_fuse_for_mpo(tmpblocks):
-    difflab = list(set([tmp[0] for tmp in tmpblocks]))
-    outblocks = []
-    for lab in difflab:
+def on_site_fuse_for_mpo(tmpblocks, coef=1.0):
+    all_keys = []
+    for tmp in tmpblocks:
+        for key in tmp.keys():
+            all_keys.append(key)
+    all_keys = sorted(set(all_keys))
+
+    outblocks = {}
+    for key in all_keys:
         for l in range(len(tmpblocks)):
-            if tmpblocks[l][0] == lab:
-                shortlist = [_[0] for _ in outblocks]
-                if lab not in shortlist:
-                    outblocks.append(tmpblocks[l])
+            if key in tmpblocks[l].keys():
+                if key not in outblocks.keys():
+                    outblocks[key] = coef * tmpblocks[l][key]
                 else:
-                    # can only be last # shortlist.index(lab)
-                    outblocks[-1][1] += tmpblocks[l][1]
-    return outblocks
+                    outblocks[key] = coef * (
+                        outblocks[key] + tmpblocks[l][key]
+                    )  # for cmplx
+    return [outblocks]
 
 
 def hamiltonian_obc(model_name, parameters, size):
@@ -682,8 +687,7 @@ def hamiltonian_obc(model_name, parameters, size):
     head, _, tail = model_name.split("_")
     id_bloc = single_operator(name=head + "_id_" + tail, coef=1.0)
     on_site = on_site_operators_from_hamiltonian(model_name, parameters)
-    # fuse on_site
-
+    on_site = on_site_fuse_for_mpo(on_site)
     # fuse
     nn_bond = nn_bond_operators_from_hamiltonian(model_name, parameters)
     nn_bond_left = [_[0] for _ in nn_bond]
@@ -797,6 +801,8 @@ def _suzu_trotter_exp_numpy(
 
 
 # below, cut from dense to quantum number (index + matrix)
+
+
 def _generate_slices(d, deg):
     offi = 0
     for i in range(d):
@@ -950,28 +956,30 @@ def suzu_trotter_obc_exp(arg, model_name, parameters, size, is_dgate):
 
     id_dense = single_operator(name=head + "_id_no", coef=1.0)
     on_site = on_site_operators_from_hamiltonian(head + "_" + mod + "_no", parameters)
-    # fuse on_site
+    on_site_left_border = on_site_fuse_for_mpo(on_site)
+    on_site = on_site_fuse_for_mpo(on_site, coef=1 / 2.0)
+    on_site_right_border = on_site_fuse_for_mpo(on_site)
 
     # fuse
     nn_bond = nn_bond_operators_from_hamiltonian(head + "_" + mod + "_no", parameters)
 
     for l in range(size - 1):
-        # if l == 0:
-        #    effectif_onsite_L = onsite[l]
-        # else:
-        #    effectif_onsite_L = [(param / 2.0, name) for param, name in onsite[l]]
+        if l == 0:
+            eff_on_site_left = on_site_left_border
+        else:
+            eff_on_site_left = on_site
 
-        # if l == L - 2:
-        #    effectif_onsite_R = onsite[L - 1]
-        # else:
-        #    effectif_onsite_R = [(param / 2.0, name) for param, name in onsite[l + 1]]
+        if l == size - 2:
+            eff_on_site_right = on_site_right_border
+        else:
+            eff_on_site_right = on_site
 
         mpo.append(
             suzu_trotter_exp_to_blocs(
                 arg,
                 id_dense,
-                on_site,
-                on_site,
+                eff_on_site_left,
+                eff_on_site_right,
                 nn_bond,
                 is_dgate,
                 degenerate_list=degenerate_list,

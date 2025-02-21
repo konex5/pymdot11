@@ -1,4 +1,3 @@
-from asyncio.proactor_events import _ProactorBaseWritePipeTransport
 import pytest
 
 from pyfhmdot.models.pymodels import suzu_trotter_obc_exp
@@ -87,3 +86,26 @@ def test_gate_exp():
 
     for i in range(len(b)):
         assert b[i][(0, 0, 0, 0)][0, 0, 0, 0] == a[i][(0, 0, 0, 0)][0, 0, 0, 0]
+
+
+def test_on_site_fuse():
+    from pyfhmdot.models.pymodels import (
+        on_site_operators_from_hamiltonian,
+        on_site_fuse_for_mpo,
+    )
+    from pyfhmdot.models.pyoperators import single_operator
+
+    on_site = [
+        single_operator("sh_sx_no", coef=2.0),
+        single_operator("sh_sy_no", coef=5.0),
+    ]
+    out_site = on_site_fuse_for_mpo(on_site)
+    assert out_site[0][(0, 0)][0, 1] == 2.0 - 5j
+
+    on_site = [
+        single_operator("sh_sz_u1", coef=2.0),
+        single_operator("sh_sz_u1", coef=5.0),
+    ]
+    out_site = on_site_fuse_for_mpo(on_site)
+    assert out_site[0][(0, 0)][0, 0] == 7.0
+    assert out_site[0][(1, 1)][0, 0] == -7.0
