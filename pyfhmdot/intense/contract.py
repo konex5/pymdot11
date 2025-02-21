@@ -193,7 +193,7 @@ def contract_right_bloc_mps(dst, right_bloc, mps_down, mpo, mps_up):
     # mps_down
     #    1|
     # 0 -|_|-2
-    multiply_mp(tmp, right_bloc, mps_down, [0], [3])
+    multiply_mp(tmp, right_bloc, mps_down, [0], [2])
     # tmp
     #      | |-1
     #    3|| |-0
@@ -204,7 +204,7 @@ def contract_right_bloc_mps(dst, right_bloc, mps_down, mpo, mps_up):
     #     3| |-0
     #  2-|   |
     #  1-|___|
-    multiply_mp(dst, tmp_tmp, mps_up, [0, 3], [3, 1])
+    multiply_mp(dst, tmp_tmp, mps_up, [0, 3], [2, 1])
     # dst
     # 2 -| |
     # 1 -| |
