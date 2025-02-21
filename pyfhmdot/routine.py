@@ -26,19 +26,15 @@ def normalize_the_array(list_of_array, cut):
             list_of_array[i] /= norm
 
 
-def strategyQ_truncation(
+def truncation_strategy(
     list_of_array,
     eps_truncation_error=10 ** -32,
     chi_max=600,
-    chi_max_total=8000,
-    norm_one=True,
-    normdouble=False,
 ):
     #
     # epsilon = || forall bloc s_bloc ||_2^2
     # chi_max = max chi of bloc
-    # chi_max_tot = max chi of all blocs together XXXXXX DO NOT WORK PLEASE CORRECT IT! to check
-    # eps_truncation_error > sum_{i>chi_max_tot} s_all,i^2
+    # eps_truncation_error < sum_{i>chi_max} s_all,i^2
     #
     norm = _np.sqrt(_np.sum([_np.linalg.norm(arr) ** 2 for arr in list_of_array]))
 
@@ -46,8 +42,6 @@ def strategyQ_truncation(
     index2cutA = _np.searchsorted(
         _np.cumsum(A ** 2), eps_truncation_error * norm ** 2, side="left"
     )
-    if len(A) - index2cutA > chi_max_total:
-        index2cutA = len(A) - chi_max_total
 
     dw = _np.sum(A[:index2cutA] ** 2)
     maxcutvalue = A[index2cutA]
@@ -157,8 +151,6 @@ def _mult_deg_MV(
     for i in range(i_Nb):  # reversed, and pop each value.
         Dsi = cut.pop()
         if Dsi > 0:
-            # M = _np.dot(array_U[i][:,:Dsi],_np.diag(array_S[i][:Dsi]))
-            # V = array_V[i]#[Dsi:,:]
             M = _np.dot(array_U.pop()[:, :Dsi], _np.diag(array_S.pop()[:Dsi]))
             V = array_V.pop()  # [Dsi:,:]
 
@@ -171,10 +163,6 @@ def _mult_deg_MV(
                 posR = tmp[5].index((it[2], it[3]))
                 offR = tmp[6][posR]
                 dimR = tmp[7][posR]
-
-                # print('M[slice(offL,offL+dimL[0]*dimL[1]),:Dsi]=',M[slice(offL,offL+dimL[0]*dimL[1]),:Dsi])
-                # print('dimL=',dimL)
-                # print('Dsi=',Dsi)
 
                 dict_left[(it[0], it[1], tmp_deg[0])] = M[
                     slice(offL, offL + dimL[0] * dimL[1]), :Dsi
@@ -242,8 +230,6 @@ def _mult_deg_UM(
             array_S.pop()
             subnewsize.pop()
             deg.pop()
-            # print("REMOVED??????????????????????????????????????????????????!")
-
     pass
 
 
@@ -279,9 +265,7 @@ def mpsQ_svd_th2Um(thetaQ, mpsL, mpsR, simdict, **kwargs):
     chi_max = simdict["dw_Dmax"]
     chi_max_total = simdict["dw_Dmax_tot"]
 
-    cut, dw = strategyQ_truncation(
-        array_of_S, eps_truncation_error, chi_max, chi_max_total, False
-    )
+    cut, dw = truncation_strategy(array_of_S, eps_truncation_error, chi_max)
 
     if simdict["normalize"] == True:
         normalize_the_array(array_of_S, cut)
@@ -340,16 +324,17 @@ def mpsQ_svd_th2mV(thetaQ, mpsL, mpsR, simdict, **kwargs):
     eps_truncation_error = simdict["eps_truncation_error"]
     chi_max = simdict["dw_Dmax"]
     chi_max_total = simdict["dw_Dmax_tot"]
-    cut, dw = strategyQ_truncation(
-        array_of_S, eps_truncation_error, chi_max, chi_max_total, False
+    cut, dw = truncation_strategy(
+        array_of_S,
+        eps_truncation_error,
+        chi_max,
     )
 
     if simdict["normalize"] == True:
         normalize_the_array(array_of_S, cut)
 
     simdict["dw_one_serie"] += dw
-    # simdict['dw_max'] = max(dw,simdict['dw_max'])
-    # print(array_of_S,deg,nondeg)
+
     cut_nondeg = [cut[i] for i in range(len(nondeg))]
     cut_deg = [cut[i] for i in range(len(nondeg), len(nondeg) + len(deg))]
 
@@ -373,8 +358,6 @@ def mpsQ_svd_th2mV(thetaQ, mpsL, mpsR, simdict, **kwargs):
         mpsL,
         mpsR,
     )
-
-    # return mpsL, mpsR
     pass
 
 

@@ -133,8 +133,7 @@ def potential_middle_indices(
     middle_indices = []
     if direction_right or direction_right is None:
         for theta_index in theta_indices:
-            middle_indices.append(internal_qn_sum(
-                theta_index[0], theta_index[1]))
+            middle_indices.append(internal_qn_sum(theta_index[0], theta_index[1]))
     if not direction_right or direction_right is None:
         for theta_index in theta_indices:
             val = internal_qn_sub(
@@ -150,7 +149,10 @@ def degeneracy_in_theta(
     middle: _List[int],
     *,
     direction_right: _Optional[bool] = None
-) -> _Tuple[_List[_Tuple[int, _Tuple[int, int, int, int]]], _List[_Tuple[int, _List[_Tuple[int, int, int, int]]]]]:
+) -> _Tuple[
+    _List[_Tuple[int, _Tuple[int, int, int, int]]],
+    _List[_Tuple[int, _List[_Tuple[int, int, int, int]]]],
+]:
     nondeg = []
     degenerate = []
 
@@ -199,20 +201,16 @@ def slices_degenerate_blocs(
 ) -> None:
     for i in range(len(degenerate_list)):  # for each deg global block
         # define a local basis
-        left__loc_basis = sorted(
-            set([(it[0], it[1]) for it in degenerate_list[i][1]]))
-        right_loc_basis = sorted(
-            set([(it[2], it[3]) for it in degenerate_list[i][1]]))
+        left__loc_basis = sorted(set([(it[0], it[1]) for it in degenerate_list[i][1]]))
+        right_loc_basis = sorted(set([(it[2], it[3]) for it in degenerate_list[i][1]]))
         # find the local dim corresponding to left_loc_basis and right_loc_basis
         left__loc_dim = len(left__loc_basis) * [(0, 0)]
         right_loc_dim = len(right_loc_basis) * [(0, 0)]
         # for each local_index
         for it in degenerate_list[i][1]:
             dims = thetaQ[it].shape
-            left__loc_dim[left__loc_basis.index(
-                (it[0], it[1]))] = (dims[0], dims[1])
-            right_loc_dim[right_loc_basis.index(
-                (it[2], it[3]))] = (dims[2], dims[3])
+            left__loc_dim[left__loc_basis.index((it[0], it[1]))] = (dims[0], dims[1])
+            right_loc_dim[right_loc_basis.index((it[2], it[3]))] = (dims[2], dims[3])
         # find the totdim
         total_left__dim = sum([d[0] * d[1] for d in left__loc_dim])
         total_right_dim = sum([d[0] * d[1] for d in right_loc_dim])
