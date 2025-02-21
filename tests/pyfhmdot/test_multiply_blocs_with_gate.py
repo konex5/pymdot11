@@ -1,3 +1,4 @@
+from pyfhmdot.routine import mpsQ_svd_th2Um, mpsQ_svd_th2mV
 import pytest
 
 from pyfhmdot.contract import (
@@ -148,7 +149,39 @@ def test_multiply_blocs_sparse_with_gate_real(
         conserve_left_right_before=False,
         conserve_left_right_after=False,
     )
-    # assert list(dest_blocs.keys())[0] == (0, 0, 0, 0)
-    # assert len(dest_blocs.keys()) == 16
-    # return dest_blocs
+    assert list(dest_blocs.keys())[0] == (0, 0, 0, 0)
+    assert len(dest_blocs.keys()) == 5
+    #
+    dest_mps_left = {}
+    dest_mps_right = {}
+    mpsQ_svd_th2Um(dest_blocs,dest_mps_left,dest_mps_right,{
+            "discarded_weights": 1e-8,
+            "eps_truncation_error": 1e-8,
+            "dw_Dmax": 100,
+            "dw_Dmax_tot": 100,
+            "normalize": True,
+            "dw_one_serie": 0,
+        })
     pass
+
+
+def test_multiply_blocs_sparse_with_gate_real_with_qcons(
+    make_maximal_entangled_state_u1, make_single_dummy_dgate
+):
+    import numpy as np
+
+    all = make_maximal_entangled_state_u1(2, 1 / np.sqrt(2))
+    lhs_blocs, rhs_blocs = all[0], all[1]
+
+    gate_blocs = make_single_dummy_dgate()
+    dest_blocs = {}
+    multiply_blocs_with_gate_applied(
+        dest_blocs,
+        lhs_blocs,
+        rhs_blocs,
+        gate_blocs,
+        conserve_left_right_before=False,
+        conserve_left_right_after=True,
+    )
+    assert list(dest_blocs.keys())[0] == (0, 0, 0, 0)
+    assert len(dest_blocs.keys()) == 1
