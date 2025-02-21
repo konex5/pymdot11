@@ -2,7 +2,7 @@ import pytest
 
 
 def test_create_id_mp():
-    from pyfhmdot.create import create_id_mp
+    from pyfhmdot.initialize import create_id_mp
 
     _, a = create_id_mp("sh_id_no", 1, True)
     _, b = create_id_mp("sh_id_u1", 1, True)

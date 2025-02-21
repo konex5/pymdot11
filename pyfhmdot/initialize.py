@@ -155,9 +155,3 @@ def create_id_mp(model_name, position, is_left):
 
     return coef, new_blocs
 
-
-def change_right_index(mp, new_index):
-    dst_mp = {}
-    for key, value in mp.items():
-        dst_mp[(key[0], key[1], new_index)] = value
-    return dst_mp

@@ -26,7 +26,7 @@ def create_random_blocs(chi, max_index=3):
 
 
 def create_gate():
-    from pyfhmdot.create import create_hamiltonian_gates
+    from pyfhmdot.initialize import create_hamiltonian_gates
 
     return create_hamiltonian_gates(
         "sh_xxz-hz_u1",

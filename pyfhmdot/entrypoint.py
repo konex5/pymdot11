@@ -1,4 +1,4 @@
-from pyfhmdot.create import create_infinite_hamiltonian as _create_infinite_hamiltonian
+from pyfhmdot.initialize import create_infinite_hamiltonian as _create_infinite_hamiltonian
 from pyfhmdot.simulation import (
     initialize_left_right,
     initialize_left_right_variance,

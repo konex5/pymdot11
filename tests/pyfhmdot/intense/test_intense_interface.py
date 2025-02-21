@@ -2,7 +2,7 @@ import pytest
 
 
 def test_measure_dmps():
-    from pyfhmdot.create import create_maximal_entangled_state
+    from pyfhmdot.initialize import create_maximal_entangled_state
     from pyfhmdot.intense.interface import measure_dmps, measure_dmps_dmps
     import numpy as _np
 

@@ -20,7 +20,7 @@ from pyfhmdot.utils.iotools import (
     create_h5,
 )
 
-from pyfhmdot.create import create_infinite_hamiltonian
+from pyfhmdot.initialize import create_infinite_hamiltonian
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="cli, create maximal entangled state")

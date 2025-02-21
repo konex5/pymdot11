@@ -2,7 +2,7 @@ import pytest
 
 
 def test_contract_dmrg(make_single_blocs_mps):
-    from pyfhmdot.create import create_infinite_hamiltonian
+    from pyfhmdot.initialize import create_infinite_hamiltonian
 
     mpo_left, mpo, mpo_right = create_infinite_hamiltonian(
         "sh_xxz-hz_u1", {"Jxy": 1, "Jz": 2, "hz": 3}

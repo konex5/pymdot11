@@ -70,7 +70,7 @@ def get_theta():
         (2, 2, 2, 2): array([[[[0.99483226]]]]),
     }
 
-    from pyfhmdot.create import create_hamiltonian_gates
+    from pyfhmdot.initialize import create_hamiltonian_gates
 
     new_theta = create_hamiltonian_gates(
         "sh_xxz-hz_u1",

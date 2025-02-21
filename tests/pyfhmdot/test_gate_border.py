@@ -3,7 +3,7 @@ import pytest
 
 def test_gate_border():
     from numpy import all, any
-    from pyfhmdot.create import create_hamiltonian_gates
+    from pyfhmdot.initialize import create_hamiltonian_gates
 
     ggate = create_hamiltonian_gates(
         "sh_xxz-hz_u1",

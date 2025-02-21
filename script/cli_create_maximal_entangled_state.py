@@ -18,7 +18,7 @@ from pyfhmdot.utils.iotools import (
     create_h5,
 )
 
-from pyfhmdot.create import create_maximal_entangled_state
+from pyfhmdot.initialize import create_maximal_entangled_state
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="cli, create maximal entangled state")

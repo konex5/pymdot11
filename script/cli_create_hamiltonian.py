@@ -21,7 +21,7 @@ from pyfhmdot.utils.general import (
     load_model_info_size,
 )
 
-from pyfhmdot.create import create_hamiltonian
+from pyfhmdot.initialize import create_hamiltonian
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="cli, create hamiltonian")
