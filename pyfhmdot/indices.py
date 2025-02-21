@@ -1,3 +1,6 @@
+from typing import List, Optional, Tuple
+
+
 def map_indices_slices_according_to_qnum(qname):
     basis = {  #
         "sh-None": {
@@ -112,15 +115,17 @@ def map_indices_slices_according_to_qnum(qname):
     }
 
 
-def internal_qn_sum(lhs, rhs):
+def internal_qn_sum(lhs: int, rhs: int) -> int:
     return lhs + rhs
 
 
-def internal_qn_sub(lhs, rhs):
+def internal_qn_sub(lhs: int, rhs: int) -> int:
     return lhs - rhs
 
 
-def potential_middle_indices(theta_indices, *, direction_right=None):
+def potential_middle_indices(
+    theta_indices: List[tuple], *, direction_right: Optional[bool] = None
+):
     middle_indices = []
     if direction_right or direction_right is None:
         for theta_index in theta_indices:
@@ -135,7 +140,9 @@ def potential_middle_indices(theta_indices, *, direction_right=None):
     return sorted(set(middle_indices))
 
 
-def degeneracy_in_theta(keys, middle, *, direction_right=None):
+def degeneracy_in_theta(
+    keys, middle: List[int], *, direction_right: Optional[bool] = None
+):
     nondeg = []
     degenerate = []
 
