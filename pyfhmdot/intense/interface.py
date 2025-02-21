@@ -1,3 +1,7 @@
+from collections import defaultdict
+from copy import deepcopy as _copy
+from numpy import array as _array
+
 from pyfhmdot.intense.contract import (
     contract_dmps_dmps_left_border as _contract_dmps_dmps_left_border,
     contract_dmps_dmps_right_border as _contract_dmps_dmps_right_border,
@@ -52,6 +56,11 @@ from pyfhmdot.intense.contract import (
 
 
 def measure_dmps(mps_one, position=-1):
+    """
+    position corresponds to the left-bloc position, 
+    It might be 0,1,...,len(mps_one)-2.
+    A -1 value picks up a middle value.
+    """
     if position == -1:
         position = len(mps_one) // 2
 
@@ -89,7 +98,6 @@ def measure_dmps_dmps(dmps_one, dmps_two, position=-1):
     _contract_dmps_dmps_right_border(tmp_right, dmps_one[-1], dmps_two[-1])
     for l in range(len(dmps_one) - 2, position, -1):
         tmp, tmp_right = tmp_right, {}  # swap and clear
-        tmp_right.clear()
         _contract_right_small_bloc_dmps(tmp_right, tmp, dmps_one[l], dmps_two[l])
 
     dst = {}
@@ -222,3 +230,25 @@ def measure_dmps_mpo_mpo_dmps(dmps_one, mpo_one, mpo_two, dmps_two, position=-1)
     _contract_left_right_very_big(dst, tmp_left, tmp_right)
 
     return dst[()][()]
+
+# def apply_single_op_on_mp(dst,op,mp):
+#     tmp = {} #defaultdict(lambda: _array(0)) # outside bloc is zero 
+#     multiply_mp(tmp,op,mp,[1],[2])
+#     permute_blocs(dst,tmp,[(0,1,2,3),(1,2,0,3)])
+
+
+def measure_dmps_average_single_mpo_dmps(dmps_one, single_mpo, dmps_two):
+    average = []    
+    for position in range(len(dmps_one)-1):
+        #store_mp = _copy(dmps_two[position])
+        #replace_mp = {}#defaultdict(lambda: _array(0)) # outside bloc is zero 
+        #apply_single_op_on_mp(replace_mp,single_mpo,dmps_two[position])
+        #dmps_two[position] = replace_mp
+        average.append(measure_dmps_dmps(dmps_one,dmps_two,position))
+        #dmps_two[position] = store_mp # put the value back
+    
+    
+    average.append(measure_dmps_dmps(dmps_one,dmps_two,len(dmps_one)-2))
+
+
+    return average
