@@ -89,6 +89,12 @@ def single_operator(name, coef):  # -> one bloc
             (0, 0): coef
             * _np.array([[0, -1j, 0], [1j, 0, -1j], [0, 1j, 0]], dtype=_cplx_t)
         },
+        # # rung: two spin half
+        # 0 is |s1=1/2,mz1=+1/2>x|s2=1/2,mz2=+1/2>
+        # 1 is |s1=1/2,mz1=-1/2>x|s2=1/2,mz2=+1/2>, |s1=1/2,mz1=+1/2>x|s2=1/2,mz2=-1/2>
+        # 2 is |s1=1/2,mz1=-1/2>x|s2=1/2,mz2=-1/2>
+        # works well for singlets and triplets
+
     }
 
     return operators[name]
@@ -138,9 +144,7 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
     # # 2 is |s1=1/2,mz1=+1/2>x|s2=1/2,mz2=-1/2>
     # # 3 is |s1=1/2,mz1=+1/2>x|s2=1/2,mz2=+1/2>
     # ## ldsh-U1comb => WORK!
-    # # 0 is |s1=1/2,mz1=-1/2>x|s2=1/2,mz2=-1/2>
-    # # 1 is |s1=1/2,mz1=-1/2>x|s2=1/2,mz2=+1/2>, |s1=1/2,mz1=+1/2>x|s2=1/2,mz2=-1/2>
-    # # 2 is |s1=1/2,mz1=+1/2>x|s2=1/2,mz2=+1/2>
+
     ############################################
     # ### PLEASE CHECK VERY CAREFULLY SINCE
     "ldsh-Id": {  # ok
@@ -156,12 +160,6 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
                         dtype=_real_t,
                     ),
                 ]
-            ],
-            "ldsh-U1detached": [
-                [(0, 0), _np.array([[+1 / 2.0]], dtype=_real_t)],
-                [(1, 1), _np.array([[+1 / 2.0]], dtype=_real_t)],
-                [(2, 2), _np.array([[+1 / 2.0]], dtype=_real_t)],
-                [(3, 3), _np.array([[+1 / 2.0]], dtype=_real_t)],
             ],
             "ldsh-U1comb": [
                 [(0, 0), _np.array([[+1 / 2.0]], dtype=_real_t)],
@@ -188,12 +186,6 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
                         dtype=_real_t,
                     ),
                 ]
-            ],
-            "ldsh-U1detached": [
-                [(0, 0), _np.array([[-1 / 2.0]], dtype=_real_t)],
-                [(1, 1), _np.array([[-1 / 2.0]], dtype=_real_t)],
-                [(2, 2), _np.array([[+1 / 2.0]], dtype=_real_t)],
-                [(3, 3), _np.array([[+1 / 2.0]], dtype=_real_t)],
             ],
             "ldsh-U1comb": [
                 [(0, 0), _np.array([[-1 / 2.0]], dtype=_real_t)],
@@ -222,12 +214,6 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
                     ),
                 ]
             ],
-            "ldsh-U1detached": [
-                [(0, 0), _np.array([[-1 / 2.0]], dtype=_real_t)],
-                [(1, 1), _np.array([[+1 / 2.0]], dtype=_real_t)],
-                [(2, 2), _np.array([[-1 / 2.0]], dtype=_real_t)],
-                [(3, 3), _np.array([[+1 / 2.0]], dtype=_real_t)],
-            ],
             "ldsh-U1comb": [
                 [(0, 0), _np.array([[-1 / 2.0]], dtype=_real_t)],
                 [(1, 1), _np.array([[+1 / 2.0, 0], [0, -1 / 2.0]], dtype=_real_t)],
@@ -255,12 +241,6 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
                     ),
                 ]
             ],
-            "ldsh-U1detached": [
-                [(0, 0), _np.array([[+1 / 2.0]], dtype=_real_t)],
-                [(1, 1), _np.array([[-1 / 2.0]], dtype=_real_t)],
-                [(2, 2), _np.array([[-1 / 2.0]], dtype=_real_t)],
-                [(3, 3), _np.array([[+1 / 2.0]], dtype=_real_t)],
-            ],
             "ldsh-U1comb": [
                 [(0, 0), _np.array([[+1 / 2.0]], dtype=_real_t)],
                 [(1, 1), _np.array([[-1 / 2.0, 0], [0, -1 / 2.0]], dtype=_real_t)],
@@ -287,10 +267,7 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
                     ),
                 ]
             ],
-            "ldsh-U1detached": [
-                [(2, 0), _np.array([[+1 / _np.sqrt(2)]], dtype=_real_t)],
-                [(3, 1), _np.array([[+1 / _np.sqrt(2)]], dtype=_real_t)],
-            ],
+
             "ldsh-U1comb": [
                 [(1, 0), _np.array([[0], [+1 / _np.sqrt(2)]], dtype=_real_t)],
                 [(2, 1), _np.array([[+1 / _np.sqrt(2), 0]], dtype=_real_t)],
@@ -316,10 +293,7 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
                     ),
                 ]
             ],
-            "ldsh-U1detached": [
-                [(1, 0), _np.array([[+1 / _np.sqrt(2)]], dtype=_real_t)],
-                [(3, 2), _np.array([[+1 / _np.sqrt(2)]], dtype=_real_t)],
-            ],
+
             "ldsh-U1comb": [
                 [(1, 0), _np.array([[+1 / _np.sqrt(2)], [0]], dtype=_real_t)],
                 [(2, 1), _np.array([[0, +1 / _np.sqrt(2)]], dtype=_real_t)],
@@ -345,10 +319,7 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
                     ),
                 ]
             ],
-            "ldsh-U1detached": [
-                [(0, 2), _np.array([[+1 / _np.sqrt(2)]], dtype=_real_t)],
-                [(1, 3), _np.array([[+1 / _np.sqrt(2)]], dtype=_real_t)],
-            ],
+  
             "ldsh-U1comb": [
                 [(0, 1), _np.array([[0, +1 / _np.sqrt(2)]], dtype=_real_t)],
                 [(1, 2), _np.array([[+1 / _np.sqrt(2)], [0]], dtype=_real_t)],
@@ -374,10 +345,7 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
                     ),
                 ]
             ],
-            "ldsh-U1detached": [
-                [(0, 1), _np.array([[+1 / _np.sqrt(2)]], dtype=_real_t)],
-                [(2, 3), _np.array([[+1 / _np.sqrt(2)]], dtype=_real_t)],
-            ],
+
             "ldsh-U1comb": [
                 [(0, 1), _np.array([[+1 / _np.sqrt(2), 0]], dtype=_real_t)],
                 [(1, 2), _np.array([[0], [+1 / _np.sqrt(2)]], dtype=_real_t)],
@@ -402,7 +370,6 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
                     ),
                 ]
             ],
-            "ldsh-U1detached": [[(3, 0), _np.array([[+1]], dtype=_real_t)]],
             "ldsh-U1comb": [[(2, 0), _np.array([[+1]], dtype=_real_t)]],
         },
         "qchange": {
@@ -424,7 +391,6 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
                     ),
                 ]
             ],
-            "ldsh-U1detached": [[(0, 3), _np.array([[+1]], dtype=_real_t)]],
             "ldsh-U1comb": [[(0, 2), _np.array([[+1]], dtype=_real_t)]],
         },
         "qchange": {
@@ -447,7 +413,6 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
                     ),
                 ]
             ],
-            "ldsh-U1detached": [[(1, 2), _np.array([[+1]], dtype=_real_t)]],
             "ldsh-U1comb": [[(1, 1), _np.array([[0, +1], [0, 0]], dtype=_real_t)]],
         },
         "qchange": {
@@ -469,7 +434,6 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
                     ),
                 ]
             ],
-            "ldsh-U1detached": [[(2, 1), _np.array([[+1]], dtype=_real_t)]],
             "ldsh-U1comb": [[(1, 1), _np.array([[0, 0], [+1, 0]], dtype=_real_t)]],
         },
         "qchange": {
@@ -484,7 +448,6 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
         1: "ldsh-SzId",
         "qchange": {
             "ldsh-None": [(0,), (0,)],
-            "ldsh-U1detached": [(0,), (0,)],
             "ldsh-U1comb": [(0,), (0,)],
         },
     },
@@ -494,7 +457,6 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
         1: "ldsh-IdSz",
         "qchange": {
             "ldsh-None": [(0,), (0,)],
-            "ldsh-U1detached": [(0,), (0,)],
             "ldsh-U1comb": [(0,), (0,)],
         },
     },
@@ -598,31 +560,6 @@ def two_sites_bond_operator(name, coef, *, weight_on_left=None):  # -> two blocs
             "ldsh-U1comb": [(-2,), (+2,)],
         },
     },
-    # ### the following is ill defined with QN conservation
-    # 'ldsh-SxSx' :
-    #     {'nb_site' : 2, 'qchange' : [[0,(+1,-1)],[(+1,-1),(+2,0,-2)]],
-    #      0 : 'ldsh-Sx', 1 : 'ldsh-Sx' },
-    # 'ldsh-SySy' :
-    #     {'nb_site' : 2, 'qchange' : [[0,(+1,-1)],[(+1,-1),(+2,0,-2)]],
-    #      0 : 'ldsh-Sy', 1 : 'ldsh-Sy' },
-    # # ### ldsc=ladder spin half STRONG COUPLING
-    # # # 0 is ld singlet s0=|s=+1,mz=+0>
-    # # # 1 is ld triplet t-=|s=+1,mz=-1>
-    # # # 2 is ld triplet t0=|s=+1,mz=+0>
-    # # # 3 is ld triplet t+=|s=+1,mz=+1>
-    #     'ldshSC-Id' :
-    #         {'nb_site' : 1, 'qchange' : [[0,0]], 'coef' : 2. ,
-    #          'qBasis' :
-    #            { 'ldsh-None' : [[(0,0), (1/2.)*_np.array([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]],dtype=_real_t)]] ,
-    #              'ldsh-U1detached' : [[(0,0), _np.array([[+1/2.]],dtype=_real_t)],
-    #                         [(1,1), _np.array([[+1/2.]],dtype=_real_t)],
-    #                         [(2,2), _np.array([[+1/2.]],dtype=_real_t)],
-    #                         [(3,3), _np.array([[+1/2.]],dtype=_real_t)]]
-    #            }
-    #      },
-    "skeleton": {"qcons_compatibility": ["None"], "nb_site": 0, "qchange": []},
-
-    return operators
 
 
 """
