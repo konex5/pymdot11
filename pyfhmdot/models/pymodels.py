@@ -143,6 +143,81 @@ def pyhamiltonian(name):
             "on_site": [],
             "nn_bond": [],
         },
+        "ru_hzid_u1": {
+            "sub_model": [],
+            "on_site": [("hz", -1.0, "ru_hzid_u1")],
+            "nn_bond": [],
+        },
+        "ru_idhz_u1": {
+            "sub_model": [],
+            "on_site": [("hz", -1.0, "ru_idhz_u1")],
+            "nn_bond": [],
+        },
+        "ru_spsm_u1": {
+            "sub_model": [],
+            "on_site": [("Jxyperp", 1.0 / 2.0, "ru_spsm_u1")],
+            "nn_bond": [],
+        },
+        "ru_smsp_u1": {
+            "sub_model": [],
+            "on_site": [("Jxyperp", 1.0 / 2.0, "ru_smsp_u1")],
+            "nn_bond": [],
+        },
+        "ru_szsz_u1": {
+            "sub_model": [],
+            "on_site": [("Jzperp", 1.0, "ru_szsz_u1")],
+            "nn_bond": [],
+        },
+        "ru_spid-smid_u1": {
+            "sub_model": [],
+            "on_site": [],
+            "nn_bond": [("Jxypar", 1.0 / 2.0, "ru_spid-smid_u1")],
+        },
+        "ru_smid-spid_u1": {
+            "sub_model": [],
+            "on_site": [],
+            "nn_bond": [("Jxypar", 1.0 / 2.0, "ru_smid-spid_u1")],
+        },
+        "ru_idsp-idsm_u1": {
+            "sub_model": [],
+            "on_site": [],
+            "nn_bond": [("Jxypar", 1.0 / 2.0, "ru_idsp-idsm_u1")],
+        },
+        "ru_idsm-idsp_u1": {
+            "sub_model": [],
+            "on_site": [],
+            "nn_bond": [("Jxypar", 1.0 / 2.0, "ru_idsm-idsp_u1")],
+        },
+        "ru_xypar_u1": {
+            "sub_model": [
+                "ru_smid-spid_u1",
+                "ru_spid-smid_u1",
+                "ru_idsm-idsp_u1",
+                "ru_idsp-idsm_u1",
+            ],
+            "on_site": [],
+            "nn_bond": [],
+        },
+        "ru_xyperp_u1": {
+            "sub_model": ["ru_smsp_u1", "ru_spsm_u1"],
+            "on_site": [],
+            "nn_bond": [],
+        },
+        "ru_zzpar_u1": {
+            "sub_model": ["ru_szid-szid_u1", "ru_idsz-idsz_u1"],
+            "on_site": [],
+            "nn_bond": [],
+        },
+        "ru_zzperp_u1": {
+            "sub_model": ["ru_szsz_u1"],
+            "on_site": [],
+            "nn_bond": [],
+        },
+        "ru_xxzperp_xxzpar_u1": {
+            "sub_model": ["ru_xyperp_u1", "ru_xypar_u1", "ru_zzperp_u1", "ru_zzpar_u1"],
+            "on_site": [],
+            "nn_bond": [],
+        },
     }
     hamiltonian = {"on_site": [], "nn_bond": []}
 
@@ -920,9 +995,6 @@ def suzu_trotter_exp_to_blocs(
                 tmp.setflags(write=0)
                 blocks[(i, j, k, l, m, n, o, p)] = tmp
     return blocks
-
-
-############################################################
 
 
 def suzu_trotter_obc_exp(arg, model_name, parameters, size, is_dgate):
