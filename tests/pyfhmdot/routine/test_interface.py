@@ -84,7 +84,18 @@ def test_routine_interface_minimize_theta():
     mp_right = {}
     left = {}
     right = {}
-    initialize_idmrg(left, mp_left, right, mp_right, ham[0], ham[-1])
+    initialize_idmrg(
+        left,
+        mp_left,
+        right,
+        mp_right,
+        ham[0],
+        ham[-1],
+        position=2,
+        size=4,
+        conserve_total=0,
+        d=2,
+    )
     env_bloc = {}
     contract_left_right_mpo_mpo_permute(env_bloc, left, ham[1][0], ham[1][1], right)
     eigvals = {}
