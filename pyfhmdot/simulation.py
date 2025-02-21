@@ -614,6 +614,54 @@ def idmrg_even(
     dst_imps_left.append(_copy(tmp_imps_left))
     dst_imps_right.append(_copy(tmp_imps_right))
 
+def compress_mps(
+    mps,
+    dw_dict,
+    chi_max,
+    normalize,
+    eps,
+    *,
+    start_left=True,
+):
+    size = len(mps)
+    for _ in range(2):
+        if start_left:
+            direction_right = 2
+        else:
+            direction_right = -3
+
+        if start_left:
+            for l in range(1, size, 1):
+                apply_mm_at(
+                    mps,
+                    l,
+                    dw_dict,
+                    chi_max,
+                    normalize,
+                    eps,
+                    is_um=True,
+                    conserve_left_right_before=False,
+                    direction_right=direction_right,
+                )
+                print_double(size, l, "A=")
+        else:
+            for l in range(size - 1, 0, -1):
+                apply_mm_at(
+                    mps,
+                    l,
+                    dw_dict,
+                    chi_max,
+                    normalize,
+                    eps,
+                    is_um=False,
+                    conserve_left_right_before=False,
+                    direction_right=direction_right,
+                )
+                print_double(size, l, "=B")
+
+        start_left = not start_left
+
+
 
 def dmrg_sweep_lanczos(
     mps,
@@ -665,7 +713,7 @@ def dmrg_sweep_lanczos(
         print(f"dmrg sweep {layer+1}/{nb_sweeps}")
 
         if start_left:
-            for l in range(2, size - 2, 1):
+            for l in range(1, size - 2, 1):
                 minimize_lanczos_and_move(
                     l,
                     mps,
@@ -678,14 +726,14 @@ def dmrg_sweep_lanczos(
                     direction_right=1,
                     is_um=True,
                 )
-                left_right[l - 1] = update_left(
-                    mps[l - 1], ham[l - 1], left_right[l - 2], l == 1
-                )
+                # left_right[l - 1] = update_left(
+                #     mps[l - 1], ham[l - 1], left_right[l - 2], l == 1
+                # )
                 print_double(size, l, "A=")
                 # left_right[l] = update_left(mps[l], ham[l], left_right[l-1])
                 # print_double(size, l+1, "A=")
         else:
-            for l in range(size - 1, 2, -1):
+            for l in range(size - 3, 0, -1):
                 minimize_lanczos_and_move(
                     l,
                     mps,

@@ -8,6 +8,7 @@ from pyfhmdot.initialize import (
 from pyfhmdot.intense.contract import filter_left_right
 
 from pyfhmdot.simulation import (
+    compress_mps,
     dmrg_sweeps as _dmrg_sweeps,
     dmrg_warmup as _dmrg_warmup,
     sweep_eleven_times as _sweep_eleven_times,
@@ -88,7 +89,7 @@ def infinite_to_finite_ground_state(
 
 def variational_ground_state(mps, ham, zdmrg_dict):
     # compress mps
-    # compress_mps(mps,zdmrg_dict,zdmrg_dict["chi_max_warmup"], True, zdmrg_dict["eps"], start_left=True)
+    compress_mps(mps,zdmrg_dict,zdmrg_dict["chi_max_warmup"], True, zdmrg_dict["eps_truncation"], start_left=True)
     # initialize
     left_right = initialize_left_right(mps, ham, 2)
     # left_var, right_var = initialize_left_right_variance(mps, ham)
