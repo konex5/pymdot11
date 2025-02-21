@@ -17,10 +17,8 @@ from pyfhmdot.indices import (
 from pyfhmdot.mul_routine import (
     mul_mm_blocs,
     mul_theta_with_gate,
-    mul_mv_nondeg,
-    mul_mv_deg,
-    mul_um_nondeg,
-    mul_um_deg,
+    mul_usv_nondeg,
+    mul_usv_deg,
 )
 
 
@@ -104,7 +102,7 @@ def theta_to_um(
     # simdict['dw_max'] = max(dw,simdict['dw_max'])
     cut_nondeg = [cut[i] for i in range(len(nondeg))]
     cut_deg = [cut[i] for i in range(len(nondeg), len(nondeg) + len(deg))]
-    mul_um_deg(
+    mul_usv_deg(
         array_of_U,
         array_of_S,
         cut_deg,
@@ -113,8 +111,9 @@ def theta_to_um(
         subnewsize_deg,
         lhs_blocs,
         rhs_blocs,
+        is_um=True,
     )
-    mul_um_nondeg(
+    mul_usv_nondeg(
         array_of_U,
         array_of_S,
         cut_nondeg,
@@ -123,6 +122,7 @@ def theta_to_um(
         nondeg_dims,
         lhs_blocs,
         rhs_blocs,
+        is_um=True,
     )
 
 
@@ -173,7 +173,7 @@ def theta_to_mv(
     cut_nondeg = [cut[i] for i in range(len(nondeg))]
     cut_deg = [cut[i] for i in range(len(nondeg), len(nondeg) + len(deg))]
 
-    mul_mv_deg(
+    mul_usv_deg(
         array_of_U,
         array_of_S,
         cut_deg,
@@ -182,8 +182,9 @@ def theta_to_mv(
         subnewsize_deg,
         lhs_blocs,
         rhs_blocs,
+        is_um=False,
     )
-    mul_mv_nondeg(
+    mul_usv_nondeg(
         array_of_U,
         array_of_S,
         cut_nondeg,
@@ -192,4 +193,5 @@ def theta_to_mv(
         nondeg_dims,
         lhs_blocs,
         rhs_blocs,
+        is_um=False,
     )

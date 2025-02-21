@@ -52,7 +52,7 @@ def mul_theta_with_gate(
             ).transpose(0, 2, 3, 1)
 
 
-def mul_mv_nondeg(
+def mul_usv_nondeg(
     array_U: _List[_np.ndarray],
     array_S: _List[_np.array],
     cut: list,
@@ -61,6 +61,7 @@ def mul_mv_nondeg(
     nondeg_dims: _List,
     dst_lhs_blocs: _Dict[_Tuple[int, int, int], _np.ndarray],
     dst_rhs_blocs: _Dict[_Tuple[int, int, int], _np.ndarray],
+    *,
     is_um: bool = False,
 ) -> None:
     for i in range(len(nondeg)):  # reversed, and passed by pop.
@@ -97,31 +98,7 @@ def mul_mv_nondeg(
             nondeg.pop()
 
 
-def mul_um_nondeg(
-    array_U,
-    array_S,
-    cut,
-    array_V,
-    nondeg,
-    nondeg_dims,
-    dst_lhs_blocs,
-    dst_rhs_blocs,
-    is_um=True,
-):
-    mul_mv_nondeg(
-        array_U,
-        array_S,
-        cut,
-        array_V,
-        nondeg,
-        nondeg_dims,
-        dst_lhs_blocs,
-        dst_rhs_blocs,
-        is_um=is_um,
-    )
-
-
-def mul_mv_deg(
+def mul_usv_deg(
     array_U: _List[_np.ndarray],
     array_S: _List[_np.array],
     cut: list,
@@ -130,6 +107,7 @@ def mul_mv_deg(
     subnewsize: _List,
     dst_lhs_blocs: _Dict[_Tuple[int, int, int], _np.ndarray],
     dst_rhs_blocs: _Dict[_Tuple[int, int, int], _np.ndarray],
+    *,
     is_um: bool = False,
 ) -> None:
     i_Nb = len(deg)  # index for deg and subnewsize.. we
@@ -173,27 +151,3 @@ def mul_mv_deg(
             array_S.pop()
             subnewsize.pop()
             deg.pop()
-
-
-def mul_um_deg(
-    array_U,
-    array_S,
-    cut,
-    array_V,
-    deg,
-    subnewsize,
-    dst_lhs_blocs,
-    dst_rhs_blocs,
-    is_um=True,
-):
-    mul_mv_deg(
-        array_U,
-        array_S,
-        cut,
-        array_V,
-        deg,
-        subnewsize,
-        dst_lhs_blocs,
-        dst_rhs_blocs,
-        is_um=is_um,
-    )
