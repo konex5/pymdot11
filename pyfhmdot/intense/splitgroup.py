@@ -1,7 +1,4 @@
 import numpy as _np
-from pyfhmdot.intense.mul_mp import (
-    permute_blocs,
-)
 
 
 def splitgroup_mapping(model_name, *, section):
@@ -206,26 +203,6 @@ def group_dmps(model_name, dst_dmp, mp):
 
 def split_dmps(model_name, dst_mp, dmp):
     reshape_and_split(model_name, dst_mp, dmp, 1)
-
-
-def group_mpos(model_name, dst_mp, mpos):
-    # mpos
-    #    2| |4
-    # 0 -|___|- 5
-    #    1| |3
-    tmp = {}
-    permute_blocs(tmp, mpos, [(0, 1, 2, 3, 4, 5), (0, 1, 4, 2, 4, 5)])
-    # mpos
-    #    3| |4
-    # 0 -|___|- 5
-    #    1| |2
-    tmp_tmp = {}
-    reshape_and_group(model_name, tmp_tmp, tmp, [1, 2])
-    reshape_and_group(model_name, dst_mp, tmp_tmp, [2, 3])
-    #    2||
-    # 0 -|___|- 3
-    #    1||
-
 
 def group_all(model_name, dmps):
     dmps_out = []
