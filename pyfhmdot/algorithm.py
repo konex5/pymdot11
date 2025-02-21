@@ -47,30 +47,40 @@ def multiply_with_gate(ma, mb, mtheta):  # -> mdest
     return mdest """
 
 
-def apply_UM(lhs_blocs, rhs_blocs, **kwargs):
+def apply_um_at(mps,position, dw_dict, chi_max, normalize, eps, *, conserve_left_right_before=False, conserve_direction_left_after=None):
     tmp_blocs = {}
     mm_to_theta_no_gate(
-        tmp_blocs,
-        lhs_blocs,
-        rhs_blocs,
-        conserve_left_right=kwargs["conserve_left_right"],
+        dst_blocs=tmp_blocs,
+        lhs_blocs=mps[position-1],
+        rhs_blocs=mps[position],
+        conserve_left_right=conserve_left_right_before,
     )
-    lhs_blocs.clear()
-    rhs_blocs.clear()
-    theta_to_um(tmp_blocs, lhs_blocs, rhs_blocs, **kwargs)
+    mps[position-1].clear()
+    mps[position].clear()
+    theta_to_um(theta_blocs=tmp_blocs, lhs_blocs=mps[position-1], rhs_blocs=mps[position],
+    dw_dict=dw_dict,
+    chi_max=chi_max,
+    normalize=normalize,
+    conserve_direction_left=conserve_direction_left_after,
+    eps=eps)
 
 
-def apply_MV(lhs_blocs, rhs_blocs, **kwargs):
+def apply_mv_at(mps,position, dw_dict, chi_max, normalize, eps, *, conserve_left_right_before=False, conserve_direction_left_after=None):
     tmp_blocs = {}
     mm_to_theta_no_gate(
-        tmp_blocs,
-        lhs_blocs,
-        rhs_blocs,
-        conserve_left_right=kwargs["conserve_left_right"],
+        dst_blocs=tmp_blocs,
+        lhs_blocs=mps[position-1],
+        rhs_blocs=mps[position],
+        conserve_left_right=conserve_left_right_before,
     )
-    lhs_blocs = {}
-    rhs_blocs = {}
-    theta_to_mv(tmp_blocs, lhs_blocs, rhs_blocs, **kwargs)
+    mps[position-1].clear()
+    mps[position].clear()
+    theta_to_mv(theta_blocs=tmp_blocs, lhs_blocs=mps[position-1], rhs_blocs=mps[position],
+    dw_dict=dw_dict,
+    chi_max=chi_max,
+    normalize=normalize,
+    conserve_direction_left=conserve_direction_left_after,
+    eps=eps)
 
 
 def apply_gate_UM(lhs_blocs, rhs_blocs, gate_blocs, **kwargs):

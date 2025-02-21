@@ -1,5 +1,6 @@
 import numpy as _np
 from typing import Dict as _Dict
+from typing import Optional as _Optional
 
 from pyfhmdot.svd_routine import (
     normalize_the_array,
@@ -63,12 +64,15 @@ def theta_to_um(
     theta_blocs: _Dict[tuple, _np.ndarray],
     lhs_blocs: _Dict[tuple, _np.ndarray],
     rhs_blocs: _Dict[tuple, _np.ndarray],
-    simdict: dict,
-    **kwargs
+    dw_dict: dict,
+    chi_max:int,
+    normalize: bool,
+    conserve_direction_left: _Optional[bool]=None,
+    eps:float=10**-8
 ) -> None:
 
     keys = list(theta_blocs.keys())
-    middle = potential_middle_indices(keys, direction_right=True)
+    middle = potential_middle_indices(keys, direction_right=conserve_direction_left)
 
     # # froebenius norm !
     # norm_before = 0.
@@ -77,7 +81,7 @@ def theta_to_um(
     # norm_before = _np.sqrt(norm_before)
     # print('norm_before=',norm_before)
 
-    nondeg, deg = degeneracy_in_theta(keys, middle, direction_right=True)
+    nondeg, deg = degeneracy_in_theta(keys, middle, direction_right=conserve_direction_left)
 
     subnewsize_deg = []
     slices_degenerate_blocs(theta_blocs, deg, subnewsize_deg)
@@ -89,16 +93,13 @@ def theta_to_um(
 
     svd_nondeg(theta_blocs, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V)
     svd_deg(theta_blocs, deg, subnewsize_deg, array_of_U, array_of_S, array_of_V)
+    
+    cut, dw = truncation_strategy(array_of_S, eps, chi_max)
 
-    eps_truncation_error = simdict["eps_truncation_error"]
-    chi_max = simdict["dw_Dmax"]
-
-    cut, dw = truncation_strategy(array_of_S, eps_truncation_error, chi_max)
-
-    if simdict["normalize"] == True:
+    if normalize:
         normalize_the_array(array_of_S, cut)
 
-    simdict["dw_one_serie"] += dw
+    dw_dict["dw_one_serie"] += dw
     # simdict['dw_max'] = max(dw,simdict['dw_max'])
     cut_nondeg = [cut[i] for i in range(len(nondeg))]
     cut_deg = [cut[i] for i in range(len(nondeg), len(nondeg) + len(deg))]
@@ -130,12 +131,15 @@ def theta_to_mv(
     theta_blocs: _Dict[tuple, _np.ndarray],
     lhs_blocs: _Dict[tuple, _np.ndarray],
     rhs_blocs: _Dict[tuple, _np.ndarray],
-    simdict: dict,
-    **kwargs
+    dw_dict: dict,
+    chi_max:int,
+    normalize: bool,
+    conserve_direction_left: _Optional[bool]=None,
+    eps:float=10**-8
 ) -> None:
 
     keys = list(theta_blocs.keys())
-    middle = potential_middle_indices(keys, direction_right=False)
+    middle = potential_middle_indices(keys, direction_right=conserve_direction_left)
 
     # # froebenius norm
     # norm_before = 0.
@@ -144,7 +148,7 @@ def theta_to_mv(
     # norm_before = _np.sqrt(norm_before)
     # print('norm_before=',norm_before)
 
-    nondeg, deg = degeneracy_in_theta(keys, middle, direction_right=False)
+    nondeg, deg = degeneracy_in_theta(keys, middle, direction_right=conserve_direction_left)
 
     subnewsize_deg = []
     slices_degenerate_blocs(theta_blocs, deg, subnewsize_deg)
@@ -157,18 +161,16 @@ def theta_to_mv(
     svd_nondeg(theta_blocs, nondeg, nondeg_dims, array_of_U, array_of_S, array_of_V)
     svd_deg(theta_blocs, deg, subnewsize_deg, array_of_U, array_of_S, array_of_V)
 
-    eps_truncation_error = simdict["eps_truncation_error"]
-    chi_max = simdict["dw_Dmax"]
     cut, dw = truncation_strategy(
         array_of_S,
-        eps_truncation_error,
+        eps,
         chi_max,
     )
 
-    if simdict["normalize"] == True:
+    if normalize:
         normalize_the_array(array_of_S, cut)
 
-    simdict["dw_one_serie"] += dw
+    dw_dict["dw_one_serie"] += dw
 
     cut_nondeg = [cut[i] for i in range(len(nondeg))]
     cut_deg = [cut[i] for i in range(len(nondeg), len(nondeg) + len(deg))]

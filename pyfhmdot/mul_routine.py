@@ -110,8 +110,7 @@ def mul_usv_deg(
     *,
     is_um: bool = False,
 ) -> None:
-    i_Nb = len(deg)  # index for deg and subnewsize.. we
-    for i in range(i_Nb):  # reversed, and pop each value.
+    for i in range(len(deg)):  # reversed, and pop each value.
         Dsi = cut.pop()
         if Dsi > 0:
             if is_um:
