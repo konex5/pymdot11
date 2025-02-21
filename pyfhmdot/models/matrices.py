@@ -1,7 +1,5 @@
 import models as _models
 
-############################################################
-
 import numpy as _np
 from scipy.linalg import expm as _expm
 from numbers import Number as _ntype
@@ -9,7 +7,6 @@ from numbers import Number as _ntype
 # from validity import valid_model_param as _valid_model_param
 from validity import quantum_name_model_from_qnmodel as _qn_model
 
-############################################################
 
 
 def _parameters2finalparameters(tupleMlist, parameters):
@@ -84,11 +81,6 @@ def words_terms(model, parameters):
     return finalhamlistreturned
 
 
-############################################################
-############################################################
-############################################################
-
-
 def operator(name, quantum_name):
     if name in _models.operators.iterkeys():
         if _models.operators[name]["nb_site"] == 1:
@@ -104,11 +96,6 @@ def operator(name, quantum_name):
     raise "Unknown in manybody.matrices.operator"
 
 
-############################################################
-############################################################
-############################################################
-
-
 def onsite_fuse_for_mpo(tmpblocks):
     difflab = list(set([tmp[0] for tmp in tmpblocks]))
     outblocks = []
@@ -122,14 +109,6 @@ def onsite_fuse_for_mpo(tmpblocks):
                     # can only be last # shortlist.index(lab)
                     outblocks[-1][1] += tmpblocks[l][1]
     return outblocks
-
-
-############################################################
-############################################################
-############################################################
-
-# def infinite_hamiltonian_terms(model,parameters):
-#     pass
 
 
 def finite_hamiltonian_terms(qnmodel, parameters, L):
@@ -183,16 +162,6 @@ def finite_hamiltonian_terms(qnmodel, parameters, L):
 
     # print(onsiteHam,onbondHam)
     return onsiteHam, onbondHam
-
-
-############################################################
-############################################################
-############################################################
-
-############################################################
-############################################################
-############################################################
-
 
 def _hamiltonian_mpo_period2(site_M, bond_L, bond_R, quantum_name):
     bl_dimL = len(bond_L) + 1
@@ -262,12 +231,6 @@ def _hamiltonian_mpo_period2(site_M, bond_L, bond_R, quantum_name):
                 )
 
     return blocks
-
-
-# def _hamiltonian_mpo_period3(onsite_M,bond_L,bond_R,quantum_name):
-#     pass
-# def _hamiltonian_mpo_period4(onsite_M,bond_L,bond_R,quantum_name):
-#     pass
 
 
 def _hamiltonian_mpo_leftborder(site_M, bond_R, quantum_name):
@@ -383,16 +346,6 @@ def hamiltonian_obc(qnmodel, param, L):
     return mpo
 
 
-############################################################
-############################################################
-############################################################
-
-
-############################################################
-############################################################
-############################################################
-
-
 def _gate_ham_period2_numpy(site_L, site_R, bond_M, quantum_name):
     quantum_name_NONE = quantum_name.split("-")[0] + "-None"
     d = _models.basis[quantum_name_NONE]["deg"][0]
@@ -437,16 +390,6 @@ def _gate_ham_period2_numpy(site_L, site_R, bond_M, quantum_name):
             ).reshape(d, d, d, d)
 
     return t
-
-
-# def _gate_ham_period3_numpy(site_L,site_R,bond_M,quantum_name):
-#     pass
-# def _gate_ham_period4_numpy(site_L,site_R,bond_M,quantum_name):
-#     pass
-
-############################################################
-############################################################
-############################################################
 
 
 def _exp_gate(arg, dH, d):
@@ -511,11 +454,6 @@ def _exp_dgate(arg, dH, d):
     return dU2
 
 
-############################################################
-############################################################
-############################################################
-
-
 def _suzu_trotter_period2_exp_numpy(arg, site_L, site_R, bond_M, quantum_name, dgate):
     quantum_name_NONE = quantum_name.split("-")[0] + "-None"
     d = _models.basis[quantum_name_NONE]["deg"][0]
@@ -526,15 +464,6 @@ def _suzu_trotter_period2_exp_numpy(arg, site_L, site_R, bond_M, quantum_name, d
     else:
         return _exp_dgate(arg, dH, d)
 
-
-# def gate_periodicity_two_suzu_trotter_exp_numpy(arg,model,param,numtype):
-#     pass
-# def gate_periodicity_ofL_suzu_trotter_exp_numpy(arg,L,model,param,numtype):
-#     pass
-
-############################################################
-############################################################
-############################################################
 
 # below, cut from dense to quantum number (index + matrix)
 def _generate_slices(d, deg):
@@ -599,10 +528,6 @@ def _generate_slices_dgate(d, deg):
 
 # above, cut from dense to quantum number (index + matrix)
 
-############################################################
-############################################################
-############################################################
-
 
 def suzu_trotter_period2_exp(arg, site_L, site_R, bond_M, quantum_name, dgate):
     # for gate : GOES OUT IN SSWW order
@@ -648,9 +573,6 @@ def suzu_trotter_period2_exp(arg, site_L, site_R, bond_M, quantum_name, dgate):
                 tmp.setflags(write=0)
                 blocks.append([[i, j, k, l, m, n, o, p], tmp])
     return blocks
-
-
-############################################################
 
 
 def suzu_trotter_obc_exp(arg, qnmodel, param, L, dgate):
@@ -699,13 +621,3 @@ def suzu_trotter_obc_exp(arg, qnmodel, param, L, dgate):
         )
 
     return mpo
-
-
-############################################################
-# MATRICES ARE CORRECT!
-# manybody.models.quantum_name = 'sh-None'
-# A = manybody.matrices.suzu_trotter_obc_exp(-0.02,'sh-xxz-hz',[1,1,2],10,True)[0]
-# manybody.models.quantum_name = 'sh-U1'
-# B = manybody.matrices.suzu_trotter_obc_exp(-0.02,'sh-xxz-hz',[1,1,2],10,True)[0]
-# for i in xrange(len(B)):
-#     print(B[i][1][0,0,0,0] == A[0][1][tuple(B[i][0])])
