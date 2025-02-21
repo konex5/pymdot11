@@ -4,10 +4,13 @@
 import argparse
 import sys
 import os
-import toml
 
-from pyfhmdot.utils.iotools import *
-from pyfhmdot.utils.iodicts import *
+from pyfhmdot.utils.iotools import (
+    check_filename_and_extension_h5,
+    create_h5,
+    add_single_mp,
+)
+from pyfhmdot.utils.iodicts import check_filename_and_extension, read_dictionary
 
 from pyfhmdot.general import (
     add_model_info,
