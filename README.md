@@ -30,6 +30,7 @@ well for spins. Enjoy!
 
 - [x] T-DMRG
 - [x] t-DMRG
+- [ ] i-DMRG
 - [ ] 0-DMRG
 - [ ] t-MPS
 - [ ] ED
