@@ -1,5 +1,4 @@
-Welcome to pyfhmdot (Fast Hilbert Matrix DOT)
-=============================================
+# Welcome to pyfhmdot (Fast Hilbert Matrix DOT)
 
 **pyfhmdot** provides scientific simulations for density matrix
 renormalization group (DMRG) on spins.
@@ -26,3 +25,11 @@ library (but in practice it is a very hard task).
 A nice surprise was to see that mpo hamiltonian representation in such
 blocs structure can induce exact diagonalization (ED) simulations as
 well for spins. Enjoy!
+
+## Simulations
+
+- [x] T-DMRG
+- [x] t-DMRG
+- [ ] 0-DMRG
+- [ ] t-MPS
+- [ ] ED
