@@ -1,7 +1,7 @@
 name: "CI-linux"
 on:
   pull_request:
-  push:
+  push: disabled_branch
 jobs:
   nix-build:
     runs-on: ubuntu-latest
