@@ -1,5 +1,6 @@
 import pytest
 
+
 @pytest.mark.skip
 def test_initialize_even_size():
     from pymdot.initialize import initialize_idmrg_even_size, initialize_idmrg_odd_size
@@ -26,8 +27,8 @@ def test_initialize_even_size():
         conserve_total=5,
         d=2,
     )
-    assert sorted(imps_left.keys()) == [(0,0,0),(0,1,1)]
-    assert sorted(imps_right.keys()) == [(4,1,5),(5,0,5)]
+    assert sorted(imps_left.keys()) == [(0, 0, 0), (0, 1, 1)]
+    assert sorted(imps_right.keys()) == [(4, 1, 5), (5, 0, 5)]
 
     dst_left_bloc = {}
     imps_left = {}
@@ -35,18 +36,19 @@ def test_initialize_even_size():
     imps_right = {}
     imps_middle = {}
 
-    initialize_idmrg_odd_size(dst_left_bloc,
-    imps_left,
-    dst_right_bloc,
-    imps_right,
-    imps_middle,
-    ham_left,
-    ham_middle[0],
-    ham_right,
-    position=1,
-    size=10,
-    conserve_total=5,
-    d=2,
+    initialize_idmrg_odd_size(
+        dst_left_bloc,
+        imps_left,
+        dst_right_bloc,
+        imps_right,
+        imps_middle,
+        ham_left,
+        ham_middle[0],
+        ham_right,
+        position=1,
+        size=10,
+        conserve_total=5,
+        d=2,
     )
 
     pass
