@@ -1,6 +1,6 @@
-# Welcome to pyfhmdot (Fast Hilbert Matrix DOT)
+# Welcome to pymdot
 
-**pyfhmdot** provides scientific simulations for density matrix
+**pymdot** provides scientific simulations for density matrix
 renormalization group (DMRG) on spins.
 
 From our knowledge, this is the only library providing such

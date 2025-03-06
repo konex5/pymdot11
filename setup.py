@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-"""The setup and build script for the pyfhmdot library."""
+"""The setup and build script for the pymdot library."""
 
 import codecs
 import os
-from pyfhmdot import __version__
+from pymdot import __version__
 
 from setuptools import setup, find_packages
 
@@ -23,21 +23,21 @@ packages = find_packages(exclude=["tests*"])
 requirements = requirements()
 
 with codecs.open("README.rst", "r", "utf-8") as fd:
-    fn = os.path.join("pyfhmdot", "version.py")
+    fn = os.path.join("pymdot", "version.py")
     with open(fn) as fh:
         code = compile(fh.read(), fn, "exec")
         exec(code)
 
     setup(
-        name="pyfhmdot-python",
+        name="pymdot-python",
         version=__version__,
-        description="Pyfhmdot project in pure python",
+        description="Pymdot project in pure python",
         long_description=fd.read(),
-        url="https://nokx5.github.io/pyfhmdot-python",
+        url="https://nokx5.github.io/pymdot-python",
         author="nokx",
         author_email="info@nokx.ch",
         license="MIT",
-        keywords="python pyfhmdot project pure skeleton",
+        keywords="python pymdot project pure skeleton",
         install_requires=requirements,
         python_requires=">=3",
         packages=packages,
@@ -45,7 +45,7 @@ with codecs.open("README.rst", "r", "utf-8") as fd:
         scripts=[],
         entry_points={
             "console_scripts": [
-                "cli_pyfhmdot = pyfhmdot.__main__:cli_entrypoint",
+                "cli_pymdot = pymdot.__main__:cli_entrypoint",
             ],
         },
     )

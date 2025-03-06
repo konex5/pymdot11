@@ -5,13 +5,13 @@ import argparse
 import sys
 import os
 
-from pyfhmdot.utils.iotools import (
+from pymdot.utils.iotools import (
     check_filename_and_extension_to_create_h5,
     create_h5,
 )
-from pyfhmdot.utils.iodicts import check_filename_and_extension, read_dictionary
+from pymdot.utils.iodicts import check_filename_and_extension, read_dictionary
 
-from pyfhmdot.utils.general import (
+from pymdot.utils.general import (
     add_model_bdmrg_simulation,
     add_model_tdmrg_simulation,
     add_model_info,
@@ -22,7 +22,7 @@ from pyfhmdot.utils.general import (
     load_model_info_size,
 )
 
-from pyfhmdot.initialize import create_hamiltonian_gates
+from pymdot.initialize import create_hamiltonian_gates
 
 
 if __name__ == "__main__":

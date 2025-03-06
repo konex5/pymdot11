@@ -5,7 +5,7 @@ import argparse
 import sys
 import os
 
-from pyfhmdot.utils.general import (
+from pymdot.utils.general import (
     add_model_bdmrg_simulation,
     add_model_info,
     add_mps,
@@ -16,12 +16,12 @@ from pyfhmdot.utils.general import (
     load_model_state,
     load_mps,
 )
-from pyfhmdot.intense.splitgroup import group_all, split_all
-from pyfhmdot.utils.iotools import (
+from pymdot.intense.splitgroup import group_all, split_all
+from pymdot.utils.iotools import (
     check_filename_and_extension_h5,
     create_h5,
 )
-from pyfhmdot.entrypoint import lowering_temperature
+from pymdot.entrypoint import lowering_temperature
 
 
 if __name__ == "__main__":

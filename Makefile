@@ -20,16 +20,16 @@ clean:
 	rm -rf .pytest_cache
 
 pep8:
-	$(PEP8) pyfhmdot tests
+	$(PEP8) pymdot tests
 
 black:
 	$(BLACK) .
 
 lint:
-	$(PYLINT) pyfhmdot # --rcfile=setup.cfg
+	$(PYLINT) pymdot # --rcfile=setup.cfg
 
 mypy:
-	$(MYPY) --ignore-missing-imports -p pyfhmdot
+	$(MYPY) --ignore-missing-imports -p pymdot
 
 test:
 	$(PYTEST) -v

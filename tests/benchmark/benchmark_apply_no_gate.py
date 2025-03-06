@@ -2,7 +2,7 @@ import tracemalloc
 import time
 import numpy as np
 
-from pyfhmdot.algorithm import apply_mm
+from pymdot.algorithm import apply_mm
 
 add_header = True
 
@@ -23,7 +23,7 @@ def create_random_blocs(chi, max_index=3):
     return blocs
 
 
-with open("/tmp/pyfhmdot_benchmark_apply_no_gate.txt", "w") as f:
+with open("/tmp/pymdot_benchmark_apply_no_gate.txt", "w") as f:
     if add_header:
         f.write("N,time[ms],memory[KiB]\n")
     for N in datalist:

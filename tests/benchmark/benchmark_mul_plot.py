@@ -8,7 +8,7 @@ N_arr = []
 time_arr = []
 mem_arr = []
 
-with open("/tmp/pyfhmdot_benchmark_mul.txt", "r") as f:
+with open("/tmp/pymdot_benchmark_mul.txt", "r") as f:
     if add_header:
         print(f.readline())
 

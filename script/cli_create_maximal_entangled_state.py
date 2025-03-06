@@ -5,20 +5,20 @@ import argparse
 import sys
 import os
 
-from pyfhmdot.utils.general import (
+from pymdot.utils.general import (
     add_model_info,
     add_mps,
     add_state_info,
     load_model_info_model_name,
     load_model_info_size,
 )
-from pyfhmdot.utils.iotools import (
+from pymdot.utils.iotools import (
     check_filename_and_extension_h5,
     check_filename_and_extension_to_create_h5,
     create_h5,
 )
 
-from pyfhmdot.initialize import create_maximal_entangled_state
+from pymdot.initialize import create_maximal_entangled_state
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="cli, create maximal entangled state")

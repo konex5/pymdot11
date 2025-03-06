@@ -13,7 +13,7 @@ def create_random_matrix(N, M):
     return np.random.random(N * M).reshape(N, M)
 
 
-with open("/tmp/pyfhmdot_benchmark_eigh.txt", "w") as f:
+with open("/tmp/pymdot_benchmark_eigh.txt", "w") as f:
     if add_header:
         f.write("N,time[ms],memory[KiB]\n")
 

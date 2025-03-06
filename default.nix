@@ -14,15 +14,15 @@ with pkgs;
 let
 
   pythonPackageOverrides = python-self: python-super: rec {
-    fhmdot = python-self.callPackage ../fhmdot/derivation.nix {
+    mdot11 = python-self.callPackage ../mdot11/derivation.nix {
       stdenv = if clangSupport then clangStdenv else gccStdenv;
       mdot = callPackage ../mdot/derivation.nix {
         stdenv = if clangSupport then clangStdenv else gccStdenv;
       };
 
     };
-    pyfhmdot = python-self.callPackage ./derivation.nix {
-      fhmdot = python-self.fhmdot;
+    pymdot = python-self.callPackage ./derivation.nix {
+      mdot11 = python-self.mdot11;
     };
 
   };

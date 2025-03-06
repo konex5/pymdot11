@@ -4,10 +4,10 @@
 import argparse
 import sys
 import os
-from pyfhmdot.intense.mul_mp import multiply_mp, permute_blocs
-from pyfhmdot.models.pyoperators import single_operator
+from pymdot.intense.mul_mp import multiply_mp, permute_blocs
+from pymdot.models.pyoperators import single_operator
 
-from pyfhmdot.utils.general import (
+from pymdot.utils.general import (
     add_model_info,
     add_mps,
     add_state_info,
@@ -15,7 +15,7 @@ from pyfhmdot.utils.general import (
     load_model_info_size,
     load_mps,
 )
-from pyfhmdot.utils.iotools import (
+from pymdot.utils.iotools import (
     check_filename_and_extension_h5,
     check_filename_and_extension_to_create_h5,
     create_h5,

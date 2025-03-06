@@ -2,7 +2,7 @@ import tracemalloc
 import time
 import numpy as np
 
-from pyfhmdot.algorithm import apply_gate_on_mm
+from pymdot.algorithm import apply_gate_on_mm
 
 add_header = True
 
@@ -24,7 +24,7 @@ def create_random_blocs(chi, max_index=3):
 
 
 def create_gate():
-    from pyfhmdot.initialize import create_hamiltonian_gates
+    from pymdot.initialize import create_hamiltonian_gates
 
     return create_hamiltonian_gates(
         "sh_xxz-hz_u1",
@@ -36,7 +36,7 @@ def create_gate():
     )[0][1]
 
 
-with open("/tmp/pyfhmdot_benchmark_apply_gate.txt", "w") as f:
+with open("/tmp/pymdot_benchmark_apply_gate.txt", "w") as f:
     if add_header:
         f.write("N,time[ms],memory[KiB]\n")
     th = [create_gate()]

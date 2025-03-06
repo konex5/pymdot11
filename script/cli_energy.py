@@ -5,13 +5,13 @@ import argparse
 import sys
 import os
 
-from pyfhmdot.utils.general import (
+from pymdot.utils.general import (
     load_model_info_size,
     load_mps,
 )
-from pyfhmdot.utils.iotools import check_filename_and_extension_h5
+from pymdot.utils.iotools import check_filename_and_extension_h5
 
-from pyfhmdot.intense.interface import (
+from pymdot.intense.interface import (
     measure_dmps_mpo_dmps,
     measure_dmps_mpo_mpo_dmps,
     measure_mps_mpo_mpo_mps,

@@ -4,9 +4,9 @@
 import argparse
 import sys
 import os
-from pyfhmdot.entrypoint import infinite_to_finite_ground_state
+from pymdot.entrypoint import infinite_to_finite_ground_state
 
-from pyfhmdot.utils.general import (
+from pymdot.utils.general import (
     add_model_info,
     add_mps,
     load_model_idmrg_simulation,
@@ -14,13 +14,13 @@ from pyfhmdot.utils.general import (
     load_model_info_size,
     load_model_parameters,
 )
-from pyfhmdot.utils.iotools import (
+from pymdot.utils.iotools import (
     check_filename_and_extension_h5,
     check_filename_and_extension_to_create_h5,
     create_h5,
 )
 
-from pyfhmdot.initialize import create_infinite_hamiltonian
+from pymdot.initialize import create_infinite_hamiltonian
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="cli, create maximal entangled state")

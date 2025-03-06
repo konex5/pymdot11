@@ -8,7 +8,7 @@
 }:
 
 buildPythonPackage rec {
-  pname = "pyfhmdot";
+  pname = "pymdot";
   inherit version;
   inherit src;
 
